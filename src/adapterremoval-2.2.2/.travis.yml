@@ -1,0 +1,31 @@
+language: cpp
+
+dist: trusty
+
+compiler:
+  - clang
+  - gcc
+
+os:
+ - linux
+ - osx
+
+addons:
+  apt:
+    packages:
+      - zlib1g-dev
+      - libbz2-dev
+
+before_install:
+  - pip install --user cpp-coveralls
+
+install: true
+
+script:
+    - make
+    - make test COVERAGE=yes
+    - make validate
+    - PATH=$PATH:$PWD/build/ make -C examples
+
+after_success:
+  - coveralls --exclude tests --exclude googletest-release-1.8.0 --gcov-options '\-lp'

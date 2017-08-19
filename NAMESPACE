@@ -1,0 +1,3 @@
+useDynLib(Rbowtie2)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
