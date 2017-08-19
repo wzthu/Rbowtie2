@@ -5,23 +5,48 @@
 
 using namespace Rcpp;
 
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP Rbowtie2_rcpp_hello_world() {
+// removeAdapter
+int removeAdapter(Rcpp::CharacterVector argvs);
+RcppExport SEXP _RBowtie2_removeAdapter(SEXP argvsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello_world());
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type argvs(argvsSEXP);
+    rcpp_result_gen = Rcpp::wrap(removeAdapter(argvs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bowtie2Mapping
+int bowtie2Mapping(Rcpp::CharacterVector argvs);
+RcppExport SEXP _RBowtie2_bowtie2Mapping(SEXP argvsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type argvs(argvsSEXP);
+    rcpp_result_gen = Rcpp::wrap(bowtie2Mapping(argvs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bowtie2Build
+int bowtie2Build(Rcpp::CharacterVector argvs);
+RcppExport SEXP _RBowtie2_bowtie2Build(SEXP argvsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type argvs(argvsSEXP);
+    rcpp_result_gen = Rcpp::wrap(bowtie2Build(argvs));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"Rbowtie2_rcpp_hello_world", (DL_FUNC) &Rbowtie2_rcpp_hello_world, 0},
+    {"_RBowtie2_removeAdapter", (DL_FUNC) &_RBowtie2_removeAdapter, 1},
+    {"_RBowtie2_bowtie2Mapping", (DL_FUNC) &_RBowtie2_bowtie2Mapping, 1},
+    {"_RBowtie2_bowtie2Build", (DL_FUNC) &_RBowtie2_bowtie2Build, 1},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_Rbowtie2(DllInfo *dll) {
+RcppExport void R_init_RBowtie2(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

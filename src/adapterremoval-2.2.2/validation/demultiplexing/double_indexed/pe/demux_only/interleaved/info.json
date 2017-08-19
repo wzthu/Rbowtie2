@@ -1,6 +1,0 @@
-{
-	"arguments": ["--demultiplex-only", "--interleaved-output"],
-	"return_code": 0,
-	"stderr": [
-	]
-}
