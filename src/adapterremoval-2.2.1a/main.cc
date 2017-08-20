@@ -27,7 +27,7 @@
 #include "debug.h"
 #include "main.h"
 #include "userconfig.h"
-
+#include "adrm_interface.h"
 namespace ar
 {
 
@@ -41,7 +41,8 @@ int demultiplex_sequences(const userconfig& config);
 } // namespace ar
 
 
-int main(int argc, char *argv[])
+//int main(int argc, char *argv[])
+int interface_adapterremoval_main(int argc, char *argv[])
 {
     using namespace ar;
     std::ios_base::sync_with_stdio(false);

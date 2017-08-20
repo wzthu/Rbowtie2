@@ -1,7 +1,7 @@
 
 
-PKG_CXXFLAGS = -pthread -lz -lbz2
-PKG_CPPFLAGS = -DR_ENV_FLAG
+PKG_CXXFLAGS = -std=c++11 -O3
+PKG_CPPFLAGS = -DR_ENV_FLAG -pthread -lz -lbz2
 
 include $(R_HOME)/etc${R_ARCH}/Makeconf
 
