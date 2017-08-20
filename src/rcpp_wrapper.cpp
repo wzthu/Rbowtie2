@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include "bowtie2/bowtie2_interface.h"
 #include "RcoutRcerr.h"
-using ar.interface_adapterremoval_main;
+//using ar::interface_adapterremoval_main;
 
 // [[Rcpp::export]]
 int removeAdapter(Rcpp::CharacterVector argvs) {

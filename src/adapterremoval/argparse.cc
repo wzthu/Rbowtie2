@@ -30,7 +30,7 @@
 #include <stdexcept>
 
 #include <sys/types.h>
-#include <sys/ioctl.h>
+//#include <sys/ioctl.h> //weizheng
 #include <unistd.h>
 
 #include "argparse.h"
@@ -49,13 +49,15 @@ typedef std::set<consumer_ptr> consumer_set;
 /** Returns the number of columns available in the terminal. */
 size_t get_terminal_columns()
 {
-    struct winsize params;
+/*    struct winsize params;
     if (ioctl(STDERR_FILENO, TIOCGWINSZ, &params)) {
         // Default to 80 columns if the parameters could not be retrieved.
         return 80;
     }
 
     return std::min<size_t>(120, std::max<size_t>(80, params.ws_col));
+*///weizheng
+	return 80;//weizheng
 }
 
 

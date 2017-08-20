@@ -28,6 +28,9 @@
 #include "main.h"
 #include "userconfig.h"
 #include "adrm_interface.h"
+
+int interface_adapterremoval_main(int argc, char *argv[]);
+
 namespace ar
 {
 
