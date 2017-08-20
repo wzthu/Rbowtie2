@@ -5,6 +5,17 @@
 
 using namespace Rcpp;
 
+// removeAdapter
+int removeAdapter(Rcpp::CharacterVector argvs);
+RcppExport SEXP Rbowtie2_removeAdapter(SEXP argvsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type argvs(argvsSEXP);
+    rcpp_result_gen = Rcpp::wrap(removeAdapter(argvs));
+    return rcpp_result_gen;
+END_RCPP
+}
 // bowtie2Mapping
 int bowtie2Mapping(Rcpp::CharacterVector argvs);
 RcppExport SEXP Rbowtie2_bowtie2Mapping(SEXP argvsSEXP) {
@@ -29,6 +40,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"Rbowtie2_removeAdapter", (DL_FUNC) &Rbowtie2_removeAdapter, 1},
     {"Rbowtie2_bowtie2Mapping", (DL_FUNC) &Rbowtie2_bowtie2Mapping, 1},
     {"Rbowtie2_bowtie2Build", (DL_FUNC) &Rbowtie2_bowtie2Build, 1},
     {NULL, NULL, 0}

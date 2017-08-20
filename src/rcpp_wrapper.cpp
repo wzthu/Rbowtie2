@@ -2,15 +2,16 @@
 
 #include <string>
 #include <iostream>
-//#include "adapterremoval/adrm_interface.h"
+#include "adapterremoval/adrm_interface.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "bowtie2/bowtie2_interface.h"
 #include "RcoutRcerr.h"
+using ar.interface_adapterremoval_main;
 
-/* // [[Rcpp::export]]
+// [[Rcpp::export]]
 int removeAdapter(Rcpp::CharacterVector argvs) {
 	int argc=argvs.size();
 	char **argv = new char* [argc];
@@ -22,7 +23,7 @@ int removeAdapter(Rcpp::CharacterVector argvs) {
 
     return interface_adapterremoval_main(argc,argv);
 }
- */
+
 
 // [[Rcpp::export]]
 int bowtie2Mapping(Rcpp::CharacterVector argvs) {
