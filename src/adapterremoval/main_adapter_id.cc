@@ -266,6 +266,42 @@ void print_consensus_adapter(const nt_count_vec& counts,
     print_most_common_kmers(kmers);
 }
 
+/**
+ * * added by weizheng
+ * **/
+void save_consensus_adapter(const nt_count_vec& counts,
+                            const kmer_map& kmers,
+                            const std::string& name,
+                            const std::string& ref,
+                            const std::string& inputFile)
+{
+ std::stringstream sequence;
+ std::stringstream qualities;
+ std::ofstream fout((inputFile+".adapter").c_str());
+
+ cout<<inputFile+".adapter"<<std::endl;
+
+ for(nt_count_vec::const_iterator it = counts.begin(); it != counts.end(); ++it) {
+  const std::pair<char, char> consensus = get_consensus_nt(*it);
+
+  sequence << consensus.first;
+  qualities << consensus.second;
+ }
+
+ const std::string consensus = sequence.str();
+ const std::string identity = compare_consensus_with_ref(ref, consensus);
+
+ fout << consensus << std::endl;
+ fout.close();
+ //    cout << "  " << name << ":  " << ref << "\n"
+ //    //              << "               " << identity << "\n"
+ //    //              << "   Consensus:  " << consensus << "\n"
+ //    //              << "     Quality:  " << qualities.str() << "\n\n";
+ //
+ //    //    print_most_common_kmers(kmers);
+}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -403,9 +439,20 @@ public:
                                 m_config.adapters.get_raw_adapters().front().first.sequence());
         cout << "\n\n";
 
+//added by weizheng------
+        save_consensus_adapter(sink->pcr1_counts, sink->pcr1_kmers, "--adapter1",
+                               m_config.adapters.get_raw_adapters().front().first.sequence(),                                           m_config.input_file_1);
+//-----------------------
+
         fastq adapter2 = m_config.adapters.get_raw_adapters().front().second;
         adapter2.reverse_complement();
         print_consensus_adapter(sink->pcr2_counts, sink->pcr2_kmers, "--adapter2", adapter2.sequence());
+
+//added by weizheng-------
+        save_consensus_adapter(sink->pcr2_counts, sink->pcr2_kmers, "--adapter2", adapter2.sequence(),
+                               m_config.input_file_2);
+//------------------------
+        cout.flush();//weizheng
     }
 
 private:
