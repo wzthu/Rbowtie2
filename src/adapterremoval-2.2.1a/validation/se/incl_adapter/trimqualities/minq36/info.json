@@ -1,6 +1,0 @@
-{
-	"arguments": ["--trimqualities", "--minquality", "36"],
-	"return_code": 0,
-	"stderr": [
-	]
-}
