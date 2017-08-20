@@ -1,3 +1,13 @@
+identify_adapters_call <- function(inputFile1,inputFile2,findParamList=NULL){
+ argv<-c("AdapterRemoval","--identify-adapters","--file1",
+         inputFile1,"--file2",inputFile2,findParamList);
+ #print(argv)
+ removeAdapter(argv);
+ adapter1tb<-read.table(paste(inputFile1,".adapter",sep = ""));
+ adapter2tb<-read.table(paste(inputFile2,".adapter",sep = ""));
+ adapter<-list(adapter1=as.character(adapter1tb[1,1]),adapter2=as.character(adapter2tb[1,1]));
+ return(adapter)
+}
 remove_adapters_call <- function(inputFile1,adapter1,outputFile1,basename,
                                   inputFile2=NULL,adapter2=NULL,outputFile2=NULL,paramlist=NULL){
 

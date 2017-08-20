@@ -33,6 +33,8 @@
 
 #include <ctime>
 
+#include "RcoutRcerr.h"
+
 namespace ar
 {
 
@@ -85,7 +87,7 @@ print_locker::print_locker(bool flush_stderr)
 {
     if (flush_stderr && s_stderr_is_incomplete) {
         s_stderr_is_incomplete = false;
-        std::cerr << std::endl;
+        cerr << std::endl;
     }
 }
 

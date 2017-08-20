@@ -29,6 +29,8 @@
 #include "userconfig.h"
 #include "adrm_interface.h"
 
+#include "RcoutRcerr.h"
+
 int interface_adapterremoval_main(int argc, char *argv[]);
 
 namespace ar
@@ -73,14 +75,14 @@ int interface_adapterremoval_main(int argc, char *argv[])
             return identify_adapter_sequences(config);
 
         default:
-            std::cerr << "ERROR: Unknown run-type: "
+            cerr << "ERROR: Unknown run-type: "
                       << static_cast<size_t>(config.run_type)
                       << std::endl;
             return 1;
     }
 
     if (returncode) {
-        std::cerr << "ERROR: AdapterRemoval did not run to completion;\n"
+        cerr << "ERROR: AdapterRemoval did not run to completion;\n"
                   << "       do NOT make use of resulting trimmed reads!"
                   << std::endl;
     }

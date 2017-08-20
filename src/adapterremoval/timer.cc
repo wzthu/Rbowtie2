@@ -32,6 +32,8 @@
 #include "timer.h"
 #include "threads.h"
 
+#include "RcoutRcerr.h"
+
 namespace ar
 {
 
@@ -145,24 +147,24 @@ void timer::do_print(size_t rate, double current_time, bool finalize) const
     print_locker lock(false);
 
     if (finalize) {
-        std::cerr << "\rProcessed a total of ";
+        cerr << "\rProcessed a total of ";
     } else {
-        std::cerr << "\rProcessed ";
+        cerr << "\rProcessed ";
     }
 
     if (rate > 10000) {
         rate = (rate / 1000) * 1000;
     }
 
-    std::cerr << thousands_sep(m_total) << " " << m_what << " in "
+    cerr << thousands_sep(m_total) << " " << m_what << " in "
               << format_time(current_time - m_first_time) << "; "
-              << thousands_sep(rate) << " " << m_what << " per second ";
+              << thousands_sep(rate) << " " << m_what << " per second "<< std::endl;//weizheng;
 
     if (finalize) {
-        std::cerr << "on average ..." << std::endl;
+        cerr << "on average ..." << std::endl;
     } else {
-        std::cerr << "...";
-        std::cerr.flush();
+        //cerr << "...";//weizheng
+        cerr.flush();
         lock.partial_stderr_output();
     }
 }
