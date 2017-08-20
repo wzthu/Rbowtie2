@@ -38,7 +38,7 @@ SHARED_CPPS = ccnt_lut.cpp ref_read.cpp alphabet.cpp shmem.cpp \
 			  random_source.cpp tinythread.cpp
 
 
-			  
+
 SEARCH_CPPS = qual.cpp pat.cpp sam.cpp \
               read_qseq.cpp aligner_seed_policy.cpp \
               aligner_seed.cpp \
@@ -98,10 +98,10 @@ PKG_CPPFLAGS = $(RELEASE_DEFS) $(EXTRA_FLAGS) $(DEFS) -DBOWTIE2 \
 
 PKG_CXXFLAGS = $(RELEASE_FLAGS) -Wall
 
-		 
+
 include $(R_HOME)/etc${R_ARCH}/Makeconf
 
-SRCS = bt2_build.cpp bt2_search.cpp $(SEARCH_CPPS) $(SHARED_CPPS)
+SRCS = bt2_build.cpp bt2_search.cpp $(SEARCH_CPPS_MAIN) $(BUILD_CPPS_MAIN) $(SHARED_CPPS)
 
 
 

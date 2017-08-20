@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "bowtie2-2.3.2/bowtie2_interface.h"
+#include "bowtie2/bowtie2_interface.h"
 #include "RcoutRcerr.h"
 
 /* // [[Rcpp::export]]

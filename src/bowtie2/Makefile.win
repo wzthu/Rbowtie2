@@ -25,7 +25,7 @@
 INC_EXT = -I third_party
 
 LIBS_BT2 = -lz
-CXX_STD = CXX11
+#CXX_STD = CXX11
 
 
 
@@ -97,12 +97,12 @@ PKG_CPPFLAGS = $(RELEASE_DEFS) $(EXTRA_FLAGS) $(DEFS) -DBOWTIE2 \
 
 
 PKG_CXXFLAGS = $(RELEASE_FLAGS) -Wall \
-               -ansi -static -static-libgcc -static-libstdc++ -fpic
+               -ansi -static -static-libgcc -static-libstdc++
 
 
 include $(R_HOME)/etc${R_ARCH}/Makeconf
 
-SRCS = bt2_build.cpp bt2_search.cpp $(SEARCH_CPPS) $(SHARED_CPPS)
+SRCS = bt2_build.cpp bt2_search.cpp $(SEARCH_CPPS_MAIN) $(BUILD_CPPS_MAIN) $(SHARED_CPPS)
 
 
 
