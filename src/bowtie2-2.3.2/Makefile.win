@@ -29,7 +29,7 @@ CXX_STD = CXX11
 
 
 
-EXTRA_FLAGS = -DPOPCNT_CAPABILITY 
+EXTRA_FLAGS = -DPOPCNT_CAPABILITY
 
 
 SHARED_CPPS = ccnt_lut.cpp ref_read.cpp alphabet.cpp shmem.cpp \
@@ -38,7 +38,7 @@ SHARED_CPPS = ccnt_lut.cpp ref_read.cpp alphabet.cpp shmem.cpp \
 			  random_source.cpp tinythread.cpp
 
 
-	
+
 
 SEARCH_CPPS = qual.cpp pat.cpp sam.cpp \
               read_qseq.cpp aligner_seed_policy.cpp \
@@ -90,16 +90,16 @@ DEFS=-fno-strict-aliasing \
      -DBUILD_HOST="\"Rbowtie2\"" \
      -DBUILD_TIME="\"2017\"" \
      -DCOMPILER_VERSION="\"C++11\"" \
-     $(FILE_FLAGS) 
-	 
+     $(FILE_FLAGS)
+
 PKG_CPPFLAGS = $(RELEASE_DEFS) $(EXTRA_FLAGS) $(DEFS) -DBOWTIE2 \
                $(NOASSERT_FLAGS) $(INC_EXT) $(LIBS_BT2)  -DR_ENV_FLAG
 
 
 PKG_CXXFLAGS = $(RELEASE_FLAGS) -Wall \
-               -ansi -static -static-libgcc -static-libstdc++
+               -ansi -static -static-libgcc -static-libstdc++ -fpic
 
-		 
+
 include $(R_HOME)/etc${R_ARCH}/Makeconf
 
 SRCS = bt2_build.cpp bt2_search.cpp $(SEARCH_CPPS) $(SHARED_CPPS)
