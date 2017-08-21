@@ -20,7 +20,7 @@ PKG_LIBS = -L$(ADRM_LIB_DIR) $(ADRM_LIB) -L$(BT2_LIB_DIR) $(BT2_LIB) -lz
 
 
 
-
+.PHONY: mkadapterremoval all
 
 all: mkadapterremoval mkbowtie2 $(SHLIB)
 
@@ -31,6 +31,6 @@ mkbowtie2:
 	(cd $(BT2_DIR) && ($(MAKE) -f Makefile.win))
 
 
-.PHONY: mkadapterremoval all
-
-
+clean:
+	rm *.dll
+	rm *.o

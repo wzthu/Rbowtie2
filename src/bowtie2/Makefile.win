@@ -108,10 +108,14 @@ SRCS = bt2_build.cpp bt2_search.cpp $(SEARCH_CPPS_MAIN) $(BUILD_CPPS_MAIN) $(SHA
 
 OBJS = ${SRCS:.cpp=.o}
 
-
+.PHONY: all clean
 
 all: libbowtie2.a
 
 
 libbowtie2.a: $(OBJS)
 		$(AR) cq $@ $^
+
+clean:
+	rm *.a
+	rm *.o

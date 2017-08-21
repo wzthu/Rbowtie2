@@ -1,38 +1,44 @@
 
 
 PKG_CXXFLAGS = -std=c++11 -O3
-PKG_CPPFLAGS = -DR_ENV_FLAG -pthread 
+PKG_CPPFLAGS = -DR_ENV_FLAG -pthread -lz -lbz2
 
 include $(R_HOME)/etc${R_ARCH}/Makeconf
 
-SRCS = adapterset.cc \
-alignment.cc \
-argparse.cc \
-debug.cc \
-demultiplex.cc \
-fastq.cc \
-fastq_enc.cc \
-fastq_io.cc \
-linereader.cc \
-linereader_joined.cc \
-main.cc \
-main_adapter_id.cc \
-main_adapter_rm.cc \
-main_demultiplex.cc \
-scheduler.cc \
-strutils.cc \
-threads.cc \
-timer.cc \
-trimmed_reads.cc \
-userconfig.cc \
+SRCS = adapterset.cpp \
+alignment.cpp \
+argparse.cpp \
+debug.cpp \
+demultiplex.cpp \
+fastq.cpp \
+fastq_enc.cpp \
+fastq_io.cpp \
+linereader.cpp \
+linereader_joined.cpp \
+main.cpp \
+main_adapter_id.cpp \
+main_adapter_rm.cpp \
+main_demultiplex.cpp \
+scheduler.cpp \
+strutils.cpp \
+threads.cpp \
+timer.cpp \
+trimmed_reads.cpp \
+userconfig.cpp \
 
 ADRM_LIBRARY = adrm
 
 
+.PHONY: all clean
 
 all: lib$(ADRM_LIBRARY).a
 
-OBJS = $(SRCS:.cc=.o)
+OBJS = $(SRCS:.cpp=.o)
 
 lib$(ADRM_LIBRARY).a:$(OBJS)
 	$(AR) cq $@ $^
+
+clean:
+	rm *.a
+	rm *.o
+	
