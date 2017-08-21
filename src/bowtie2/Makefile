@@ -26,7 +26,6 @@ INC_EXT = -I third_party
 LIBS_BT2 = -lz -lpthread
 CXX_STD = CXX11
 
-HEADERS = $(wildcard *.h)
 MM_DEF = -DBOWTIE_MM
 
 

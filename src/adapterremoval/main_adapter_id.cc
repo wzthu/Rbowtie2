@@ -441,7 +441,7 @@ public:
 
 //added by weizheng------
         save_consensus_adapter(sink->pcr1_counts, sink->pcr1_kmers, "--adapter1",
-                               m_config.adapters.get_raw_adapters().front().first.sequence(),                                           m_config.input_file_1);
+                               m_config.adapters.get_raw_adapters().front().first.sequence(),                                           m_config.input_files_1[0]);
 //-----------------------
 
         fastq adapter2 = m_config.adapters.get_raw_adapters().front().second;
@@ -450,7 +450,7 @@ public:
 
 //added by weizheng-------
         save_consensus_adapter(sink->pcr2_counts, sink->pcr2_kmers, "--adapter2", adapter2.sequence(),
-                               m_config.input_file_2);
+                               m_config.input_files_2[0]);
 //------------------------
         cout.flush();//weizheng
     }
