@@ -10,7 +10,7 @@ checkFileExist <- function(filePath,argname){
 checkPathExist <- function(filePath,argname){
  if(!is.null(filePath)){
   if(!dir.exists(dirname(filePath))){
-   stop(paste("For argument `%s`,path does not exist: `%s`",argname,filePath))
+   stop(sprintf("For argument `%s`,path does not exist: `%s`",argname,filePath))
   }
  }
 }
@@ -20,10 +20,11 @@ checkFileCreatable <- function(filePath,argname,overwrite){
    if(overwrite){
     warning(sprintf("For argument `%s`, file exist:%s. It will be overwrited",argname,filePath));
    }else{
-    stop(springf("For argument `%s`,file exist: %s. Use 'overwrite=TRUE' to overwrite",argname,filePath));
+    stop(sprintf("For argument `%s`,file exist: %s. Use 'overwrite=TRUE' to overwrite",argname,filePath));
    }
   }else if(!file.create(filePath)){
-   stop(paste("For argument `%s`, cannot create file `%s`, No such file or directory or permission denied",argname,filePath));
+   stop(sprintf("For argument `%s`, cannot create file `%s`.\nNo such directory or permission denied.",argname,filePath));
+   stop("")
   }else{
    unlink(filePath)
   }

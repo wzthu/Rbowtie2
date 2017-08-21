@@ -1,5 +1,5 @@
 
-bowtie2 <- function(bt2Index,samOutput,seq1,seq2=NULL,...,interleaved=FALSE,overwrite=FALSE){
+bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,overwrite=FALSE){
  bt2Index <-trimws(as.character(bt2Index))
  samOutput<-trimws(as.character(samOutput))
 
@@ -56,7 +56,9 @@ bowtie2 <- function(bt2Index,samOutput,seq1,seq2=NULL,...,interleaved=FALSE,over
  }
 
  argvs <- c("bowtie2-align-s",paramArray,argvs,"-S",samOutput)
+
  bowtie2Mapping(argvs = argvs)
+ print(argvs)
 }
 
 
@@ -85,8 +87,9 @@ bowtie2_build <- function(reference,bt2Index,...,overwrite=FALSE){
  checkFileCreatable(paste0(bt2Index,".rev.2.bt2"),"bt2Index",overwrite)
 
  argvs <- c("bowtie2-build-s",paramArray,reference,bt2Index)
- #bowtie2Build(argvs = argvs)
 
+ print(argvs)
+ bowtie2Build(argvs = argvs)
 }
 
 bowtie2_version <- function(){

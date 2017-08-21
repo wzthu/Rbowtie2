@@ -1,21 +1,29 @@
-identify_adapters <- function(file1,file2,overwrite = FALSE){
+identify_adapters <- function(file1,file2,...,overwrite = FALSE){
  file1<-trimws(as.character(file1))
  file2<-trimws(as.character(file2))
  checkFileExist(file1,"file1")
  checkFileExist(file2,"file2")
  checkFileCreatable(paste0(file1,".adapter"),"file1",overwrite)
  checkFileCreatable(paste0(file2,".adapter"),"file2",overwrite)
- argv<-c("AdapterRemoval","--identify-adapters","--file1",
-         file1,"--file2",file2);
- removeAdapter(argv);
+ paramlist<-trimws(as.character(list(...)))
+ paramArray<-c()
+ if(length(paramlist)>0){
+  for(i in 1:length(paramlist)){
+   paramArray<-c(paramArray,strsplit(paramlist[i],"\\s+")[[1]])
+  }
+ }
+ argvs<-c("AdapterRemoval","--identify-adapters","--file1",
+         file1,"--file2",file2,paramArray);
+ print(argvs)
+ removeAdapter(argvs);
  adapter1tb<-read.table(paste0(file1,".adapter"));
  adapter2tb<-read.table(paste0(file2,".adapter"));
  adapter<-list(adapter1=as.character(adapter1tb[1,1]),adapter2=as.character(adapter2tb[1,1]));
  return(adapter)
 }
 
-remove_adapters <- function(file1,adapter1 = NULL,output1 = NULL,file2 = NULL,adapter2 = NULL,output2 = NULL,
-                            basename = NULL,...,interleaved = FALSE,overwrite = FALSE){
+remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NULL,adapter2 = NULL,output2 = NULL,
+                            basename = NULL,interleaved = FALSE,overwrite = FALSE){
  file1<-trimws(as.character(file1))
  if(!is.null(adapter1)){
   adapter1<-trimws(as.character(adapter1))
@@ -70,7 +78,10 @@ remove_adapters <- function(file1,adapter1 = NULL,output1 = NULL,file2 = NULL,ad
  if(!is.null(basename)){
   argvs<-c(argvs,"--basename",basename)
  }
- removeAdapter(argv)
+ argvs<-c(argvs,paramArray)
+ print(argvs)
+ removeAdapter(argvs)
+
 
 }
 
