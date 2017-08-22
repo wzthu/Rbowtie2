@@ -38,6 +38,15 @@ or put them in different \code{Character}(e.g. "--threads","8","--no-mixed").Not
 bowtie2 will be ignored if they are already handled as explicit function arguments. See the output of
 \code{bowtie2_usage()} for details about available parameters.
 }
+\examples{
+td <- tempdir()
+## Building a bowtie2 index
+refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),full=TRUE)
+bowtie2_build(references=refs, bt2Index=file.path(td, "index"),"--threads 4 --quiet",overwrite=TRUE)
+## Alignments
+bowtie2(bt2Index = file.path(td, "index"),samOutput = file.path(td, "result.sam"),overwrite=TRUE)
+readLines(file.path(td, "result.sam"))
+}
 \references{
 Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 }

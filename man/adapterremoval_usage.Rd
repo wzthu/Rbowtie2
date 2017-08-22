@@ -11,6 +11,9 @@ Note that some arguments to the
 adapterremoval will be ignored if they are
 already handled as explicit function arguments.
 }
+\examples{
+adapterremoval_usage()
+}
 \references{
 Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
 adapter trimming, identification, and read merging.

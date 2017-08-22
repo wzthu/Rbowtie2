@@ -36,6 +36,14 @@ bowtie2_build will be ignored if they are already handled as explicit function a
 # Get node information from this graph
 
 #>   id type label deg inde
+td <- tempdir()
+## Building a bowtie2 index
+refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),full=TRUE)
+bowtie2_build(references=refs, bt2Index=file.path(td, "index"),"--threads 4 --quiet",overwrite=TRUE)
+## Use additional arguments in another way
+bowtie2_build(references=refs, bt2Index=file.path(td, "index"),"--threads",4,"--quiet",overwrite=TRUE)
+## The function will print the output during the process without "--quiet" argument.
+bowtie2_build(references=refs, bt2Index=file.path(td, "index"),overwrite=TRUE)
 }
 \references{
 Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.

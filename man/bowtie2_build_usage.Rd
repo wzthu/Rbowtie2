@@ -11,6 +11,9 @@ Note that some arguments to the
 bowtie2_build_usage will be ignored if they are
 already handled as explicit function arguments.
 }
+\examples{
+bowtie2_build_usage()
+}
 \references{
-Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
+Langmead B, Salzberg S. Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
 }

@@ -1,7 +1,7 @@
 Package: Rbowtie2
 Type: Package
 Title: A R wrapper for bowtie2 and AdapterRemoval 
-Version: 1.0
+Version: 0.99.1
 Date: 2017-08-18
 Author: Zheng Wei, Wei Zhang
 Maintainer: Zheng Wei <wei-z14@mails.tsinghua.edu.cn>
@@ -12,3 +12,4 @@ LinkingTo: Rcpp
 SystemRequirements: C++11
 Archs: x64
 RoxygenNote: 6.0.1
+biocViews: Sequencing, Alignment, Reads Preprocessing

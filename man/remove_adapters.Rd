@@ -48,6 +48,16 @@ or put them in different \code{Character}(e.g. "--threads","8").Note that some a
 identify_adapters will be ignored if they are already handled as explicit function arguments. See the output of
 \code{adapterremoval_usage()} for details about available parameters.
 }
+\examples{
+td <- tempdir()
+
+reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fastq")
+reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fastq")
+remove_adapters(file1=reads_1,file2=reads_2,
+output1=file.path(td,"reads_1.trimmed.fq"),output2=file.path(td,"reads_2.trimmed.fq"),
+basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 2")
+
+}
 \references{
 Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
 adapter trimming, identification, and read merging.

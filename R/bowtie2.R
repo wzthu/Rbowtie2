@@ -1,4 +1,5 @@
 #' @useDynLib Rbowtie2
+#' @import Rcpp
 #' @name bowtie2
 #' @title Interface to bowtie2 of bowtie2-2.2.3
 #' @description This function can be use to call \code{bowtie2} that wrapped in shared library.
@@ -22,6 +23,15 @@
 #' \code{bowtie2_usage()} for details about available parameters.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2
+#' @examples
+#' td <- tempdir()
+#' ## Building a bowtie2 index
+#' refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),full=TRUE)
+#' bowtie2_build(references=refs, bt2Index=file.path(td, "index"),"--threads 4 --quiet",overwrite=TRUE)
+#' ## Alignments
+#' bowtie2(bt2Index = file.path(td, "index"),samOutput = file.path(td, "result.sam"),overwrite=TRUE)
+#' readLines(file.path(td, "result.sam"))
+
 bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,overwrite=FALSE){
  bt2Index <-trimws(as.character(bt2Index))
  samOutput<-trimws(as.character(samOutput))
@@ -81,7 +91,7 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,over
  argvs <- c("bowtie2-align-s",paramArray,argvs,"-S",samOutput)
 
  bowtie2Mapping(argvs = argvs)
- print(argvs)
+ invisible(paste0(argvs,collapse = " "))
 }
 
 
@@ -109,6 +119,16 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,over
 #' #>   id type label deg inde
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2_build
+#' @examples
+#' td <- tempdir()
+#' ## Building a bowtie2 index
+#' refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),full=TRUE)
+#' bowtie2_build(references=refs, bt2Index=file.path(td, "index"),"--threads 4 --quiet",overwrite=TRUE)
+#' ## Use additional arguments in another way
+#' bowtie2_build(references=refs, bt2Index=file.path(td, "index"),"--threads",4,"--quiet",overwrite=TRUE)
+#' ## The function will print the output during the process without "--quiet" argument.
+#' bowtie2_build(references=refs, bt2Index=file.path(td, "index"),overwrite=TRUE)
+
 bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
  references<- trimws(as.character(references))
  bt2Index <- trimws(as.character(bt2Index))
@@ -133,8 +153,10 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
  references<-paste0(references,collapse = ",")
  argvs <- c("bowtie2-build-s",paramArray,references,bt2Index)
 
- print(argvs)
+
  bowtie2Build(argvs = argvs)
+ argvs[1]<-"bowtie2-build"
+ invisible(paste0(argvs,collapse = " "))
 }
 
 #' @name bowtie2_version
@@ -142,6 +164,8 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 #' @description Print version information of bowtie2-2.2.3
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2_version
+#' @examples
+#' bowtie2_version()
 bowtie2_version <- function(){
  invisible(bowtie2Mapping(argvs = c("bowtie2-align-s","--version")))
 }
@@ -153,6 +177,8 @@ bowtie2_version <- function(){
 #' already handled as explicit function arguments.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2_usage
+#' @examples
+#' bowtie2Mapping()
 bowtie2_usage <- function(){
  bowtie2Mapping(argvs = c("bowtie2-align-s","-h"))
 }
@@ -162,8 +188,10 @@ bowtie2_usage <- function(){
 #' @description Note that some arguments to the
 #' bowtie2_build_usage will be ignored if they are
 #' already handled as explicit function arguments.
-#' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
+#' @references Langmead B, Salzberg S. Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
 #' @export bowtie2_build_usage
+#' @examples
+#' bowtie2_build_usage()
 bowtie2_build_usage <- function() {
  bowtie2Build(argvs = c("bowtie2-build-s","-h"))
 }

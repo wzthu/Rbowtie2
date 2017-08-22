@@ -1,4 +1,5 @@
 #' @useDynLib Rbowtie2
+#' @import Rcpp
 #' @name identify_adapters
 #' @title identify adapters for paired-end reads
 #' @description This function can be use to call \code{AdapterRemoval} that wrapped in shared library for adapters identifying.
@@ -18,6 +19,11 @@
 #' adapter trimming, identification, and read merging.
 #' BMC Research Notes, 12;9(1):88.
 #' @export identify_adapters
+#' @examples
+#' reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fastq")
+#' reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fastq")
+#' identify_adapters(file1=reads_1,file2=reads_2,
+#' ,overwrite=TRUE,"--threads 2")
 identify_adapters <- function(file1,file2,...,overwrite = FALSE){
  file1<-trimws(as.character(file1))
  if(!is.null(file2)){
@@ -82,6 +88,15 @@ identify_adapters <- function(file1,file2,...,overwrite = FALSE){
 #' adapter trimming, identification, and read merging.
 #' BMC Research Notes, 12;9(1):88.
 #' @export remove_adapters
+#' @examples
+#' td <- tempdir()
+#'
+#' reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fastq")
+#' reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fastq")
+#' remove_adapters(file1=reads_1,file2=reads_2,
+#' output1=file.path(td,"reads_1.trimmed.fq"),output2=file.path(td,"reads_2.trimmed.fq"),
+#' basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 2")
+#'
 remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NULL,adapter2 = NULL,output2 = NULL,
                             basename = NULL,interleaved = FALSE,overwrite = FALSE){
  file1<-trimws(as.character(file1))
@@ -161,6 +176,8 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NUL
 #' adapter trimming, identification, and read merging.
 #' BMC Research Notes, 12;9(1):88.
 #' @export adapterremoval_usage
+#' @examples
+#' adapterremoval_usage()
 adapterremoval_usage<- function(){
  removeAdapter(c("AdapterRemoval","-h"))
 }
@@ -173,6 +190,8 @@ adapterremoval_usage<- function(){
 #' adapter trimming, identification, and read merging.
 #' BMC Research Notes, 12;9(1):88.
 #' @export adapterremoval_version
+#' @examples
+#' adapterremoval_version()
 adapterremoval_version<- function(){
  removeAdapter(c("AdapterRemoval","--version"))
 }
