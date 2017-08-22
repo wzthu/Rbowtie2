@@ -31,11 +31,15 @@ it must be \code{NULL}.}
 \item{output2}{\code{Character}. The trimmed mate2 reads output file path for file2. Default:
 BASENAME.pair2.truncated (only used in PE mode, but not if --interleaved-output is enabled)}
 
-\item{basename}{\code{Character}. The outputfile path prefix}
+\item{basename}{\code{Character}. The outputfile path prefix. Default: your_output}
 
 \item{interleaved}{\code{Logical}. Set \code{TRUE} when files are interleaved paired-end sequencing data.}
 
 \item{overwrite}{\code{Logical}. Force overwriting of existing files if setting \code{TRUE}.}
+}
+\value{
+An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistake.
+Otherwise the value is non-zero.
 }
 \description{
 This function can be use to call \code{AdapterRemoval} that wrapped in shared library.
@@ -51,11 +55,16 @@ identify_adapters will be ignored if they are already handled as explicit functi
 \examples{
 td <- tempdir()
 
-reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fastq")
-reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fastq")
-remove_adapters(file1=reads_1,file2=reads_2,
+# Identify adapters
+reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fq")
+reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fq")
+adapters <- identify_adapters(file1=reads_1,file2=reads_2,basename=file.path(td,"reads")
+,"--threads 3",overwrite=TRUE)
+
+# Remove adapters
+remove_adapters(file1=reads_1,file2=reads_2,adapter1 = adapters[1], adapter2 = adapters[2],
 output1=file.path(td,"reads_1.trimmed.fq"),output2=file.path(td,"reads_2.trimmed.fq"),
-basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 2")
+basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 3")
 
 }
 \references{

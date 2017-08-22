@@ -4,7 +4,7 @@
 \alias{identify_adapters}
 \title{identify adapters for paired-end reads}
 \usage{
-identify_adapters(file1, file2, ..., overwrite = FALSE)
+identify_adapters(file1, file2, ..., basename = NULL, overwrite = FALSE)
 }
 \arguments{
 \item{file1}{\code{Character} vector. It can be file paths with #1 mates paired with file paths in file2
@@ -14,6 +14,8 @@ And it can also be interleaved file paths when argument interleaved=\code{TRUE}}
 For interleaved paired-end sequencing files(argument interleaved=\code{TRUE}),it must to be setted to \code{NULL}.}
 
 \item{...}{Additional arguments to be passed on to the binaries. See below for details.}
+
+\item{basename}{\code{Character}. The outputfile path prefix.Default: your_output}
 
 \item{overwrite}{\code{Logical}. Force overwriting of existing files if setting \code{TRUE}.}
 }
@@ -29,10 +31,12 @@ identify_adapters will be ignored if they are already handled as explicit functi
 \code{adapterremoval_usage()} for details about available parameters.
 }
 \examples{
+td <- tempdir()
 reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fastq")
 reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fastq")
-identify_adapters(file1=reads_1,file2=reads_2,
-,overwrite=TRUE,"--threads 2")
+adapters <- identify_adapters(file1=reads_1,file2=reads_2,basename = file.path(td,"reads")
+,"--threads 2",overwrite=TRUE)
+adapters
 }
 \references{
 Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid

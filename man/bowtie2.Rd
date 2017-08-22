@@ -27,6 +27,10 @@ it must be \code{NULL}.}
 
 \item{overwrite}{\code{Logical}. Force overwriting of existing files if setting \code{TRUE}.}
 }
+\value{
+An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
+Otherwise the value is non-zero.
+}
 \description{
 This function can be use to call \code{bowtie2} that wrapped in shared library.
 }

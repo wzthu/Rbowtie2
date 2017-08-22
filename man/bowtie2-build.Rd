@@ -19,6 +19,10 @@ unless argument overwrite is \code{TRUE}.}
 
 \item{overwrite}{\code{Logical}. Force overwriting of existing files if setting \code{TRUE}.}
 }
+\value{
+An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
+Otherwise the value is non-zero.
+}
 \description{
 This function can be use to call \code{bowtie2-build} that wrapped in shared library.
 }
@@ -31,11 +35,6 @@ bowtie2_build will be ignored if they are already handled as explicit function a
 \code{bowtie2_build_usage()} for details about available parameters.
 }
 \examples{
-# Create a new graph and add a cycle of nodes to it
-
-# Get node information from this graph
-
-#>   id type label deg inde
 td <- tempdir()
 ## Building a bowtie2 index
 refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),full=TRUE)

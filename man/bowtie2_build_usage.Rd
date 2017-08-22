@@ -6,6 +6,10 @@
 \usage{
 bowtie2_build_usage()
 }
+\value{
+An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
+Otherwise the value is non-zero.
+}
 \description{
 Note that some arguments to the
 bowtie2_build_usage will be ignored if they are
