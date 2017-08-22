@@ -8,6 +8,7 @@
 #' @param file2 \code{Character} vector. It contains file paths with #2 mates paired with file paths in seq1.
 #' For interleaved paired-end sequencing files(argument interleaved=\code{TRUE}),it must to be setted to \code{NULL}.
 #' @param ... Additional arguments to be passed on to the binaries. See below for details.
+#' @param basename \code{Character}. The outputfile path prefix.Default: your_output
 #' @param overwrite \code{Logical}. Force overwriting of existing files if setting \code{TRUE}.
 #' @details All additional arguments in ... are interpreted as additional parameters to be passed on to
 #' bowtie2_build. All of them should be \code{Character} or \code{Numeric} scalar. You can put all aditional
@@ -20,19 +21,24 @@
 #' BMC Research Notes, 12;9(1):88.
 #' @export identify_adapters
 #' @examples
+#' td <- tempdir()
 #' reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fastq")
 #' reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fastq")
-#' identify_adapters(file1=reads_1,file2=reads_2,
-#' ,overwrite=TRUE,"--threads 2")
-identify_adapters <- function(file1,file2,...,overwrite = FALSE){
+#' adapters <- identify_adapters(file1=reads_1,file2=reads_2,basename = file.path(td,"reads")
+#' ,"--threads 2",overwrite=TRUE)
+#' adapters
+identify_adapters <- function(file1,file2,...,basename = NULL,overwrite = FALSE){
  file1<-trimws(as.character(file1))
  if(!is.null(file2)){
   file2<-trimws(as.character(file2))
  }
+ if(!is.null(basename)){
+  basename<-trimws(as.character(basename))
+ }
  checkFileExist(file1,"file1")
  checkFileExist(file2,"file2")
- checkFileCreatable(paste0(file1,".adapter"),"file1",overwrite)
- checkFileCreatable(paste0(file2,".adapter"),"file2",overwrite)
+ checkFileCreatable(paste0(basename,".adapter1"),"file1",overwrite)
+ checkFileCreatable(paste0(basename,".adapter2"),"file2",overwrite)
  paramlist<-trimws(as.character(list(...)))
  paramArray<-c()
  if(length(paramlist)>0){
@@ -47,13 +53,15 @@ identify_adapters <- function(file1,file2,...,overwrite = FALSE){
   argvs<-c("AdapterRemoval","--identify-adapters","--file1",
            file1,"--file2",file2,paramArray);
  }
+ if(!is.null(basename)){
+  argvs<-c(argvs,"--basename",basename)
+ }
 
  print(argvs)
  removeAdapter(argvs);
- adapter1tb<-readLines(paste0(file1,".adapter"));
- adapter2tb<-readLines(paste0(file2,".adapter"));
- adapter<-list(adapter1=as.character(adapter1tb[1,1]),adapter2=as.character(adapter2tb[1,1]));
- return(adapter)
+ adapter1tb<-readLines(paste0(basename,".adapter1"));
+ adapter2tb<-readLines(paste0(basename,".adapter2"));
+ return(c(adapter1tb,adapter2tb))
 }
 
 
@@ -75,7 +83,7 @@ identify_adapters <- function(file1,file2,...,overwrite = FALSE){
 #' @param output2 \code{Character}. The trimmed mate2 reads output file path for file2. Default:
 #' BASENAME.pair2.truncated (only used in PE mode, but not if --interleaved-output is enabled)
 #' @param ... Additional arguments to be passed on to the binaries. See below for details.
-#' @param basename \code{Character}. The outputfile path prefix
+#' @param basename \code{Character}. The outputfile path prefix. Default: your_output
 #' @param interleaved \code{Logical}. Set \code{TRUE} when files are interleaved paired-end sequencing data.
 #' @param overwrite \code{Logical}. Force overwriting of existing files if setting \code{TRUE}.
 #' @details All additional arguments in ... are interpreted as additional parameters to be passed on to
@@ -84,6 +92,8 @@ identify_adapters <- function(file1,file2,...,overwrite = FALSE){
 #' or put them in different \code{Character}(e.g. "--threads","8").Note that some arguments to the
 #' identify_adapters will be ignored if they are already handled as explicit function arguments. See the output of
 #' \code{adapterremoval_usage()} for details about available parameters.
+#' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistake.
+#' Otherwise the value is non-zero.
 #' @references    Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
 #' adapter trimming, identification, and read merging.
 #' BMC Research Notes, 12;9(1):88.
@@ -91,11 +101,16 @@ identify_adapters <- function(file1,file2,...,overwrite = FALSE){
 #' @examples
 #' td <- tempdir()
 #'
-#' reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fastq")
-#' reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fastq")
-#' remove_adapters(file1=reads_1,file2=reads_2,
+#' # Identify adapters
+#' reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fq")
+#' reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fq")
+#' adapters <- identify_adapters(file1=reads_1,file2=reads_2,basename=file.path(td,"reads")
+#' ,"--threads 3",overwrite=TRUE)
+#'
+#' # Remove adapters
+#' remove_adapters(file1=reads_1,file2=reads_2,adapter1 = adapters[1], adapter2 = adapters[2],
 #' output1=file.path(td,"reads_1.trimmed.fq"),output2=file.path(td,"reads_2.trimmed.fq"),
-#' basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 2")
+#' basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 3")
 #'
 remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NULL,adapter2 = NULL,output2 = NULL,
                             basename = NULL,interleaved = FALSE,overwrite = FALSE){
@@ -160,8 +175,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NUL
   argvs<-c(argvs,"--basename",basename)
  }
  argvs<-c(argvs,paramArray)
- print(argvs)
- removeAdapter(argvs)
+ invisible(removeAdapter(argvs))
 
 
 }
@@ -169,9 +183,12 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NUL
 
 #' @name adapterremoval_usage
 #' @title Print available arguments for adapterremoval
-#' @description Note that some arguments to the
+#' @description Print available arguments for adapterremoval.
+#' Note that some arguments to the
 #' adapterremoval will be ignored if they are
 #' already handled as explicit function arguments.
+#' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes.
+#' Otherwise the value is non-zero.
 #' @references Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
 #' adapter trimming, identification, and read merging.
 #' BMC Research Notes, 12;9(1):88.
@@ -186,6 +203,7 @@ adapterremoval_usage<- function(){
 #' @name adapterremoval_version
 #' @title Print version information of adapterremoval
 #' @description Print version information of adapterremoval
+#' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
 #' @references Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
 #' adapter trimming, identification, and read merging.
 #' BMC Research Notes, 12;9(1):88.

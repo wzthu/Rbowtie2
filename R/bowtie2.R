@@ -21,6 +21,8 @@
 #' or put them in different \code{Character}(e.g. "--threads","8","--no-mixed").Note that some arguments to the
 #' bowtie2 will be ignored if they are already handled as explicit function arguments. See the output of
 #' \code{bowtie2_usage()} for details about available parameters.
+#' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
+#' Otherwise the value is non-zero.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2
 #' @examples
@@ -90,8 +92,8 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,over
 
  argvs <- c("bowtie2-align-s",paramArray,argvs,"-S",samOutput)
 
- bowtie2Mapping(argvs = argvs)
- invisible(paste0(argvs,collapse = " "))
+ invisible(bowtie2Mapping(argvs = argvs))
+
 }
 
 
@@ -111,12 +113,8 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,over
 #' or put them in different \code{Character}(e.g. "--threads","8","--quiet").Note that some arguments to the
 #' bowtie2_build will be ignored if they are already handled as explicit function arguments. See the output of
 #' \code{bowtie2_build_usage()} for details about available parameters.
-#' @examples
-#' # Create a new graph and add a cycle of nodes to it
-#'
-#' # Get node information from this graph
-#'
-#' #>   id type label deg inde
+#' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
+#' Otherwise the value is non-zero.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2_build
 #' @examples
@@ -154,14 +152,15 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
  argvs <- c("bowtie2-build-s",paramArray,references,bt2Index)
 
 
- bowtie2Build(argvs = argvs)
- argvs[1]<-"bowtie2-build"
- invisible(paste0(argvs,collapse = " "))
+ invisible(bowtie2Build(argvs = argvs))
+
 }
 
 #' @name bowtie2_version
 #' @title Print version information of bowtie2-2.2.3
 #' @description Print version information of bowtie2-2.2.3
+#' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
+#' Otherwise the value is non-zero.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2_version
 #' @examples
@@ -175,12 +174,14 @@ bowtie2_version <- function(){
 #' @description Note that some arguments to the
 #' bowtie2 will be ignored if they are
 #' already handled as explicit function arguments.
+#' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
+#' Otherwise the value is non-zero.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2_usage
 #' @examples
 #' bowtie2Mapping()
 bowtie2_usage <- function(){
- bowtie2Mapping(argvs = c("bowtie2-align-s","-h"))
+ invisible(bowtie2Mapping(argvs = c("bowtie2-align-s","-h")))
 }
 
 #' @name bowtie2_build_usage
@@ -188,12 +189,14 @@ bowtie2_usage <- function(){
 #' @description Note that some arguments to the
 #' bowtie2_build_usage will be ignored if they are
 #' already handled as explicit function arguments.
+#' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
+#' Otherwise the value is non-zero.
 #' @references Langmead B, Salzberg S. Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
 #' @export bowtie2_build_usage
 #' @examples
 #' bowtie2_build_usage()
 bowtie2_build_usage <- function() {
- bowtie2Build(argvs = c("bowtie2-build-s","-h"))
+ invisible(bowtie2Build(argvs = c("bowtie2-build-s","-h")))
 }
 
 

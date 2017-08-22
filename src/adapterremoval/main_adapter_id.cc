@@ -277,9 +277,9 @@ void save_consensus_adapter(const nt_count_vec& counts,
 {
  std::stringstream sequence;
  std::stringstream qualities;
- std::ofstream fout((inputFile+".adapter").c_str());
+ std::ofstream fout((inputFile).c_str());
 
- cout<<inputFile+".adapter"<<std::endl;
+ //cout<<inputFile<<std::endl;
 
  for(nt_count_vec::const_iterator it = counts.begin(); it != counts.end(); ++it) {
   const std::pair<char, char> consensus = get_consensus_nt(*it);
@@ -441,7 +441,7 @@ public:
 
 //added by weizheng------
         save_consensus_adapter(sink->pcr1_counts, sink->pcr1_kmers, "--adapter1",
-                               m_config.adapters.get_raw_adapters().front().first.sequence(),                                           m_config.input_files_1[0]);
+                               m_config.adapters.get_raw_adapters().front().first.sequence(),m_config.basename+std::string(".adapter1"));
 //-----------------------
 
         fastq adapter2 = m_config.adapters.get_raw_adapters().front().second;
@@ -450,7 +450,7 @@ public:
 
 //added by weizheng-------
         save_consensus_adapter(sink->pcr2_counts, sink->pcr2_kmers, "--adapter2", adapter2.sequence(),
-                               m_config.input_files_2[0]);
+                               m_config.basename+std::string(".adapter2"));
 //------------------------
         cout.flush();//weizheng
     }
