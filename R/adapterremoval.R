@@ -16,6 +16,7 @@
 #' or put them in different \code{Character}(e.g. "--threads","8").Note that some arguments to the
 #' identify_adapters will be ignored if they are already handled as explicit function arguments. See the output of
 #' \code{adapterremoval_usage()} for details about available parameters.
+#' @return An invisible \code{Character} vector of adapters for each mate.
 #' @references    Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
 #' adapter trimming, identification, and read merging.
 #' BMC Research Notes, 12;9(1):88.

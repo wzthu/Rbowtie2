@@ -19,6 +19,9 @@ For interleaved paired-end sequencing files(argument interleaved=\code{TRUE}),it
 
 \item{overwrite}{\code{Logical}. Force overwriting of existing files if setting \code{TRUE}.}
 }
+\value{
+An invisible \code{Character} vector of adapters for each mate.
+}
 \description{
 This function can be use to call \code{AdapterRemoval} that wrapped in shared library for adapters identifying.
 }

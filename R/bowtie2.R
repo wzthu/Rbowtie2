@@ -31,7 +31,9 @@
 #' refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),full=TRUE)
 #' bowtie2_build(references=refs, bt2Index=file.path(td, "index"),"--threads 4 --quiet",overwrite=TRUE)
 #' ## Alignments
-#' bowtie2(bt2Index = file.path(td, "index"),samOutput = file.path(td, "result.sam"),overwrite=TRUE)
+#' reads <- system.file(package="Rbowtie2", "extdata", "bt2", "reads", "reads.fastq")
+#' bowtie2(bt2Index = file.path(td, "index"),samOutput = file.path(td, "result.sam"),
+#' seq1=reads,overwrite=TRUE)
 #' readLines(file.path(td, "result.sam"))
 
 bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,overwrite=FALSE){
