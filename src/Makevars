@@ -18,7 +18,7 @@ PKG_CPPFLAGS = -DNDEBUG -DPLF_SYS_LINUX -I$(ADRM_INCLUDE_DIR) -I$(BT2_INCLUDE_DI
 PKG_LIBS = -L$(ADRM_LIB_DIR) $(ADRM_LIB) -L$(BT2_LIB_DIR) $(BT2_LIB)
 
 
-.PHONY: mkadapterremoval mkbowtie2 all
+.PHONY: mkadapterremoval mkbowtie2 all clean
 
 all: mkadapterremoval mkbowtie2 $(SHLIB)
 
@@ -31,5 +31,7 @@ mkbowtie2:
 clean:
 	rm *.so
 	rm *.o
+	(cd	$(ADRM_DIR) && ($(MAKE) -f Makefile clean))
+	(cd	$(BT2_DIR) && ($(MAKE) -f Makefile clean))
 
 
