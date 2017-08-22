@@ -6,6 +6,9 @@
 \usage{
 bowtie2_version()
 }
+\description{
+Print version information of bowtie2-2.2.3
+}
 \references{
 Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 }

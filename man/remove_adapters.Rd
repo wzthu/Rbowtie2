@@ -31,6 +31,8 @@ it must be \code{NULL}.}
 \item{output2}{\code{Character}. The trimmed mate2 reads output file path for file2. Default:
 BASENAME.pair2.truncated (only used in PE mode, but not if --interleaved-output is enabled)}
 
+\item{basename}{\code{Character}. The outputfile path prefix}
+
 \item{interleaved}{\code{Logical}. Set \code{TRUE} when files are interleaved paired-end sequencing data.}
 
 \item{overwrite}{\code{Logical}. Force overwriting of existing files if setting \code{TRUE}.}

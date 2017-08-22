@@ -6,6 +6,9 @@
 \usage{
 adapterremoval_version()
 }
+\description{
+Print version information of adapterremoval
+}
 \references{
 Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
 adapter trimming, identification, and read merging.

@@ -5,9 +5,8 @@
 #' @param file1 \code{Character} vector. It can be file paths with #1 mates paired with file paths in file2
 #' And it can also be interleaved file paths when argument interleaved=\code{TRUE}
 #' @param file2 \code{Character} vector. It contains file paths with #2 mates paired with file paths in seq1.
-#' For interleaved paired-end sequencing files(argument interleaved=\code{TRUE}),it will be ignored.
+#' For interleaved paired-end sequencing files(argument interleaved=\code{TRUE}),it must to be setted to \code{NULL}.
 #' @param ... Additional arguments to be passed on to the binaries. See below for details.
-#' @param interleaved \code{Logical}. Set \code{TRUE} when files are interleaved paired-end sequencing data.
 #' @param overwrite \code{Logical}. Force overwriting of existing files if setting \code{TRUE}.
 #' @details All additional arguments in ... are interpreted as additional parameters to be passed on to
 #' bowtie2_build. All of them should be \code{Character} or \code{Numeric} scalar. You can put all aditional
@@ -19,9 +18,11 @@
 #' adapter trimming, identification, and read merging.
 #' BMC Research Notes, 12;9(1):88.
 #' @export identify_adapters
-identify_adapters <- function(file1,file2,...,interleaved = FALSE,overwrite = FALSE){
+identify_adapters <- function(file1,file2,...,overwrite = FALSE){
  file1<-trimws(as.character(file1))
- file2<-trimws(as.character(file2))
+ if(!is.null(file2)){
+  file2<-trimws(as.character(file2))
+ }
  checkFileExist(file1,"file1")
  checkFileExist(file2,"file2")
  checkFileCreatable(paste0(file1,".adapter"),"file1",overwrite)
@@ -33,8 +34,14 @@ identify_adapters <- function(file1,file2,...,interleaved = FALSE,overwrite = FA
    paramArray<-c(paramArray,strsplit(paramlist[i],"\\s+")[[1]])
   }
  }
- argvs<-c("AdapterRemoval","--identify-adapters","--file1",
-         file1,"--file2",file2,paramArray);
+ if(is.null(file2)){
+  argvs<-c("AdapterRemoval","--identify-adapters","--file1",
+           file1,"--interleaved",paramArray);
+ }else{
+  argvs<-c("AdapterRemoval","--identify-adapters","--file1",
+           file1,"--file2",file2,paramArray);
+ }
+
  print(argvs)
  removeAdapter(argvs);
  adapter1tb<-readLines(paste0(file1,".adapter"));
@@ -62,6 +69,7 @@ identify_adapters <- function(file1,file2,...,interleaved = FALSE,overwrite = FA
 #' @param output2 \code{Character}. The trimmed mate2 reads output file path for file2. Default:
 #' BASENAME.pair2.truncated (only used in PE mode, but not if --interleaved-output is enabled)
 #' @param ... Additional arguments to be passed on to the binaries. See below for details.
+#' @param basename \code{Character}. The outputfile path prefix
 #' @param interleaved \code{Logical}. Set \code{TRUE} when files are interleaved paired-end sequencing data.
 #' @param overwrite \code{Logical}. Force overwriting of existing files if setting \code{TRUE}.
 #' @details All additional arguments in ... are interpreted as additional parameters to be passed on to

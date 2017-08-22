@@ -4,18 +4,16 @@
 \alias{identify_adapters}
 \title{identify adapters for paired-end reads}
 \usage{
-identify_adapters(file1, file2, ..., interleaved = FALSE, overwrite = FALSE)
+identify_adapters(file1, file2, ..., overwrite = FALSE)
 }
 \arguments{
 \item{file1}{\code{Character} vector. It can be file paths with #1 mates paired with file paths in file2
 And it can also be interleaved file paths when argument interleaved=\code{TRUE}}
 
 \item{file2}{\code{Character} vector. It contains file paths with #2 mates paired with file paths in seq1.
-For interleaved paired-end sequencing files(argument interleaved=\code{TRUE}),it will be ignored.}
+For interleaved paired-end sequencing files(argument interleaved=\code{TRUE}),it must to be setted to \code{NULL}.}
 
 \item{...}{Additional arguments to be passed on to the binaries. See below for details.}
-
-\item{interleaved}{\code{Logical}. Set \code{TRUE} when files are interleaved paired-end sequencing data.}
 
 \item{overwrite}{\code{Logical}. Force overwriting of existing files if setting \code{TRUE}.}
 }
