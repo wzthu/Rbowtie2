@@ -1,4 +1,25 @@
-identify_adapters <- function(file1,file2,...,overwrite = FALSE){
+#' @useDynLib Rbowtie2
+#' @name identify_adapters
+#' @title identify adapters for paired-end reads
+#' @description This function can be use to call \code{AdapterRemoval} that wrapped in shared library for adapters identifying.
+#' @param file1 \code{Character} vector. It can be file paths with #1 mates paired with file paths in file2
+#' And it can also be interleaved file paths when argument interleaved=\code{TRUE}
+#' @param file2 \code{Character} vector. It contains file paths with #2 mates paired with file paths in seq1.
+#' For interleaved paired-end sequencing files(argument interleaved=\code{TRUE}),it will be ignored.
+#' @param ... Additional arguments to be passed on to the binaries. See below for details.
+#' @param interleaved \code{Logical}. Set \code{TRUE} when files are interleaved paired-end sequencing data.
+#' @param overwrite \code{Logical}. Force overwriting of existing files if setting \code{TRUE}.
+#' @details All additional arguments in ... are interpreted as additional parameters to be passed on to
+#' bowtie2_build. All of them should be \code{Character} or \code{Numeric} scalar. You can put all aditional
+#' arguments in one \code{Character}(e.g. "--threads 8") with white space splited just like command line,
+#' or put them in different \code{Character}(e.g. "--threads","8").Note that some arguments to the
+#' identify_adapters will be ignored if they are already handled as explicit function arguments. See the output of
+#' \code{adapterremoval_usage()} for details about available parameters.
+#' @references    Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
+#' adapter trimming, identification, and read merging.
+#' BMC Research Notes, 12;9(1):88.
+#' @export identify_adapters
+identify_adapters <- function(file1,file2,...,interleaved = FALSE,overwrite = FALSE){
  file1<-trimws(as.character(file1))
  file2<-trimws(as.character(file2))
  checkFileExist(file1,"file1")
@@ -16,12 +37,43 @@ identify_adapters <- function(file1,file2,...,overwrite = FALSE){
          file1,"--file2",file2,paramArray);
  print(argvs)
  removeAdapter(argvs);
- adapter1tb<-read.table(paste0(file1,".adapter"));
- adapter2tb<-read.table(paste0(file2,".adapter"));
+ adapter1tb<-readLines(paste0(file1,".adapter"));
+ adapter2tb<-readLines(paste0(file2,".adapter"));
  adapter<-list(adapter1=as.character(adapter1tb[1,1]),adapter2=as.character(adapter2tb[1,1]));
  return(adapter)
 }
 
+
+#' @name remove_adapters
+#' @title Interface to bowtie2 of adapterremoval-2.2.1a
+#' @description This function can be use to call \code{AdapterRemoval} that wrapped in shared library.
+#' @param file1 \code{Character} vector. For single-end sequencing, it contains sequence file paths.
+#' For paired-end sequencing, it can be file paths with #1 mates paired with file paths in file2
+#' And it can also be interleaved file paths when argument interleaved=\code{TRUE}
+#' @param adapter1 \code{Character}. It is an adapter sequence for file1. Default: AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG
+#' @param file2 \code{Character} vector. It contains file paths with #2 mates paired with file paths in file1.
+#' For single-end sequencing files and interleaved paired-end sequencing files(argument interleaved=\code{TRUE}),
+#' it must be \code{NULL}.
+#' @param output1 \code{Character}. The trimmed mate1 reads output file path for file1. Defualt:
+#' basename.pair1.truncated (paired-end),
+#' basename.truncated (single-end), or
+#' basename.paired.truncated (interleaved)
+#' @param adapter2 \code{Character}. It is an adapter sequence for file2. Defualt: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT
+#' @param output2 \code{Character}. The trimmed mate2 reads output file path for file2. Default:
+#' BASENAME.pair2.truncated (only used in PE mode, but not if --interleaved-output is enabled)
+#' @param ... Additional arguments to be passed on to the binaries. See below for details.
+#' @param interleaved \code{Logical}. Set \code{TRUE} when files are interleaved paired-end sequencing data.
+#' @param overwrite \code{Logical}. Force overwriting of existing files if setting \code{TRUE}.
+#' @details All additional arguments in ... are interpreted as additional parameters to be passed on to
+#' bowtie2_build. All of them should be \code{Character} or \code{Numeric} scalar. You can put all aditional
+#' arguments in one \code{Character}(e.g. "--threads 8") with white space splited just like command line,
+#' or put them in different \code{Character}(e.g. "--threads","8").Note that some arguments to the
+#' identify_adapters will be ignored if they are already handled as explicit function arguments. See the output of
+#' \code{adapterremoval_usage()} for details about available parameters.
+#' @references    Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
+#' adapter trimming, identification, and read merging.
+#' BMC Research Notes, 12;9(1):88.
+#' @export remove_adapters
 remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NULL,adapter2 = NULL,output2 = NULL,
                             basename = NULL,interleaved = FALSE,overwrite = FALSE){
  file1<-trimws(as.character(file1))
@@ -40,6 +92,9 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NUL
     stop("The lengths of arguments `file1` and `file2` should be the same length")
    }
   }
+ }
+ if(!is.null(adapter2)){
+  adapter2<-trimws(as.character(adapter2))
  }
  if(!is.null(output2)){
   output2<-trimws(as.character(output2))
@@ -72,6 +127,9 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NUL
  if(!is.null(file2)){
   argvs<-c(argvs,"--file2",file2)
  }
+ if(!is.null(adapter2)){
+  argvs<-c(argvs,"--adapter2",adapter2)
+ }
  if(!is.null(output2)){
   argvs<-c(argvs,"--output2",output2)
  }
@@ -83,6 +141,32 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NUL
  removeAdapter(argvs)
 
 
+}
+
+
+#' @name adapterremoval_usage
+#' @title Print available arguments for adapterremoval
+#' @description Note that some arguments to the
+#' adapterremoval will be ignored if they are
+#' already handled as explicit function arguments.
+#' @references Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
+#' adapter trimming, identification, and read merging.
+#' BMC Research Notes, 12;9(1):88.
+#' @export adapterremoval_usage
+adapterremoval_usage<- function(){
+ removeAdapter(c("AdapterRemoval","-h"))
+}
+
+
+#' @name adapterremoval_version
+#' @title Print version information of adapterremoval
+#' @description Print version information of adapterremoval
+#' @references Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
+#' adapter trimming, identification, and read merging.
+#' BMC Research Notes, 12;9(1):88.
+#' @export adapterremoval_version
+adapterremoval_version<- function(){
+ removeAdapter(c("AdapterRemoval","--version"))
 }
 
 

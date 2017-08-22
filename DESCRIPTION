@@ -11,3 +11,4 @@ Imports: Rcpp (>= 0.12.11),utils
 LinkingTo: Rcpp
 SystemRequirements: C++11
 Archs: x64
+RoxygenNote: 6.0.1
