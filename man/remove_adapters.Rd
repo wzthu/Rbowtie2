@@ -72,3 +72,6 @@ Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
 adapter trimming, identification, and read merging.
 BMC Research Notes, 12;9(1):88.
 }
+\author{
+Zheng Wei
+}

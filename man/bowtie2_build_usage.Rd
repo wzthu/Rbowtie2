@@ -21,3 +21,6 @@ bowtie2_build_usage()
 \references{
 Langmead B, Salzberg S. Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
 }
+\author{
+Zheng Wei
+}

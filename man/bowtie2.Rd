@@ -56,3 +56,6 @@ readLines(file.path(td, "result.sam"))
 \references{
 Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 }
+\author{
+Zheng Wei
+}

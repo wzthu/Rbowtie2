@@ -17,6 +17,7 @@
 #' identify_adapters will be ignored if they are already handled as explicit function arguments. See the output of
 #' \code{adapterremoval_usage()} for details about available parameters.
 #' @return An invisible \code{Character} vector of adapters for each mate.
+#' @author Zheng Wei
 #' @references    Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
 #' adapter trimming, identification, and read merging.
 #' BMC Research Notes, 12;9(1):88.
@@ -93,6 +94,7 @@ identify_adapters <- function(file1,file2,...,basename = NULL,overwrite = FALSE)
 #' or put them in different \code{Character}(e.g. "--threads","8").Note that some arguments to the
 #' identify_adapters will be ignored if they are already handled as explicit function arguments. See the output of
 #' \code{adapterremoval_usage()} for details about available parameters.
+#' @author Zheng Wei
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistake.
 #' Otherwise the value is non-zero.
 #' @references    Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
@@ -190,6 +192,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NUL
 #' already handled as explicit function arguments.
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes.
 #' Otherwise the value is non-zero.
+#' @author Zheng Wei
 #' @references Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
 #' adapter trimming, identification, and read merging.
 #' BMC Research Notes, 12;9(1):88.
@@ -197,7 +200,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NUL
 #' @examples
 #' adapterremoval_usage()
 adapterremoval_usage<- function(){
- removeAdapter(c("AdapterRemoval","-h"))
+ invisible(removeAdapter(c("AdapterRemoval","-h")))
 }
 
 
@@ -205,6 +208,7 @@ adapterremoval_usage<- function(){
 #' @title Print version information of adapterremoval
 #' @description Print version information of adapterremoval
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
+#' @author  Zheng Wei
 #' @references Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
 #' adapter trimming, identification, and read merging.
 #' BMC Research Notes, 12;9(1):88.
@@ -212,7 +216,7 @@ adapterremoval_usage<- function(){
 #' @examples
 #' adapterremoval_version()
 adapterremoval_version<- function(){
- removeAdapter(c("AdapterRemoval","--version"))
+ invisible(removeAdapter(c("AdapterRemoval","--version")))
 }
 
 

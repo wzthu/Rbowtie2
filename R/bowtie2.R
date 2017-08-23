@@ -21,6 +21,7 @@
 #' or put them in different \code{Character}(e.g. "--threads","8","--no-mixed").Note that some arguments to the
 #' bowtie2 will be ignored if they are already handled as explicit function arguments. See the output of
 #' \code{bowtie2_usage()} for details about available parameters.
+#' @author Zheng Wei
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
@@ -115,6 +116,7 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,over
 #' or put them in different \code{Character}(e.g. "--threads","8","--quiet").Note that some arguments to the
 #' bowtie2_build will be ignored if they are already handled as explicit function arguments. See the output of
 #' \code{bowtie2_build_usage()} for details about available parameters.
+#' @author Zheng Wei
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
@@ -161,6 +163,7 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 #' @name bowtie2_version
 #' @title Print version information of bowtie2-2.2.3
 #' @description Print version information of bowtie2-2.2.3
+#' @author Zheng Wei
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
@@ -176,6 +179,7 @@ bowtie2_version <- function(){
 #' @description Note that some arguments to the
 #' bowtie2 will be ignored if they are
 #' already handled as explicit function arguments.
+#' @author Zheng Wei
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
@@ -191,6 +195,7 @@ bowtie2_usage <- function(){
 #' @description Note that some arguments to the
 #' bowtie2_build_usage will be ignored if they are
 #' already handled as explicit function arguments.
+#' @author Zheng Wei
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
 #' @references Langmead B, Salzberg S. Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
