@@ -39,7 +39,6 @@ checkAddArgus<- function(pattern,...){
    paramArray<-c(paramArray,strsplit(paramlist[i],"\\s+")[[1]])
   }
  }
- print(paramArray)
  fixed<-grepl(pattern,paramArray)
  if(sum(fixed)>0){
   invalidp<-paste0(paramArray[fixed],collapse = " ")

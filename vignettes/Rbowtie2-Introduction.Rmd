@@ -2,7 +2,9 @@
 title: "An Introduction to Rbowtie2"
 author: "Zheng Wei and Wei Zhang"
 date: "2017-8-23"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -98,7 +100,6 @@ Before aligning reads, bowtie2 index should be build. refs is a character vector
 td <- tempdir()
 refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),full=TRUE)
 bowtie2_build(references=refs, bt2Index=file.path(td, "index"),"--threads 4 --quiet",overwrite=TRUE)
-
 ```
 
 #### Additional Arguments of Bowtie Build
