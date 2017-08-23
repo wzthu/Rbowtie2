@@ -181,7 +181,7 @@ bowtie2_version <- function(){
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2_usage
 #' @examples
-#' bowtie2Mapping()
+#' bowtie2_usage()
 bowtie2_usage <- function(){
  invisible(bowtie2Mapping(argvs = c("bowtie2-align-s","-h")))
 }

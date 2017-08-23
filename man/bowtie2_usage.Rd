@@ -16,7 +16,7 @@ bowtie2 will be ignored if they are
 already handled as explicit function arguments.
 }
 \examples{
-bowtie2Mapping()
+bowtie2_usage()
 }
 \references{
 Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.

@@ -1,0 +1,125 @@
+---
+title: "An Introduction to Rbowtie2"
+author: "Zheng Wei and Wei Zhang"
+date: "2017-8-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+MOE Key Laboratory of Bioinformatics and Bioinformatics Division, TNLIST /Department
+of Automation, Tsinghua University
+
+{wei-z14,w-zhang16}\@mails.tsinghua.edu.cn
+
+## Introduction
+
+The package provides an R wrapper of bowtie2 and AdapterRemoval. Bowtie2 is the popular sequencing reads aligner, which is good at aligning reads with length above 50bp. AdapterRemoval is a convenient tool for rapid adapter trimming, identification, and read merging. Both of them are implemented with C++. We use Rcpp package to wrap them into an R package that provide userer friendly interfaces for R users.
+
+You can preprocess the raw sequencing data by using AadapterRemoval even if adapter(s) infomation is missing. Then, bowtie2 can aligned these preprocessed reads to the references. This package is used by the HelloATAC package(in preparation). If you are processing the chromatin openness sequencing data like ATAC-seq, DNase-seq ect., We strongly recommend to use the HelloATAC package instead of using Rbowtie2 directly. Both of them are developed and maintened by members of Xiaowo Wang Lab:  <http://bioinfo.au.tsinghua.edu.cn/member/xwwang>
+
+
+## An Example Workflow by Using Rbowtie2
+
+
+
+### Installation
+
+To install the latest version of Rbowtie2, you will need to be using the latest version of R. Rbowtie2 is part of Bioconductor project, so you can install Rbowtie2 and its dependencies like this:
+
+```{r install, eval=FALSE}
+source("http://www.bioconductor.org/biocLite.R")
+biocLite("Rbowtie2")
+```
+
+### Loading
+
+Just like other R package, you need to load Rbowtie2 like this each time before using the package.
+```{r loading}
+library(Rbowtie2)
+```
+
+### AdapterRemoval
+
+All package functions mentioned in this subsection use the shared library of AdapterRemoval.
+
+#### Idetitify Adapter
+
+If you know the adapter sequence of reads files, you can skip this step. Single end data is not support for this function yet. You still have to know adapter sequence.
+
+
+reads_1 and reads_2 are raw paired-end reads file with fastq format. adapters is two adapters character vector. 
+
+```{r idad}
+
+td <- tempdir()
+reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fq")
+reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fq")
+adapters <- identify_adapters(file1=reads_1,file2=reads_2,basename=file.path(td,"reads"),"--threads 3",overwrite=TRUE)
+adapters
+```
+
+#### Remove Adapter
+
+With known adapter sequence, remove_adapter function can be call to trim adapters.  
+
+```{r rmad}
+remove_adapters(file1=reads_1,file2=reads_2,adapter1 = adapters[1], adapter2 = adapters[2],
+output1=file.path(td,"reads_1.trimmed.fq"),output2=file.path(td,"reads_2.trimmed.fq"),
+basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 3")
+```
+
+
+#### Additional Arguments and Version
+
+If you need to set additional arguments like "--threads 3" above, you can call function below to print all options available. The fixed arguments like file1, file2 and basename ect. are invalid.
+
+```{r adrmusage, eval=FALSE}
+adapterremoval_usage()
+```
+
+You can get version infomation by call:
+
+```{r adrmversion, eval=FALSE}
+adapterremoval_version()
+```
+
+
+### Bowtie2
+All package functions mentioned in this subsection use the shared library of Bowtie2.
+
+#### Build Bowtie2 Index
+Before aligning reads, bowtie2 index should be build. refs is a character vector of fasta reference file paths. A prefix of bowtie index should be set to argument bt2Index. Then, 6 index files with .bt2 suffix will be created with bt2Index prefix.
+
+```{r bt2bd1}
+td <- tempdir()
+refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),full=TRUE)
+bowtie2_build(references=refs, bt2Index=file.path(td, "index"),"--threads 4 --quiet",overwrite=TRUE)
+
+```
+
+#### Additional Arguments of Bowtie Build
+
+If you need to set additional arguments like "--threads 4 --quiet" above, you can call function below to print all options available. The fixed arguments references, bt2Index are invalid.
+
+```{r bt2bdusage, eval=FALSE}
+bowtie2_build_usage()
+```
+
+#### Bowtie2 Alignment
+
+The variable reads are preprocessed reads file paths. Withs the reads paths and bowtie2 index, reads will be mapped to reference by calling bowtie2. The result is saved in a sam file path that setted to samOutput 
+
+```{r bt2align}
+reads <- system.file(package="Rbowtie2", "extdata", "bt2", "reads", "reads.fastq")
+bowtie2(bt2Index = file.path(td, "index"),samOutput = file.path(td, "result.sam"),
+seq1=reads,overwrite=TRUE)
+readLines(file.path(td, "result.sam"))
+```
+
+
+
+
+
+

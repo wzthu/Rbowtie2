@@ -23,8 +23,8 @@
 #' @export identify_adapters
 #' @examples
 #' td <- tempdir()
-#' reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fastq")
-#' reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fastq")
+#' reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fq")
+#' reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fq")
 #' adapters <- identify_adapters(file1=reads_1,file2=reads_2,basename = file.path(td,"reads")
 #' ,"--threads 2",overwrite=TRUE)
 #' adapters
