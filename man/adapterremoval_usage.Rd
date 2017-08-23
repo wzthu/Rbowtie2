@@ -13,7 +13,7 @@ Otherwise the value is non-zero.
 \description{
 Print available arguments for adapterremoval.
 Note that some arguments to the
-adapterremoval will be ignored if they are
+adapterremoval are invalid if they are
 already handled as explicit function arguments.
 }
 \examples{

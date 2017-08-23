@@ -48,8 +48,9 @@ This function can be use to call \code{AdapterRemoval} that wrapped in shared li
 All additional arguments in ... are interpreted as additional parameters to be passed on to
 bowtie2_build. All of them should be \code{Character} or \code{Numeric} scalar. You can put all aditional
 arguments in one \code{Character}(e.g. "--threads 8") with white space splited just like command line,
-or put them in different \code{Character}(e.g. "--threads","8").Note that some arguments to the
-identify_adapters will be ignored if they are already handled as explicit function arguments. See the output of
+or put them in different \code{Character}(e.g. "--threads","8").Note that some arguments(
+"--file1","--file2","--adapter1","--adapter2","--output1","--output2","--basename","--interleaved") to the
+identify_adapters are invalid if they are already handled as explicit function arguments. See the output of
 \code{adapterremoval_usage()} for details about available parameters.
 }
 \examples{

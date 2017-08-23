@@ -12,7 +12,7 @@ Otherwise the value is non-zero.
 }
 \description{
 Note that some arguments to the
-bowtie2 will be ignored if they are
+bowtie2 are invalid if they are
 already handled as explicit function arguments.
 }
 \examples{

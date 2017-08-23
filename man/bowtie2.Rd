@@ -38,8 +38,9 @@ This function can be use to call \code{bowtie2} that wrapped in shared library.
 All additional arguments in ... are interpreted as additional parameters to be passed on to
 bowtie2_build. All of them should be \code{Character} or \code{Numeric} scalar. You can put all aditional
 arguments in one \code{Character}(e.g. "--threads 8 --no-mixed") with white space splited just like command line,
-or put them in different \code{Character}(e.g. "--threads","8","--no-mixed").Note that some arguments to the
-bowtie2 will be ignored if they are already handled as explicit function arguments. See the output of
+or put them in different \code{Character}(e.g. "--threads","8","--no-mixed").Note that some
+arguments("-x","--interleaved","-U","-1","-2","-S") to the
+bowtie2 are invalid if they are already handled as explicit function arguments. See the output of
 \code{bowtie2_usage()} for details about available parameters.
 }
 \examples{
