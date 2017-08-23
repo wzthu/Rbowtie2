@@ -13,8 +13,9 @@
 #' @details All additional arguments in ... are interpreted as additional parameters to be passed on to
 #' bowtie2_build. All of them should be \code{Character} or \code{Numeric} scalar. You can put all aditional
 #' arguments in one \code{Character}(e.g. "--threads 8") with white space splited just like command line,
-#' or put them in different \code{Character}(e.g. "--threads","8").Note that some arguments to the
-#' identify_adapters will be ignored if they are already handled as explicit function arguments. See the output of
+#' or put them in different \code{Character}(e.g. "--threads","8").Note that some arguments("--identify-adapters",
+#' "--file1","--file2","--basename") to the
+#' identify_adapters are invalid if they are already handled as explicit function arguments. See the output of
 #' \code{adapterremoval_usage()} for details about available parameters.
 #' @return An invisible \code{Character} vector of adapters for each mate.
 #' @author Zheng Wei
@@ -41,13 +42,8 @@ identify_adapters <- function(file1,file2,...,basename = NULL,overwrite = FALSE)
  checkFileExist(file2,"file2")
  checkFileCreatable(paste0(basename,".adapter1"),"file1",overwrite)
  checkFileCreatable(paste0(basename,".adapter2"),"file2",overwrite)
- paramlist<-trimws(as.character(list(...)))
- paramArray<-c()
- if(length(paramlist)>0){
-  for(i in 1:length(paramlist)){
-   paramArray<-c(paramArray,strsplit(paramlist[i],"\\s+")[[1]])
-  }
- }
+
+ paramArray<-checkAddArgus("--identify-adapters|--file1|--file2|--basename",...)
  if(is.null(file2)){
   argvs<-c("AdapterRemoval","--identify-adapters","--file1",
            file1,"--interleaved",paramArray);
@@ -91,8 +87,9 @@ identify_adapters <- function(file1,file2,...,basename = NULL,overwrite = FALSE)
 #' @details All additional arguments in ... are interpreted as additional parameters to be passed on to
 #' bowtie2_build. All of them should be \code{Character} or \code{Numeric} scalar. You can put all aditional
 #' arguments in one \code{Character}(e.g. "--threads 8") with white space splited just like command line,
-#' or put them in different \code{Character}(e.g. "--threads","8").Note that some arguments to the
-#' identify_adapters will be ignored if they are already handled as explicit function arguments. See the output of
+#' or put them in different \code{Character}(e.g. "--threads","8").Note that some arguments(
+#' "--file1","--file2","--adapter1","--adapter2","--output1","--output2","--basename","--interleaved") to the
+#' identify_adapters are invalid if they are already handled as explicit function arguments. See the output of
 #' \code{adapterremoval_usage()} for details about available parameters.
 #' @author Zheng Wei
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistake.
@@ -144,13 +141,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NUL
   basename<-trimws(as.character(basename))
  }
 
- paramlist<-trimws(as.character(list(...)))
- paramArray<-c()
- if(length(paramlist)>0){
-  for(i in 1:length(paramlist)){
-   paramArray<-c(paramArray,strsplit(paramlist[i],"\\s+")[[1]])
-  }
- }
+ paramArray<-checkAddArgus("--file1|--file2|--adapter1|--adapter2|--output1|--output2|--basename|--interleaved",...)
  checkFileExist(file1,"file1")
  checkFileExist(file2,"file2")
  checkFileCreatable(output1,"output1",overwrite)
@@ -177,6 +168,9 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NUL
  if(!is.null(basename)){
   argvs<-c(argvs,"--basename",basename)
  }
+ if(interleaved){
+  argvs<-c(argvs,"--interleaved",interleaved)
+ }
  argvs<-c(argvs,paramArray)
  invisible(removeAdapter(argvs))
 
@@ -188,7 +182,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,file2 = NUL
 #' @title Print available arguments for adapterremoval
 #' @description Print available arguments for adapterremoval.
 #' Note that some arguments to the
-#' adapterremoval will be ignored if they are
+#' adapterremoval are invalid if they are
 #' already handled as explicit function arguments.
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes.
 #' Otherwise the value is non-zero.

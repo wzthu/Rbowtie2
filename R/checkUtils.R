@@ -31,4 +31,21 @@ checkFileCreatable <- function(filePath,argname,overwrite){
  }
 }
 
+checkAddArgus<- function(pattern,...){
+ paramlist<-trimws(as.character(list(...)))
+ paramArray<-c()
+ if(length(paramlist)>0){
+  for(i in 1:length(paramlist)){
+   paramArray<-c(paramArray,strsplit(paramlist[i],"\\s+")[[1]])
+  }
+ }
+ print(paramArray)
+ fixed<-grepl(pattern,paramArray)
+ if(sum(fixed)>0){
+  invalidp<-paste0(paramArray[fixed],collapse = " ")
+  stop(sprintf("Argument(s) `%s` are invalid for additional argument. Please set them as fixed arguments.",invalidp))
+ }
+ return(paramArray)
+}
+
 

@@ -18,8 +18,9 @@
 #' @details All additional arguments in ... are interpreted as additional parameters to be passed on to
 #' bowtie2_build. All of them should be \code{Character} or \code{Numeric} scalar. You can put all aditional
 #' arguments in one \code{Character}(e.g. "--threads 8 --no-mixed") with white space splited just like command line,
-#' or put them in different \code{Character}(e.g. "--threads","8","--no-mixed").Note that some arguments to the
-#' bowtie2 will be ignored if they are already handled as explicit function arguments. See the output of
+#' or put them in different \code{Character}(e.g. "--threads","8","--no-mixed").Note that some
+#' arguments("-x","--interleaved","-U","-1","-2","-S") to the
+#' bowtie2 are invalid if they are already handled as explicit function arguments. See the output of
 #' \code{bowtie2_usage()} for details about available parameters.
 #' @author Zheng Wei
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
@@ -50,13 +51,7 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,over
    stop("The lengths of arguments `seq1` and `seq2` should be the same length")
   }
  }
- paramlist<-trimws(as.character(list(...)))
- paramArray<-c()
- if(length(paramlist)>0){
-  for(i in 1:length(paramlist)){
-   paramArray<-c(paramArray,strsplit(paramlist[i],"\\s+")[[1]])
-  }
- }
+ paramArray<-checkAddArgus("-x|--interleaved|-U|-1|-2|-S",...)
 
 
  if(interleaved){
@@ -113,8 +108,7 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,over
 #' @details All additional arguments in ... are interpreted as additional parameters to be passed on to
 #' bowtie2_build. All of them should be \code{Character} or \code{Numeric} scalar. You can put all aditional
 #' arguments in one \code{Character}(e.g. "--threads 8 --quiet") with white space splited just like command line,
-#' or put them in different \code{Character}(e.g. "--threads","8","--quiet").Note that some arguments to the
-#' bowtie2_build will be ignored if they are already handled as explicit function arguments. See the output of
+#' or put them in different \code{Character}(e.g. "--threads","8","--quiet"). See the output of
 #' \code{bowtie2_build_usage()} for details about available parameters.
 #' @author Zheng Wei
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
@@ -135,13 +129,7 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
  references<- trimws(as.character(references))
  bt2Index <- trimws(as.character(bt2Index))
 
- paramlist<-trimws(as.character(list(...)))
- paramArray<-c()
- if(length(paramlist)>0){
-  for(i in 1:length(paramlist)){
-   paramArray<-c(paramArray,strsplit(paramlist[i],"\\s+")[[1]])
-  }
- }
+ paramArray<-checkAddArgus("noinvalid",...)
 
  checkFileExist(references,"references")
  checkPathExist(bt2Index,"bt2Index")
@@ -177,7 +165,7 @@ bowtie2_version <- function(){
 #' @name bowtie2_usage
 #' @title Print available arguments for bowtie2
 #' @description Note that some arguments to the
-#' bowtie2 will be ignored if they are
+#' bowtie2 are invalid if they are
 #' already handled as explicit function arguments.
 #' @author Zheng Wei
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
@@ -193,7 +181,7 @@ bowtie2_usage <- function(){
 #' @name bowtie2_build_usage
 #' @title Print available arguments for bowtie2_build_usage
 #' @description Note that some arguments to the
-#' bowtie2_build_usage will be ignored if they are
+#' bowtie2_build_usage are invalid if they are
 #' already handled as explicit function arguments.
 #' @author Zheng Wei
 #' @return An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
