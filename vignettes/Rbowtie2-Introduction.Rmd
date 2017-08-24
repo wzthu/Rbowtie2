@@ -16,9 +16,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-The package provides an R wrapper of [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) and [AdapterRemoval](https://github.com/MikkelSchubert/adapterremoval). Bowtie2 is the popular sequencing reads aligner, which is good at aligning reads with length above 50bp[1]. AdapterRemoval is a convenient tool for rapid adapter trimming, identification, and read merging[2]. Both of them are implemented with C++. We use Rcpp package to wrap them into an R package that provide user friendly interfaces for R users.
+The package provides an R wrapper of [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) and [AdapterRemoval](https://github.com/MikkelSchubert/adapterremoval). Bowtie2 is the popular sequencing reads aligner, which is good at aligning reads with length above 50bp[1]. AdapterRemoval is a convenient tool for rapid adapter trimming, identification, and read merging[2]. Both of them are implemented with C++. We use Rcpp package to wrap them into an R package that provide user friendly interfaces for R users.
 
-You can preprocess the raw sequencing data by using AadapterRemoval even if adapter(s) information is missing. Then, bowtie2 can aligned these preprocessed reads to the references. 
+You can preprocess the raw sequencing data by using AadapterRemoval even if adapter(s) information is missing. Then, Bowtie2 can aligned these preprocessed reads to the references. 
 
 This package is developed and maintained by members of [Xiaowo Wang Lab](http://bioinfo.au.tsinghua.edu.cn/member/xwwang)
 
