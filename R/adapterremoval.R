@@ -45,40 +45,40 @@
 #' ,"--threads 2",overwrite=TRUE)
 #' adapters
 identify_adapters <- function(file1,file2,...,basename = NULL,
-                              overwrite = FALSE){
- file1<-trimws(as.character(file1))
- if(!is.null(file2)){
-  file2<-trimws(as.character(file2))
- }
- if(!is.null(basename)){
-  basename<-trimws(as.character(basename))
- }
- checkFileExist(file1,"file1")
- checkFileExist(file2,"file2")
- checkFileCreatable(paste0(basename,".adapter1"),"file1",overwrite)
- checkFileCreatable(paste0(basename,".adapter2"),"file2",overwrite)
+    overwrite = FALSE){
+    file1<-trimws(as.character(file1))
+    if(!is.null(file2)){
+        file2<-trimws(as.character(file2))
+    }
+    if(!is.null(basename)){
+        basename<-trimws(as.character(basename))
+    }
+    checkFileExist(file1,"file1")
+    checkFileExist(file2,"file2")
+    checkFileCreatable(paste0(basename,".adapter1"),"file1",overwrite)
+    checkFileCreatable(paste0(basename,".adapter2"),"file2",overwrite)
 
- paramArray<-
-  checkAddArgus("--identify-adapters|--file1|--file2|--basename",...)
- if(is.null(file2)){
-  argvs<-c("AdapterRemoval","--identify-adapters","--file1",
-           file1,"--interleaved",paramArray);
- }else{
-  argvs<-c("AdapterRemoval","--identify-adapters","--file1",
-           file1,"--file2",file2,paramArray);
- }
- if(!is.null(basename)){
-  argvs<-c(argvs,"--basename",basename)
- }
+    paramArray<-
+        checkAddArgus("--identify-adapters|--file1|--file2|--basename",...)
+    if(is.null(file2)){
+        argvs<-c("AdapterRemoval","--identify-adapters","--file1",
+                 file1,"--interleaved",paramArray);
+    }else{
+        argvs<-c("AdapterRemoval","--identify-adapters","--file1",
+                 file1,"--file2",file2,paramArray);
+    }
+    if(!is.null(basename)){
+        argvs<-c(argvs,"--basename",basename)
+    }
 
- print(argvs)
- removeAdapter(argvs);
- if(is.null(basename)){
-  basename<-"your_output"
- }
- adapter1tb<-readLines(paste0(basename,".adapter1"));
- adapter2tb<-readLines(paste0(basename,".adapter2"));
- return(c(adapter1tb,adapter2tb))
+    print(argvs)
+    removeAdapter(argvs);
+    if(is.null(basename)){
+        basename<-"your_output"
+    }
+    adapter1tb<-readLines(paste0(basename,".adapter1"));
+    adapter2tb<-readLines(paste0(basename,".adapter2"));
+    return(c(adapter1tb,adapter2tb))
 }
 
 
@@ -160,68 +160,68 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
                             file2 = NULL,adapter2 = NULL,output2 = NULL,
                             basename = NULL,interleaved = FALSE,
                             overwrite = FALSE){
- file1<-trimws(as.character(file1))
- if(!is.null(adapter1)){
-  adapter1<-trimws(as.character(adapter1))
- }
- if(!is.null(output1)){
-  output1<-trimws(as.character(output1))
- }
- if(!is.null(file2)){
-  if(interleaved){
-   stop("Argumnet `seq2` has to be NULL when interleaved=TRUE")
-  }else{
-   file2<-trimws(as.character(file2))
-   if(length(file1)!=length(file2)){
-    stop(paste0("The lengths of arguments `file1` ",
-                "and `file2` should be the same length"))
-   }
-  }
- }
- if(!is.null(adapter2)){
-  adapter2<-trimws(as.character(adapter2))
- }
- if(!is.null(output2)){
-  output2<-trimws(as.character(output2))
- }
- if(!is.null(basename)){
-  basename<-trimws(as.character(basename))
- }
+    file1<-trimws(as.character(file1))
+    if(!is.null(adapter1)){
+        adapter1<-trimws(as.character(adapter1))
+    }
+    if(!is.null(output1)){
+        output1<-trimws(as.character(output1))
+    }
+    if(!is.null(file2)){
+        if(interleaved){
+            stop("Argumnet `seq2` has to be NULL when interleaved=TRUE")
+        }else{
+            file2<-trimws(as.character(file2))
+            if(length(file1)!=length(file2)){
+                stop(paste0("The lengths of arguments `file1` ",
+                            "and `file2` should be the same length"))
+            }
+        }
+    }
+    if(!is.null(adapter2)){
+        adapter2<-trimws(as.character(adapter2))
+    }
+    if(!is.null(output2)){
+        output2<-trimws(as.character(output2))
+    }
+    if(!is.null(basename)){
+        basename<-trimws(as.character(basename))
+    }
 
- paramArray<-
-  checkAddArgus(paste0("--file1|--file2|--adapter1|--adapter2|",
-               "--output1|--output2|--basename|--interleaved"),...)
- checkFileExist(file1,"file1")
- checkFileExist(file2,"file2")
- checkFileCreatable(output1,"output1",overwrite)
- checkFileCreatable(output2,"output2",overwrite)
- checkPathExist(basename,"basename")
+    paramArray<-
+        checkAddArgus(paste0("--file1|--file2|--adapter1|--adapter2|",
+                             "--output1|--output2|--basename|--interleaved"),...)
+    checkFileExist(file1,"file1")
+    checkFileExist(file2,"file2")
+    checkFileCreatable(output1,"output1",overwrite)
+    checkFileCreatable(output2,"output2",overwrite)
+    checkPathExist(basename,"basename")
 
- argvs<-c("AdapterRemoval","--file1",file1)
+    argvs<-c("AdapterRemoval","--file1",file1)
 
- if(!is.null(adapter1)){
-  argvs<-c(argvs,"--adapter1",adapter1)
- }
- if(!is.null(output1)){
-  argvs<-c(argvs,"--output1",output1)
- }
- if(!is.null(file2)){
-  argvs<-c(argvs,"--file2",file2)
- }
- if(!is.null(adapter2)){
-  argvs<-c(argvs,"--adapter2",adapter2)
- }
- if(!is.null(output2)){
-  argvs<-c(argvs,"--output2",output2)
- }
- if(!is.null(basename)){
-  argvs<-c(argvs,"--basename",basename)
- }
- if(interleaved){
-  argvs<-c(argvs,"--interleaved")
- }
- argvs<-c(argvs,paramArray)
- invisible(removeAdapter(argvs))
+    if(!is.null(adapter1)){
+        argvs<-c(argvs,"--adapter1",adapter1)
+    }
+    if(!is.null(output1)){
+        argvs<-c(argvs,"--output1",output1)
+    }
+    if(!is.null(file2)){
+        argvs<-c(argvs,"--file2",file2)
+    }
+    if(!is.null(adapter2)){
+        argvs<-c(argvs,"--adapter2",adapter2)
+    }
+    if(!is.null(output2)){
+        argvs<-c(argvs,"--output2",output2)
+    }
+    if(!is.null(basename)){
+        argvs<-c(argvs,"--basename",basename)
+    }
+    if(interleaved){
+        argvs<-c(argvs,"--interleaved")
+    }
+    argvs<-c(argvs,paramArray)
+    invisible(removeAdapter(argvs))
 
 
 }
@@ -244,7 +244,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
 #' @examples
 #' adapterremoval_usage()
 adapterremoval_usage<- function(){
- invisible(removeAdapter(c("AdapterRemoval","-h")))
+    invisible(removeAdapter(c("AdapterRemoval","-h")))
 }
 
 
@@ -261,7 +261,7 @@ adapterremoval_usage<- function(){
 #' @examples
 #' adapterremoval_version()
 adapterremoval_version<- function(){
- invisible(removeAdapter(c("AdapterRemoval","--version")))
+    invisible(removeAdapter(c("AdapterRemoval","--version")))
 }
 
 

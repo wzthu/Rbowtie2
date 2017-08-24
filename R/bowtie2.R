@@ -64,59 +64,60 @@
 
 bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
                     overwrite=FALSE){
- bt2Index <-trimws(as.character(bt2Index))
- samOutput<-trimws(as.character(samOutput))
+    bt2Index <-trimws(as.character(bt2Index))
+    samOutput<-trimws(as.character(samOutput))
 
- seq1<-trimws(as.character(seq1))
-
-
- if(!is.null(seq2)){
-  seq2<-trimws(as.character(seq2))
-  if(length(seq1)!=length(seq2)){
-   stop("The lengths of arguments `seq1` and `seq2` should be the same length")
-  }
- }
- paramArray<-checkAddArgus("-x|--interleaved|-U|-1|-2|-S",...)
+    seq1<-trimws(as.character(seq1))
 
 
- if(interleaved){
-  if(length(seq1)>1){
-   stop(paste0("Argumnet `seq1` has to be a SINGLE file",
-               " path rather than a vector of paths"))
-  }
-  if(!is.null(seq2)){
-   stop("Argumnet `seq2` has to be NULL when interleaved=TRUE")
-  }
- }
+    if(!is.null(seq2)){
+        seq2<-trimws(as.character(seq2))
+        if(length(seq1)!=length(seq2)){
+            stop(paste0("The lengths of arguments ",
+                        "`seq1` and `seq2` should be the same length"))
+        }
+    }
+    paramArray<-checkAddArgus("-x|--interleaved|-U|-1|-2|-S",...)
 
 
- checkFileExist(seq1,"seq1")
- checkFileExist(seq2,"seq2")
- checkPathExist(bt2Index,"bt2Index")
- checkFileExist(paste0(bt2Index,".1.bt2"),"bt2Index")
- checkFileExist(paste0(bt2Index,".2.bt2"),"bt2Index")
- checkFileExist(paste0(bt2Index,".3.bt2"),"bt2Index")
- checkFileExist(paste0(bt2Index,".4.bt2"),"bt2Index")
- checkFileExist(paste0(bt2Index,".rev.1.bt2"),"bt2Index")
- checkFileExist(paste0(bt2Index,".rev.2.bt2"),"bt2Index")
- checkFileCreatable(samOutput,"samOutput",overwrite)
+    if(interleaved){
+        if(length(seq1)>1){
+            stop(paste0("Argumnet `seq1` has to be a SINGLE file",
+                        " path rather than a vector of paths"))
+        }
+        if(!is.null(seq2)){
+            stop("Argumnet `seq2` has to be NULL when interleaved=TRUE")
+        }
+    }
 
- argvs = c("-x",bt2Index)
- seq1<-paste0(seq1,collapse = ",")
- if(is.null(seq2)){
-  if(interleaved){
-   argvs <- c(argvs,"--interleaved",seq1)
-  }else{
-   argvs <- c(argvs,"-U",seq1)
-  }
- }else{
-  seq2<-paste0(seq2,collapse = ",")
-  argvs <- c(argvs,"-1",seq1,"-2",seq2)
- }
 
- argvs <- c("bowtie2-align-s",paramArray,argvs,"-S",samOutput)
+    checkFileExist(seq1,"seq1")
+    checkFileExist(seq2,"seq2")
+    checkPathExist(bt2Index,"bt2Index")
+    checkFileExist(paste0(bt2Index,".1.bt2"),"bt2Index")
+    checkFileExist(paste0(bt2Index,".2.bt2"),"bt2Index")
+    checkFileExist(paste0(bt2Index,".3.bt2"),"bt2Index")
+    checkFileExist(paste0(bt2Index,".4.bt2"),"bt2Index")
+    checkFileExist(paste0(bt2Index,".rev.1.bt2"),"bt2Index")
+    checkFileExist(paste0(bt2Index,".rev.2.bt2"),"bt2Index")
+    checkFileCreatable(samOutput,"samOutput",overwrite)
 
- invisible(bowtie2Mapping(argvs = argvs))
+    argvs = c("-x",bt2Index)
+    seq1<-paste0(seq1,collapse = ",")
+    if(is.null(seq2)){
+        if(interleaved){
+            argvs <- c(argvs,"--interleaved",seq1)
+        }else{
+            argvs <- c(argvs,"-U",seq1)
+        }
+    }else{
+        seq2<-paste0(seq2,collapse = ",")
+        argvs <- c(argvs,"-1",seq1,"-2",seq2)
+    }
+
+    argvs <- c("bowtie2-align-s",paramArray,argvs,"-S",samOutput)
+
+    invisible(bowtie2Mapping(argvs = argvs))
 
 }
 
@@ -169,25 +170,25 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
 #' overwrite=TRUE)
 
 bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
- references<- trimws(as.character(references))
- bt2Index <- trimws(as.character(bt2Index))
+    references<- trimws(as.character(references))
+    bt2Index <- trimws(as.character(bt2Index))
 
- paramArray<-checkAddArgus("noinvalid",...)
+    paramArray<-checkAddArgus("noinvalid",...)
 
- checkFileExist(references,"references")
- checkPathExist(bt2Index,"bt2Index")
- checkFileCreatable(paste0(bt2Index,".1.bt2"),"bt2Index",overwrite)
- checkFileCreatable(paste0(bt2Index,".2.bt2"),"bt2Index",overwrite)
- checkFileCreatable(paste0(bt2Index,".3.bt2"),"bt2Index",overwrite)
- checkFileCreatable(paste0(bt2Index,".4.bt2"),"bt2Index",overwrite)
- checkFileCreatable(paste0(bt2Index,".rev.1.bt2"),"bt2Index",overwrite)
- checkFileCreatable(paste0(bt2Index,".rev.2.bt2"),"bt2Index",overwrite)
+    checkFileExist(references,"references")
+    checkPathExist(bt2Index,"bt2Index")
+    checkFileCreatable(paste0(bt2Index,".1.bt2"),"bt2Index",overwrite)
+    checkFileCreatable(paste0(bt2Index,".2.bt2"),"bt2Index",overwrite)
+    checkFileCreatable(paste0(bt2Index,".3.bt2"),"bt2Index",overwrite)
+    checkFileCreatable(paste0(bt2Index,".4.bt2"),"bt2Index",overwrite)
+    checkFileCreatable(paste0(bt2Index,".rev.1.bt2"),"bt2Index",overwrite)
+    checkFileCreatable(paste0(bt2Index,".rev.2.bt2"),"bt2Index",overwrite)
 
- references<-paste0(references,collapse = ",")
- argvs <- c("bowtie2-build-s",paramArray,references,bt2Index)
+    references<-paste0(references,collapse = ",")
+    argvs <- c("bowtie2-build-s",paramArray,references,bt2Index)
 
 
- invisible(bowtie2Build(argvs = argvs))
+    invisible(bowtie2Build(argvs = argvs))
 
 }
 
@@ -204,7 +205,7 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 #' @examples
 #' bowtie2_version()
 bowtie2_version <- function(){
- invisible(bowtie2Mapping(argvs = c("bowtie2-align-s","--version")))
+    invisible(bowtie2Mapping(argvs = c("bowtie2-align-s","--version")))
 }
 
 #' @name bowtie2_usage
@@ -222,7 +223,7 @@ bowtie2_version <- function(){
 #' @examples
 #' bowtie2_usage()
 bowtie2_usage <- function(){
- invisible(bowtie2Mapping(argvs = c("bowtie2-align-s","-h")))
+    invisible(bowtie2Mapping(argvs = c("bowtie2-align-s","-h")))
 }
 
 #' @name bowtie2_build_usage
@@ -240,7 +241,7 @@ bowtie2_usage <- function(){
 #' @examples
 #' bowtie2_build_usage()
 bowtie2_build_usage <- function() {
- invisible(bowtie2Build(argvs = c("bowtie2-build-s","-h")))
+    invisible(bowtie2Build(argvs = c("bowtie2-build-s","-h")))
 }
 
 
