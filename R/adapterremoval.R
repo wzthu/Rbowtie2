@@ -215,7 +215,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
   argvs<-c(argvs,"--basename",basename)
  }
  if(interleaved){
-  argvs<-c(argvs,"--interleaved",interleaved)
+  argvs<-c(argvs,"--interleaved")
  }
  argvs<-c(argvs,paramArray)
  invisible(removeAdapter(argvs))
