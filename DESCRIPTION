@@ -8,6 +8,7 @@ Maintainer: Zheng Wei <wzweizheng@qq.com>
 Description:This package provides an R wrapper of the popular bowtie2 sequencing reads aligner and AdapterRemoval, a convenient tool for rapid adapter trimming, identification, and read merging.
 License: GPL (>= 3)
 Imports: Rcpp (>= 0.12.11)
+Suggests: knitr
 LinkingTo: Rcpp
 SystemRequirements: C++11
 Archs: x64

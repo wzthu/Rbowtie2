@@ -3,18 +3,16 @@ title: "An Introduction to Rbowtie2"
 author: "Zheng Wei and Wei Zhang"
 date: '`r Sys.Date()`'
 output:
-  pdf_document: default
   html_document: default
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{An Introduction to Rbowtie2}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-MOE Key Laboratory of Bioinformatics and Bioinformatics Division, 
 
-TNLIST /Department of Automation, Tsinghua University
-
-{wei-z14,w-zhang16}\@mails.tsinghua.edu.cn
 
 ## Introduction
 
@@ -22,8 +20,13 @@ The package provides an R wrapper of bowtie2 and AdapterRemoval. Bowtie2 is the 
 
 You can preprocess the raw sequencing data by using AadapterRemoval even if adapter(s) information is missing. Then, bowtie2 can aligned these preprocessed reads to the references. 
 
-This package is developed and maintained by members of Xiaowo Wang Lab:  <http://bioinfo.au.tsinghua.edu.cn/member/xwwang>
+This package is developed and maintained by members of [Xiaowo Wang Lab](http://bioinfo.au.tsinghua.edu.cn/member/xwwang)
 
+MOE Key Laboratory of Bioinformatics and Bioinformatics Division, 
+
+TNLIST / Department of Automation, Tsinghua University
+
+contact:{wei-z14,w-zhang16}(at)mails.tsinghua.edu.cn
 
 ## An Example Workflow by Using Rbowtie2
 
