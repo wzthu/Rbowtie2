@@ -29,8 +29,8 @@ mkbowtie2:
 	(cd $(BT2_DIR) && ($(MAKE) -f Makefile))
 
 clean:
-	rm *.so
-	rm *.o
+	rm -f *.so
+	rm -f *.o
 	(cd	$(ADRM_DIR) && ($(MAKE) clean -f Makefile))
 	(cd	$(BT2_DIR) && ($(MAKE) clean -f Makefile))
 

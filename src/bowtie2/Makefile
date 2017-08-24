@@ -115,5 +115,5 @@ libbowtie2.a: $(OBJS)
 		$(AR) cq $@ $^
 
 clean:
-	rm *.a
-	rm *.o
+	rm -f *.a
+	rm -f *.o
