@@ -4,16 +4,14 @@ author: "Zheng Wei and Wei Zhang"
 date: '`r Sys.Date()`'
 output:
   html_document: default
-  pdf_document: default
-vignette: |
-  %\VignetteEngine{knitr::knitr} %\VignetteIndexEntry{Title of your vignette} %\usepackage[UTF-8]{inputenc}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-MOE Key Laboratory of Bioinformatics and Bioinformatics Division, TNLIST /Department
-of Automation, Tsinghua University
+MOE Key Laboratory of Bioinformatics and Bioinformatics Division, 
+
+TNLIST /Department of Automation, Tsinghua University
 
 {wei-z14,w-zhang16}\@mails.tsinghua.edu.cn
 
@@ -52,7 +50,7 @@ All package functions mentioned in this subsection use the shared library of Ada
 
 #### Idetitify Adapter
 
-If you know the adapter sequence of reads files, you can skip this step. Single end data is not support for this function yet. You still have to know adapter sequence.
+If you know the adapter sequence of reads files, you can skip this step. Besides,single end data is not support for this function yet so adapter sequence has to be known .
 
 
 reads_1 and reads_2 are raw paired-end reads file with fastq format. adapters is two adapters character vector. 
@@ -96,7 +94,7 @@ adapterremoval_version()
 All package functions mentioned in this subsection use the shared library of Bowtie2.
 
 #### Build Bowtie2 Index
-Before aligning reads, bowtie2 index should be build. refs is a character vector of fasta reference file paths. A prefix of bowtie index should be set to argument bt2Index. Then, 6 index files with .bt2 suffix will be created with bt2Index prefix.
+Before aligning reads, bowtie2 index should be build. refs is a character vector of fasta reference file paths. A prefix of bowtie index should be set to argument bt2Index. Then, 6 index files with .bt2 file name extension will be created with bt2Index prefix.
 
 ```{r bt2bd1}
 td <- tempdir()
@@ -114,7 +112,7 @@ bowtie2_build_usage()
 
 #### Bowtie2 Alignment
 
-The variable reads are preprocessed reads file paths. Withs the reads paths and bowtie2 index, reads will be mapped to reference by calling bowtie2. The result is saved in a sam file path that setted to samOutput 
+The variable reads_1 and reads_1 are preprocessed reads file paths. With bowtie2 index, reads will be mapped to reference by calling bowtie2. The result is saved in a sam file whose path is set to samOutput 
 
 ```{r bt2align}
 reads_1 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads", "reads_1.fastq")
