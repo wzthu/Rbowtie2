@@ -32,8 +32,8 @@
 #' \code{Numeric} scalar. You can put all aditional
 #' arguments in one \code{Character}(e.g. "--threads 8 --no-mixed")
 #' with white space splited just like command line,
-#' or put them in different \code{Character}(e.g. "--threads","8","--no-mixed").
-#' Note that some
+#' or put them in different \code{Character}
+#' (e.g. "--threads","8","--no-mixed"). Note that some
 #' arguments("-x","--interleaved","-U","-1","-2","-S") to the
 #' bowtie2 are invalid if they are already handled as explicit
 #' function arguments. See the output of
@@ -50,15 +50,17 @@
 #' ## Building a bowtie2 index
 #' refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),
 #' full=TRUE)
-#' bowtie2_build(references=refs, bt2Index=file.path(td, "index"),
+#' bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
 #' "--threads 4 --quiet",overwrite=TRUE)
 #' ## Alignments
-#' reads <- system.file(package="Rbowtie2", "extdata", "bt2", "reads",
-#'  "reads.fastq")
-#' bowtie2(bt2Index = file.path(td, "index"),
+#' reads_1 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads",
+#' "reads_1.fastq")
+#' reads_2 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads",
+#' "reads_2.fastq")
+#' bowtie2(bt2Index = file.path(td, "lambda_virus"),
 #' samOutput = file.path(td, "result.sam"),
-#' seq1=reads,overwrite=TRUE)
-#' readLines(file.path(td, "result.sam"))
+#'        seq1=reads_1,seq2=reads_2,overwrite=TRUE,"--threads 3")
+#' head(readLines(file.path(td, "result.sam")))
 
 bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
                     overwrite=FALSE){
@@ -156,14 +158,14 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
 #' ## Building a bowtie2 index
 #' refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),
 #' full=TRUE)
-#' bowtie2_build(references=refs, bt2Index=file.path(td, "index"),
+#' bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
 #' "--threads 4 --quiet",overwrite=TRUE)
 #' ## Use additional arguments in another way
-#' bowtie2_build(references=refs, bt2Index=file.path(td, "index"),
+#' bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
 #' "--threads",4,"--quiet",overwrite=TRUE)
 #' ## The function will print the output
 #' ## during the process without "--quiet" argument.
-#' bowtie2_build(references=refs, bt2Index=file.path(td, "index"),
+#' bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
 #' overwrite=TRUE)
 
 bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
@@ -232,8 +234,8 @@ bowtie2_usage <- function(){
 #' @return An invisible \code{Integer} of the shared library call status.
 #' The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
-#' @references Langmead B, Salzberg S. Fast gapped-read alignment with Bowtie 2.
-#'  Nature Methods. 2012, 9:357-359.
+#' @references Langmead B, Salzberg S.
+#' Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
 #' @export bowtie2_build_usage
 #' @examples
 #' bowtie2_build_usage()

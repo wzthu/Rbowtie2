@@ -8,43 +8,60 @@
 bowtie2_build(references, bt2Index, ..., overwrite = FALSE)
 }
 \arguments{
-\item{references}{\code{Character} vector. The path to the files containing the references for which to
+\item{references}{\code{Character} vector. The path to the files containing
+the references for which to
 build a bowtie index.}
 
-\item{bt2Index}{\code{Character} scalar. Write bowtie2 index data to files with this prefix: 'dir/basename'.
-If the files with path like 'dir/basename.*.bt2' already exists, the function function will cast an error,
+\item{bt2Index}{\code{Character} scalar. Write bowtie2 index data to files
+with this prefix: 'dir/basename'.
+If the files with path like 'dir/basename.*.bt2' already exists,
+the function function will cast an error,
 unless argument overwrite is \code{TRUE}.}
 
-\item{...}{Additional arguments to be passed on to the binaries. See below for details.}
+\item{...}{Additional arguments to be passed on to the binaries.
+See below for details.}
 
-\item{overwrite}{\code{Logical}. Force overwriting of existing files if setting \code{TRUE}.}
+\item{overwrite}{\code{Logical}. Force overwriting of existing files
+if setting \code{TRUE}.}
 }
 \value{
-An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
+An invisible \code{Integer} of the shared library call status.
+The value is 0 when there is not any mistakes
 Otherwise the value is non-zero.
 }
 \description{
-This function can be use to call \code{bowtie2-build} that wrapped in shared library.
+This function can be use to call \code{bowtie2-build}
+that wrapped in shared library.
 }
 \details{
-All additional arguments in ... are interpreted as additional parameters to be passed on to
-bowtie2_build. All of them should be \code{Character} or \code{Numeric} scalar. You can put all aditional
-arguments in one \code{Character}(e.g. "--threads 8 --quiet") with white space splited just like command line,
-or put them in different \code{Character}(e.g. "--threads","8","--quiet"). See the output of
+All additional arguments in ... are interpreted as additional
+parameters to be passed on to
+bowtie2_build. All of them should be \code{Character} or
+\code{Numeric} scalar. You can put all aditional
+arguments in one \code{Character}(e.g. "--threads 8 --quiet") with white
+space splited just like command line,
+or put them in different \code{Character}(e.g. "--threads","8","--quiet").
+See the output of
 \code{bowtie2_build_usage()} for details about available parameters.
 }
 \examples{
 td <- tempdir()
 ## Building a bowtie2 index
-refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),full=TRUE)
-bowtie2_build(references=refs, bt2Index=file.path(td, "index"),"--threads 4 --quiet",overwrite=TRUE)
+refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),
+full=TRUE)
+bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
+"--threads 4 --quiet",overwrite=TRUE)
 ## Use additional arguments in another way
-bowtie2_build(references=refs, bt2Index=file.path(td, "index"),"--threads",4,"--quiet",overwrite=TRUE)
-## The function will print the output during the process without "--quiet" argument.
-bowtie2_build(references=refs, bt2Index=file.path(td, "index"),overwrite=TRUE)
+bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
+"--threads",4,"--quiet",overwrite=TRUE)
+## The function will print the output
+## during the process without "--quiet" argument.
+bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
+overwrite=TRUE)
 }
 \references{
-Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
+Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
+alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 }
 \author{
 Zheng Wei

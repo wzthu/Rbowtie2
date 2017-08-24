@@ -7,7 +7,8 @@
 bowtie2_build_usage()
 }
 \value{
-An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
+An invisible \code{Integer} of the shared library call status.
+The value is 0 when there is not any mistakes
 Otherwise the value is non-zero.
 }
 \description{
@@ -19,7 +20,8 @@ already handled as explicit function arguments.
 bowtie2_build_usage()
 }
 \references{
-Langmead B, Salzberg S. Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
+Langmead B, Salzberg S.
+Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
 }
 \author{
 Zheng Wei

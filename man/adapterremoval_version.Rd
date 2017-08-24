@@ -7,7 +7,8 @@
 adapterremoval_version()
 }
 \value{
-An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistakes
+An invisible \code{Integer} of the shared library call status.
+The value is 0 when there is not any mistakes
 }
 \description{
 Print version information of adapterremoval
@@ -16,8 +17,8 @@ Print version information of adapterremoval
 adapterremoval_version()
 }
 \references{
-Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
-adapter trimming, identification, and read merging.
+Schubert, Lindgreen, and Orlando (2016).
+AdapterRemoval v2: rapid adapter trimming, identification, and read merging.
 BMC Research Notes, 12;9(1):88.
 }
 \author{

@@ -9,48 +9,70 @@ remove_adapters(file1, ..., adapter1 = NULL, output1 = NULL, file2 = NULL,
   overwrite = FALSE)
 }
 \arguments{
-\item{file1}{\code{Character} vector. For single-end sequencing, it contains sequence file paths.
-For paired-end sequencing, it can be file paths with #1 mates paired with file paths in file2
-And it can also be interleaved file paths when argument interleaved=\code{TRUE}}
+\item{file1}{\code{Character} vector. For single-end sequencing,
+it contains sequence file paths.
+For paired-end sequencing, it can be file paths with #1 mates paired
+with file paths in file2
+And it can also be interleaved file paths when argument
+interleaved=\code{TRUE}}
 
-\item{...}{Additional arguments to be passed on to the binaries. See below for details.}
+\item{...}{Additional arguments to be passed on to the binaries.
+See below for details.}
 
-\item{adapter1}{\code{Character}. It is an adapter sequence for file1. Default: AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG}
+\item{adapter1}{\code{Character}. It is an adapter sequence for file1.
+Default: AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG}
 
-\item{output1}{\code{Character}. The trimmed mate1 reads output file path for file1. Defualt:
+\item{output1}{\code{Character}. The trimmed mate1 reads output file
+path for file1. Defualt:
 basename.pair1.truncated (paired-end),
 basename.truncated (single-end), or
 basename.paired.truncated (interleaved)}
 
-\item{file2}{\code{Character} vector. It contains file paths with #2 mates paired with file paths in file1.
-For single-end sequencing files and interleaved paired-end sequencing files(argument interleaved=\code{TRUE}),
+\item{file2}{\code{Character} vector. It contains file paths with #2
+mates paired with file paths in file1.
+For single-end sequencing files and interleaved paired-end sequencing
+files(argument interleaved=\code{TRUE}),
 it must be \code{NULL}.}
 
-\item{adapter2}{\code{Character}. It is an adapter sequence for file2. Defualt: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT}
+\item{adapter2}{\code{Character}. It is an adapter sequence for file2.
+Defualt: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT}
 
-\item{output2}{\code{Character}. The trimmed mate2 reads output file path for file2. Default:
-BASENAME.pair2.truncated (only used in PE mode, but not if --interleaved-output is enabled)}
+\item{output2}{\code{Character}. The trimmed mate2 reads output file
+path for file2. Default:
+BASENAME.pair2.truncated (only used in PE mode, but not if
+--interleaved-output is enabled)}
 
-\item{basename}{\code{Character}. The outputfile path prefix. Default: your_output}
+\item{basename}{\code{Character}. The outputfile path prefix.
+Default: your_output}
 
-\item{interleaved}{\code{Logical}. Set \code{TRUE} when files are interleaved paired-end sequencing data.}
+\item{interleaved}{\code{Logical}. Set \code{TRUE} when files are
+interleaved paired-end sequencing data.}
 
-\item{overwrite}{\code{Logical}. Force overwriting of existing files if setting \code{TRUE}.}
+\item{overwrite}{\code{Logical}. Force overwriting of existing files
+if setting \code{TRUE}.}
 }
 \value{
-An invisible \code{Integer} of the shared library call status. The value is 0 when there is not any mistake.
+An invisible \code{Integer} of the shared library call status.
+The value is 0 when there is not any mistake.
 Otherwise the value is non-zero.
 }
 \description{
-This function can be use to call \code{AdapterRemoval} that wrapped in shared library.
+This function can be use to call \code{AdapterRemoval}
+that wrapped in shared library.
 }
 \details{
-All additional arguments in ... are interpreted as additional parameters to be passed on to
-bowtie2_build. All of them should be \code{Character} or \code{Numeric} scalar. You can put all aditional
-arguments in one \code{Character}(e.g. "--threads 8") with white space splited just like command line,
-or put them in different \code{Character}(e.g. "--threads","8").Note that some arguments(
-"--file1","--file2","--adapter1","--adapter2","--output1","--output2","--basename","--interleaved") to the
-identify_adapters are invalid if they are already handled as explicit function arguments. See the output of
+All additional arguments in ... are interpreted as additional
+parameters to be passed on to
+bowtie2_build. All of them should be \code{Character} or \code{Numeric}
+scalar. You can put all aditional
+arguments in one \code{Character}(e.g. "--threads 8") with white space
+splited just like command line,
+or put them in different \code{Character}(e.g. "--threads","8").
+Note that some arguments(
+"--file1","--file2","--adapter1","--adapter2","--output1","--output2",
+"--basename","--interleaved") to the
+identify_adapters are invalid if they are already handled as explicit
+function arguments. See the output of
 \code{adapterremoval_usage()} for details about available parameters.
 }
 \examples{
@@ -59,17 +81,20 @@ td <- tempdir()
 # Identify adapters
 reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fq")
 reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fq")
-adapters <- identify_adapters(file1=reads_1,file2=reads_2,basename=file.path(td,"reads")
-,"--threads 3",overwrite=TRUE)
+adapters <- identify_adapters(file1=reads_1,file2=reads_2,
+basename=file.path(td,"reads"), "--threads 3",overwrite=TRUE)
 
 # Remove adapters
-remove_adapters(file1=reads_1,file2=reads_2,adapter1 = adapters[1], adapter2 = adapters[2],
-output1=file.path(td,"reads_1.trimmed.fq"),output2=file.path(td,"reads_2.trimmed.fq"),
+remove_adapters(file1=reads_1,file2=reads_2,adapter1 = adapters[1],
+adapter2 = adapters[2],
+output1=file.path(td,"reads_1.trimmed.fq"),
+output2=file.path(td,"reads_2.trimmed.fq"),
 basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 3")
 
 }
 \references{
-Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid
+Schubert, Lindgreen, and Orlando (2016). AdapterRemoval
+v2: rapid
 adapter trimming, identification, and read merging.
 BMC Research Notes, 12;9(1):88.
 }
