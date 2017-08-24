@@ -73,6 +73,9 @@ identify_adapters <- function(file1,file2,...,basename = NULL,
 
  print(argvs)
  removeAdapter(argvs);
+ if(is.null(basename)){
+  basename<-"your_output"
+ }
  adapter1tb<-readLines(paste0(basename,".adapter1"));
  adapter2tb<-readLines(paste0(basename,".adapter2"));
  return(c(adapter1tb,adapter2tb))
