@@ -3,6 +3,7 @@ title: "An Introduction to Rbowtie2"
 author: "Zheng Wei and Wei Zhang"
 date: '`r Sys.Date()`'
 output:
+  pdf_document: default
   html_document: default
 ---
 
@@ -135,7 +136,7 @@ You can get version information by call:
 ```{r bt2version}
 bowtie2_version()
 ```
-##Acknowledge
+##Acknowledgement
 
 We would like to thank Huan Fang for package testing and valuable suggestions.
 
