@@ -17,11 +17,11 @@ TNLIST /Department of Automation, Tsinghua University
 
 ## Introduction
 
-The package provides an R wrapper of bowtie2 and AdapterRemoval. Bowtie2 is the popular sequencing reads aligner, which is good at aligning reads with length above 50bp[1]. AdapterRemoval is a convenient tool for rapid adapter trimming, identification, and read merging[2]. Both of them are implemented with C++. We use Rcpp package to wrap them into an R package that provide userer friendly interfaces for R users.
+The package provides an R wrapper of bowtie2 and AdapterRemoval. Bowtie2 is the popular sequencing reads aligner, which is good at aligning reads with length above 50bp[1]. AdapterRemoval is a convenient tool for rapid adapter trimming, identification, and read merging[2]. Both of them are implemented with C++. We use Rcpp package to wrap them into an R package that provide user friendly interfaces for R users.
 
-You can preprocess the raw sequencing data by using AadapterRemoval even if adapter(s) infomation is missing. Then, bowtie2 can aligned these preprocessed reads to the references. 
+You can preprocess the raw sequencing data by using AadapterRemoval even if adapter(s) information is missing. Then, bowtie2 can aligned these preprocessed reads to the references. 
 
-This package is developed and maintened by members of Xiaowo Wang Lab:  <http://bioinfo.au.tsinghua.edu.cn/member/xwwang>
+This package is developed and maintained by members of Xiaowo Wang Lab:  <http://bioinfo.au.tsinghua.edu.cn/member/xwwang>
 
 
 ## An Example Workflow by Using Rbowtie2
@@ -83,7 +83,7 @@ If you need to set additional arguments like "--threads 3" above, you can call f
 adapterremoval_usage()
 ```
 
-You can get version infomation by call:
+You can get version information by call:
 
 ```{r adrmversion}
 adapterremoval_version()
@@ -130,7 +130,7 @@ If you need to set additional arguments like "--threads 3" above, you can call f
 bowtie2_usage()
 ```
 
-You can get version infomation by call:
+You can get version information by call:
 
 ```{r bt2version}
 bowtie2_version()
