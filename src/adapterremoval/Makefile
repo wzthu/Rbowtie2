@@ -1,7 +1,7 @@
 
 
 PKG_CXXFLAGS = -std=c++11 -O3
-PKG_CPPFLAGS = -DR_ENV_FLAG -pthread -lz -lbz2
+PKG_CPPFLAGS = -DR_ENV_FLAG -pthread -lz -DAR_GZIP_SUPPORT
 
 include $(R_HOME)/etc${R_ARCH}/Makeconf
 
@@ -41,4 +41,3 @@ lib$(ADRM_LIBRARY).a:$(OBJS)
 clean:
 	rm *.a
 	rm *.o
-	

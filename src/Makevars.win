@@ -34,5 +34,5 @@ mkbowtie2:
 clean:
 	rm *.dll
 	rm *.o
-	(cd	$(ADRM_DIR) && ($(MAKE) -f Makefile clean))
-	(cd	$(BT2_DIR) && ($(MAKE) -f Makefile.win clean))
+	(cd	$(ADRM_DIR) && ($(MAKE) clean -f Makefile))
+	(cd	$(BT2_DIR) && ($(MAKE) clean -f Makefile.win))

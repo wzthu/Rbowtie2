@@ -31,7 +31,7 @@ mkbowtie2:
 clean:
 	rm *.so
 	rm *.o
-	(cd	$(ADRM_DIR) && ($(MAKE) -f Makefile clean))
-	(cd	$(BT2_DIR) && ($(MAKE) -f Makefile clean))
+	(cd	$(ADRM_DIR) && ($(MAKE) clean -f Makefile))
+	(cd	$(BT2_DIR) && ($(MAKE) clean -f Makefile))
 
 
