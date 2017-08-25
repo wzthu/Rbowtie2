@@ -122,7 +122,8 @@ adapterremoval_version()
 
 ### Bowtie2
 All package functions mentioned in this subsection 
-use the shared library of Bowtie2.
+use the shared library of Bowtie2. 
+Note that Bowtie2 is support 64bit R.
 
 #### Build Bowtie2 Index
 Before aligning reads, bowtie2 index should be build. 
@@ -165,7 +166,9 @@ reads_2 <- system.file(package="Rbowtie2", "extdata",
 bowtie2(bt2Index = file.path(td, "lambda_virus"),
         samOutput = file.path(td, "result.sam"),
 seq1=reads_1,seq2=reads_2,overwrite=TRUE,"--threads 3")
-head(readLines(file.path(td, "result.sam")))
+if(file.exists(file.path(td, "result.sam"))){
+    head(readLines(file.path(td, "result.sam")))
+}
 ```
 
 #### Additional Arguments and Version of Bowtie2 Aligner

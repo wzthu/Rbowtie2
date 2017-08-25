@@ -58,12 +58,18 @@
 #' reads_2 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads",
 #' "reads_2.fastq")
 #' bowtie2(bt2Index = file.path(td, "lambda_virus"),
-#' samOutput = file.path(td, "result.sam"),
+#'        samOutput = file.path(td, "result.sam"),
 #'        seq1=reads_1,seq2=reads_2,overwrite=TRUE,"--threads 3")
-#' head(readLines(file.path(td, "result.sam")))
+#' if(file.exists(file.path(td, "result.sam"))){
+#'     head(readLines(file.path(td, "result.sam")))
+#' }
+#'
 
 bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
                     overwrite=FALSE){
+    if(R.Version()$os=="mingw32"){
+        return("bowtie2 is not support 32bit, please use 64bit R instead")
+    }
     bt2Index <-trimws(as.character(bt2Index))
     samOutput<-trimws(as.character(samOutput))
 
@@ -170,6 +176,9 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
 #' overwrite=TRUE)
 
 bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
+    if(R.Version()$os=="mingw32"){
+        return("bowtie2 is not support 32bit, please use 64bit R instead")
+    }
     references<- trimws(as.character(references))
     bt2Index <- trimws(as.character(bt2Index))
 
@@ -205,6 +214,9 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 #' @examples
 #' bowtie2_version()
 bowtie2_version <- function(){
+    if(R.Version()$os=="mingw32"){
+        return("bowtie2 is not support 32bit, please use 64bit R instead")
+    }
     invisible(bowtie2Mapping(argvs = c("bowtie2-align-s","--version")))
 }
 
@@ -223,6 +235,9 @@ bowtie2_version <- function(){
 #' @examples
 #' bowtie2_usage()
 bowtie2_usage <- function(){
+    if(R.Version()$os=="mingw32"){
+        return("bowtie2 is not support 32bit, please use 64bit R instead")
+    }
     invisible(bowtie2Mapping(argvs = c("bowtie2-align-s","-h")))
 }
 
@@ -241,6 +256,9 @@ bowtie2_usage <- function(){
 #' @examples
 #' bowtie2_build_usage()
 bowtie2_build_usage <- function() {
+    if(R.Version()$os=="mingw32"){
+        return("bowtie2 is not support 32bit, please use 64bit R instead")
+    }
     invisible(bowtie2Build(argvs = c("bowtie2-build-s","-h")))
 }
 

@@ -73,9 +73,12 @@ reads_1 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads",
 reads_2 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads",
 "reads_2.fastq")
 bowtie2(bt2Index = file.path(td, "lambda_virus"),
-samOutput = file.path(td, "result.sam"),
+       samOutput = file.path(td, "result.sam"),
        seq1=reads_1,seq2=reads_2,overwrite=TRUE,"--threads 3")
-head(readLines(file.path(td, "result.sam")))
+if(file.exists(file.path(td, "result.sam"))){
+    head(readLines(file.path(td, "result.sam")))
+}
+
 }
 \references{
 Langmead, B., & Salzberg, S. L. (2012).
