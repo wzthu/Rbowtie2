@@ -1,5 +1,3 @@
-#' @useDynLib Rbowtie2
-#' @import Rcpp
 #' @name identify_adapters
 #' @title identify adapters for paired-end reads
 #' @description This function can be use to call \code{AdapterRemoval}
@@ -61,18 +59,17 @@ identify_adapters <- function(file1,file2,...,basename = NULL,
     paramArray<-
         checkAddArgus("--identify-adapters|--file1|--file2|--basename",...)
     if(is.null(file2)){
-        argvs<-c("AdapterRemoval","--identify-adapters","--file1",
+        argvs<-c("--identify-adapters","--file1",
                  file1,"--interleaved",paramArray);
     }else{
-        argvs<-c("AdapterRemoval","--identify-adapters","--file1",
+        argvs<-c("--identify-adapters","--file1",
                  file1,"--file2",file2,paramArray);
     }
     if(!is.null(basename)){
         argvs<-c(argvs,"--basename",basename)
     }
 
-    print(argvs)
-    removeAdapter(argvs);
+    .callbinary("AdapterRemoval",paste(argvs,collapse = " "))
     if(is.null(basename)){
         basename<-"your_output"
     }
@@ -150,11 +147,11 @@ identify_adapters <- function(file1,file2,...,basename = NULL,
 #' basename=file.path(td,"reads"), "--threads 3",overwrite=TRUE)
 #'
 #' # Remove adapters
-#' remove_adapters(file1=reads_1,file2=reads_2,adapter1 = adapters[1],
+#' cmdout<-remove_adapters(file1=reads_1,file2=reads_2,adapter1 = adapters[1],
 #' adapter2 = adapters[2],
 #' output1=file.path(td,"reads_1.trimmed.fq"),
 #' output2=file.path(td,"reads_2.trimmed.fq"),
-#' basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 3")
+#' basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 3");cmdout
 #'
 remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
                             file2 = NULL,adapter2 = NULL,output2 = NULL,
@@ -197,7 +194,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
     checkFileCreatable(output2,"output2",overwrite)
     checkPathExist(basename,"basename")
 
-    argvs<-c("AdapterRemoval","--file1",file1)
+    argvs<-c("--file1",file1)
 
     if(!is.null(adapter1)){
         argvs<-c(argvs,"--adapter1",adapter1)
@@ -221,7 +218,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
         argvs<-c(argvs,"--interleaved")
     }
     argvs<-c(argvs,paramArray)
-    invisible(removeAdapter(argvs))
+    invisible(.callbinary("AdapterRemoval",paste(argvs,collapse = " ")))
 
 
 }
@@ -244,7 +241,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
 #' @examples
 #' adapterremoval_usage()
 adapterremoval_usage<- function(){
-    invisible(removeAdapter(c("AdapterRemoval","-h")))
+    invisible(.callbinary("AdapterRemoval","-h"))
 }
 
 
@@ -261,7 +258,13 @@ adapterremoval_usage<- function(){
 #' @examples
 #' adapterremoval_version()
 adapterremoval_version<- function(){
-    invisible(removeAdapter(c("AdapterRemoval","--version")))
+    invisible(.callbinary("AdapterRemoval","--version"))
 }
 
-
+.callbinary<- function(bin, args)
+{
+    args <- gsub("^ *| *$", "", args)
+    call <- paste(shQuote(file.path(system.file(package="Rbowtie2"), bin)), args)
+    output <- system(call, intern=TRUE,show.output.on.console=TRUE)
+    return(output)
+}

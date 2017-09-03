@@ -1,0 +1,33 @@
+#CXX = $(BINPREF)/g++ -std=gnu++11
+include ${R_HOME}/etc${R_ARCH}/Makeconf
+ADRM_DIR = adapterremoval
+BT2_DIR = bowtie2
+
+ifeq "$(WIN)" "64"
+
+.PHONY: mkadapterremoval mkbowtie2 all
+
+all: 
+	(cd $(BT2_DIR) && ($(MAKE) CXX="$(CXX) -std=gnu++11" -f Makefile.win))
+	(cd	$(ADRM_DIR) && ($(MAKE) CXX="$(CXX) -std=gnu++11" -f Makefile))
+
+
+clean:
+	(cd	$(ADRM_DIR) && ($(MAKE) clean -f Makefile))
+	(cd	$(BT2_DIR) && ($(MAKE) clean -f Makefile.win))
+
+
+else
+
+.PHONY: mkadapterremoval all
+
+all: mkadapterremoval 
+
+mkadapterremoval:
+	(cd	$(ADRM_DIR) && ($(MAKE) CXX="$(CXX)" -f Makefile))
+
+
+clean:
+	(cd	$(ADRM_DIR) && ($(MAKE) clean -f Makefile))
+
+endif

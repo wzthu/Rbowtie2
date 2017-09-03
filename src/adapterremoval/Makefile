@@ -1,43 +1,58 @@
 
 
-PKG_CXXFLAGS = -std=c++11 -O3
-PKG_CPPFLAGS = -DR_ENV_FLAG -pthread -lz -DAR_GZIP_SUPPORT
+CXXFLAGS = -O3 -std=c++11
+CPPFLAGS = -pthread -DNDEBUG 
 
-include $(R_HOME)/etc${R_ARCH}/Makeconf
-
-SRCS = adapterset.cpp \
-alignment.cpp \
-argparse.cpp \
-debug.cpp \
-demultiplex.cpp \
-fastq.cpp \
-fastq_enc.cpp \
-fastq_io.cpp \
-linereader.cpp \
-linereader_joined.cpp \
-main.cpp \
-main_adapter_id.cpp \
-main_adapter_rm.cpp \
-main_demultiplex.cpp \
-scheduler.cpp \
-strutils.cpp \
-threads.cpp \
-timer.cpp \
-trimmed_reads.cpp \
-userconfig.cpp \
+#CPPFLAGS = -pthread -lz -DAR_GZIP_SUPPORT  -DNDEBUG 
+CXX= 
+SRCS = adapterset.cc \
+alignment.cc \
+argparse.cc \
+debug.cc \
+demultiplex.cc \
+fastq.cc \
+fastq_enc.cc \
+fastq_io.cc \
+linereader.cc \
+linereader_joined.cc \
+main_adapter_id.cc \
+main_adapter_rm.cc \
+main_demultiplex.cc \
+scheduler.cc \
+strutils.cc \
+threads.cc \
+timer.cc \
+trimmed_reads.cc \
+userconfig.cc \
+main.cc 
 
 ADRM_LIBRARY = adrm
 
 
-.PHONY: all clean
+.PHONY: all clean AdapterRemoval
 
-all: lib$(ADRM_LIBRARY).a
+OBJS = $(SRCS:.cc=.o)
 
-OBJS = $(SRCS:.cpp=.o)
+all: AdapterRemoval install
+	
 
-lib$(ADRM_LIBRARY).a:$(OBJS)
-	$(AR) cq $@ $^
+
+AdapterRemoval:$(OBJS)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS)  -o $@ $^
+
+
+
+.cc.o:
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< 
+
+
+install:
+	cp AdapterRemoval ../../inst/
+
 
 clean:
-	rm -f *.a
+	rm -f AdapterRemoval
+	rm -f ../../inst/AdapterRemoval
 	rm -f *.o
+	
+

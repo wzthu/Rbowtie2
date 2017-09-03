@@ -50,4 +50,11 @@ vignettes/*.pdf
 /src/*/*.dll
 /src/*/*.so
 /src/*/*.a
+/src/*/*.exe
+/src/*/AdapterRemoval
+/src/*/bowtie2-align-s
+/src/*/bowtie2-build-s
+/inst/AdapterRemoval
+/inst/bowtie2-align-s
+/inst/bowtie2-build-s
 .Rproj.user

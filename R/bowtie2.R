@@ -1,5 +1,3 @@
-#' @useDynLib Rbowtie2
-#' @import Rcpp
 #' @name bowtie2
 #' @title Interface to bowtie2 of bowtie2-2.2.3
 #' @description This function can be use to call \code{bowtie2}
@@ -57,9 +55,9 @@
 #' "reads_1.fastq")
 #' reads_2 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads",
 #' "reads_2.fastq")
-#' bowtie2(bt2Index = file.path(td, "lambda_virus"),
+#' cmdout<-bowtie2(bt2Index = file.path(td, "lambda_virus"),
 #'        samOutput = file.path(td, "result.sam"),
-#'        seq1=reads_1,seq2=reads_2,overwrite=TRUE,"--threads 3")
+#'        seq1=reads_1,seq2=reads_2,overwrite=TRUE,"--threads 3");cmdout
 #' if(file.exists(file.path(td, "result.sam"))){
 #'     head(readLines(file.path(td, "result.sam")))
 #' }
@@ -67,7 +65,7 @@
 
 bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
                     overwrite=FALSE){
-    if(R.Version()$os=="mingw32"){
+    if(R.Version()$arch=="i386"){
         return("bowtie2 is not support 32bit, please use 64bit R instead")
     }
     bt2Index <-trimws(as.character(bt2Index))
@@ -121,9 +119,9 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
         argvs <- c(argvs,"-1",seq1,"-2",seq2)
     }
 
-    argvs <- c("bowtie2-align-s",paramArray,argvs,"-S",samOutput)
+    argvs <- c(paramArray,argvs,"-S",samOutput)
 
-    invisible(bowtie2Mapping(argvs = argvs))
+    invisible(.callbinary("bowtie2-align-s",paste(argvs,collapse = " ")))
 
 }
 
@@ -165,18 +163,18 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
 #' ## Building a bowtie2 index
 #' refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),
 #' full=TRUE)
-#' bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
-#' "--threads 4 --quiet",overwrite=TRUE)
+#' cmdout<-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
+#' "--threads 4 --quiet",overwrite=TRUE);cmdout
 #' ## Use additional arguments in another way
-#' bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
-#' "--threads",4,"--quiet",overwrite=TRUE)
+#' cmdout<-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
+#' "--threads",4,"--quiet",overwrite=TRUE);cmdout
 #' ## The function will print the output
 #' ## during the process without "--quiet" argument.
-#' bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
-#' overwrite=TRUE)
+#' cmdout<-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
+#' overwrite=TRUE);cmdout
 
 bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
-    if(R.Version()$os=="mingw32"){
+    if(R.Version()$arch=="i386"){
         return("bowtie2 is not support 32bit, please use 64bit R instead")
     }
     references<- trimws(as.character(references))
@@ -194,10 +192,10 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
     checkFileCreatable(paste0(bt2Index,".rev.2.bt2"),"bt2Index",overwrite)
 
     references<-paste0(references,collapse = ",")
-    argvs <- c("bowtie2-build-s",paramArray,references,bt2Index)
+    argvs <- c(paramArray,references,bt2Index)
 
 
-    invisible(bowtie2Build(argvs = argvs))
+    invisible(.callbinary("bowtie2-build-s",paste(argvs,collapse = " ")))
 
 }
 
@@ -212,12 +210,12 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 #' alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2_version
 #' @examples
-#' bowtie2_version()
+#' cmdout<-bowtie2_version();cmdout
 bowtie2_version <- function(){
-    if(R.Version()$os=="mingw32"){
+    if(R.Version()$arch=="i386"){
         return("bowtie2 is not support 32bit, please use 64bit R instead")
     }
-    invisible(bowtie2Mapping(argvs = c("bowtie2-align-s","--version")))
+    invisible(.callbinary("bowtie2-align-s","--version"))
 }
 
 #' @name bowtie2_usage
@@ -233,12 +231,12 @@ bowtie2_version <- function(){
 #' alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2_usage
 #' @examples
-#' bowtie2_usage()
+#' cmdout<-bowtie2_usage();cmdout
 bowtie2_usage <- function(){
-    if(R.Version()$os=="mingw32"){
+    if(R.Version()$arch=="i386"){
         return("bowtie2 is not support 32bit, please use 64bit R instead")
     }
-    invisible(bowtie2Mapping(argvs = c("bowtie2-align-s","-h")))
+    invisible(.callbinary("bowtie2-align-s","-h"))
 }
 
 #' @name bowtie2_build_usage
@@ -254,12 +252,12 @@ bowtie2_usage <- function(){
 #' Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
 #' @export bowtie2_build_usage
 #' @examples
-#' bowtie2_build_usage()
+#' cmdout<-bowtie2_build_usage();cmdout
 bowtie2_build_usage <- function() {
-    if(R.Version()$os=="mingw32"){
+    if(R.Version()$arch=="i386"){
         return("bowtie2 is not support 32bit, please use 64bit R instead")
     }
-    invisible(bowtie2Build(argvs = c("bowtie2-build-s","-h")))
+    invisible(.callbinary("bowtie2-build-s","-h"))
 }
 
 
