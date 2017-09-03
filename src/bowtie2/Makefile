@@ -130,6 +130,8 @@ install:
 	cp bowtie2-build-s ../../inst
 
 clean:
+	rm -f ../../inst/bowtie2-align-s
+	rm -f ../../inst/bowtie2-build-s
 	rm -f bowtie2-align-s
 	rm -f bowtie2-build-s
 	rm -f *.o
