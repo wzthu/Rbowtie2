@@ -57,4 +57,5 @@ vignettes/*.pdf
 /inst/AdapterRemoval
 /inst/bowtie2-align-s
 /inst/bowtie2-build-s
+/inst/*.exe
 .Rproj.user

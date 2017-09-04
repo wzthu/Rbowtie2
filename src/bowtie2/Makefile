@@ -23,9 +23,9 @@
 
 
 INC_EXT = -I third_party
-LIBS_BT2 = -lpthread
+LIBS_BT2 = -pthread
 #LIBS_BT2 = -lz -lpthread
-CXX_STD = CXX11
+#CXX_STD = CXX11
 
 MM_DEF = -DBOWTIE_MM
 

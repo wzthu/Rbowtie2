@@ -1,20 +1,15 @@
-#include ${R_HOME}/etc$(R_ARCH)/Makeconf
+#include ${R_HOME}/etc${R_ARCH}/Makeconf
 ADRM_DIR = adapterremoval
 BT2_DIR = bowtie2
 
+CXX = g++
 
-.PHONY: createinst mkadapterremoval mkbowtie2 all clean
+.PHONY: all clean
 
-all: createinst mkadapterremoval mkbowtie2 
-
-createinst:
+all: 
 	mkdir -p ../inst
-
-mkadapterremoval:
 	(cd	$(ADRM_DIR) && ($(MAKE) CXX="$(CXX) -std=gnu++11" -f Makefile))
-
-mkbowtie2:
-	(cd $(BT2_DIR) && ($(MAKE) CXX="$(CXX) -std=gnu++11" -f Makefile))
+	(cd $(BT2_DIR) && ($(MAKE) CXX="$(CXX)" -f Makefile))
 
 
 clean:
