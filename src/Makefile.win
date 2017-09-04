@@ -5,7 +5,7 @@ BT2_DIR = bowtie2
 
 ifeq "$(WIN)" "64"
 
-.PHONY: mkadapterremoval mkbowtie2 all
+.PHONY:  clean all
 
 all: 
 	mkdir -p ../inst
@@ -21,12 +21,11 @@ clean:
 
 else
 
-.PHONY: mkadapterremoval all
+.PHONY: clean all
 
-all: mkadapterremoval 
-
-mkadapterremoval:
-	(cd	$(ADRM_DIR) && ($(MAKE) CXX="$(CXX)" -f Makefile))
+all: 
+	mkdir -p ../inst
+	(cd	$(ADRM_DIR) && ($(MAKE) CXX="$(BINPREF)/g++ -std=gnu++11" -f Makefile.win))
 
 
 clean:

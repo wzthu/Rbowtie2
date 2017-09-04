@@ -4,7 +4,7 @@ CXXFLAGS = -O3
 CPPFLAGS = -pthread -DNDEBUG 
 
 #CPPFLAGS = -pthread -lz -DAR_GZIP_SUPPORT  -DNDEBUG 
-CXX= 
+
 SRCS = adapterset.cc \
 alignment.cc \
 argparse.cc \
