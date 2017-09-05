@@ -85,11 +85,11 @@ adapters <- identify_adapters(file1=reads_1,file2=reads_2,
 basename=file.path(td,"reads"), "--threads 3",overwrite=TRUE)
 
 # Remove adapters
-remove_adapters(file1=reads_1,file2=reads_2,adapter1 = adapters[1],
+cmdout<-remove_adapters(file1=reads_1,file2=reads_2,adapter1 = adapters[1],
 adapter2 = adapters[2],
 output1=file.path(td,"reads_1.trimmed.fq"),
 output2=file.path(td,"reads_2.trimmed.fq"),
-basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 3")
+basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 3");cmdout
 
 }
 \references{

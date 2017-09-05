@@ -26,9 +26,19 @@ else
 all: 
 	mkdir -p ../inst
 	(cd	$(ADRM_DIR) && ($(MAKE) CXX="$(BINPREF)/g++ -std=gnu++11" -f Makefile.win))
+	$(CXX) -c  bowtie2_32.cpp
+	$(CXX) bowtie2_32.o -o bowtie2-align-s
+	$(CXX) bowtie2_32.o -o bowtie2-build-s
+	cp bowtie2-build-s ../inst
+	cp bowtie2-align-s ../inst
 
 
 clean:
 	(cd	$(ADRM_DIR) && ($(MAKE) clean -f Makefile))
+	rm -f ../inst/bowtie2-build-s
+	rm -f ../inst/bowtie2-align-s
+	rm -f bowtie2-build-s
+	rm -f bowtie2-align-s
+	rm -f *.o
 
 endif

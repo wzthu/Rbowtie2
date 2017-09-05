@@ -49,15 +49,15 @@ td <- tempdir()
 ## Building a bowtie2 index
 refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),
 full=TRUE)
-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
-"--threads 4 --quiet",overwrite=TRUE)
+cmdout<-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
+"--threads 4 --quiet",overwrite=TRUE);cmdout
 ## Use additional arguments in another way
-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
-"--threads",4,"--quiet",overwrite=TRUE)
+cmdout<-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
+"--threads",4,"--quiet",overwrite=TRUE);cmdout
 ## The function will print the output
 ## during the process without "--quiet" argument.
-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
-overwrite=TRUE)
+cmdout<-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
+overwrite=TRUE);cmdout
 }
 \references{
 Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read

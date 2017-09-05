@@ -15,7 +15,7 @@ Otherwise the value is non-zero.
 Print version information of bowtie2-2.2.3
 }
 \examples{
-bowtie2_version()
+cmdout<-bowtie2_version();cmdout
 }
 \references{
 Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read

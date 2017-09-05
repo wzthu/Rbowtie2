@@ -17,7 +17,7 @@ bowtie2 are invalid if they are
 already handled as explicit function arguments.
 }
 \examples{
-bowtie2_usage()
+cmdout<-bowtie2_usage();cmdout
 }
 \references{
 Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
