@@ -1,6 +1,6 @@
 checkFileExist <- function(filePath,argname){
     if(!is.null(filePath)){
-        for(i in 1:length(filePath)){
+        for(i in seq_along(filePath)){
             if(!file.exists(filePath[i])){
                 stop(sprintf("For argument `%s`, file does not exist: `%s`",
                              argname,filePath[i]))
@@ -43,7 +43,7 @@ checkAddArgus<- function(pattern,...){
     paramlist<-trimws(as.character(list(...)))
     paramArray<-c()
     if(length(paramlist)>0){
-        for(i in 1:length(paramlist)){
+        for(i in seq_along(paramlist)){
             paramArray<-c(paramArray,strsplit(paramlist[i],"\\s+")[[1]])
         }
     }
