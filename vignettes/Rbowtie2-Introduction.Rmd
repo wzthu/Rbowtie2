@@ -82,11 +82,10 @@ adapters is two adapters character vector.
 td <- tempdir()
 reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fq")
 reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fq")
-adapters <- 
+(adapters <- 
     identify_adapters(file1=reads_1,file2=reads_2,
                       basename=file.path(td,"reads"),
-                      "--threads 3",overwrite=TRUE)
-adapters
+                      "--threads 3",overwrite=TRUE))
 ```
 
 #### Remove Adapter
@@ -95,11 +94,11 @@ With known adapter sequence,
 remove_adapter function can be call to trim adapters.  
 
 ```{r rmad}
-cmdout<-remove_adapters(file1=reads_1,file2=reads_2,adapter1 = adapters[1], 
+(cmdout<-remove_adapters(file1=reads_1,file2=reads_2,adapter1 = adapters[1], 
                 adapter2 = adapters[2],
 output1=file.path(td,"reads_1.trimmed.fq"),
 output2=file.path(td,"reads_2.trimmed.fq"),
-basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 3");cmdout
+basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 3"))
 ```
 
 
@@ -110,13 +109,13 @@ you can call function below to print all options available.
 The fixed arguments like file1, file2 and basename etc. are invalid.
 
 ```{r adrmusage}
-cmdout<-adapterremoval_usage();cmdout
+(cmdout<-adapterremoval_usage())
 ```
 
 You can get version information by call:
 
 ```{r adrmversion}
-cmdout<-adapterremoval_version();cmdout
+(cmdout<-adapterremoval_version())
 ```
 
 
@@ -135,9 +134,9 @@ be created with bt2Index prefix.
 ```{r bt2bd1}
 td <- tempdir()
 refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),full=TRUE)
-cmdout<-bowtie2_build(references=refs, 
+(cmdout<-bowtie2_build(references=refs, 
               bt2Index=file.path(td, "lambda_virus"), "--threads 4 --quiet",
-              overwrite=TRUE);cmdout
+              overwrite=TRUE))
 ```
 
 #### Additional Arguments of Bowtie Build
@@ -148,7 +147,7 @@ you can call function below to print all options available.
 The fixed arguments references, bt2Index are invalid.
 
 ```{r bt2bdusage}
-cmdout<-bowtie2_build_usage();cmdout
+(cmdout<-bowtie2_build_usage())
 ```
 
 #### Bowtie2 Alignment
@@ -163,10 +162,10 @@ reads_1 <- system.file(package="Rbowtie2", "extdata",
                        "bt2", "reads", "reads_1.fastq")
 reads_2 <- system.file(package="Rbowtie2", "extdata", 
                        "bt2", "reads", "reads_2.fastq")
-if(file.exists(file.path(td, "lambda_virus"))){
-    cmdout<-bowtie2(bt2Index = file.path(td, "lambda_virus"),
+if(file.exists(file.path(td, "lambda_virus.1.bt2"))){
+    (cmdout<-bowtie2(bt2Index = file.path(td, "lambda_virus"),
         samOutput = file.path(td, "result.sam"),
-    seq1=reads_1,seq2=reads_2,overwrite=TRUE,"--threads 3");cmdout
+    seq1=reads_1,seq2=reads_2,overwrite=TRUE,"--threads 3"))
     head(readLines(file.path(td, "result.sam")))
 }
 ```
@@ -178,20 +177,28 @@ you can call function below to print all options available.
 The fixed arguments like bt2Index, samOutput and seq1 etc. are invalid.
 
 ```{r bt2usage}
-cmdout<-bowtie2_usage();cmdout
+(cmdout<-bowtie2_usage())
 ```
 
 You can get version information by call:
 
 ```{r bt2version}
-cmdout<-bowtie2_version();cmdout
+(cmdout<-bowtie2_version())
 ```
-##Acknowledgement
+
+
+## Session Infomation
+
+```{r sessioninfo}
+sessionInfo()
+```
+
+## Acknowledgement
 
 We would like to thank Huan Fang for package testing and 
 valuable suggestions.
 
-##References
+## References
 
 [1] Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read alignment
 with Bowtie 2. Nature methods, 9(4), 357-359.
