@@ -15,7 +15,7 @@ all:
 
 
 clean:
-	(cd	$(ADRM_DIR) && ($(MAKE) clean -f Makefile))
+	(cd	$(ADRM_DIR) && ($(MAKE) clean -f Makefile.win))
 	(cd	$(BT2_DIR) && ($(MAKE) clean -f Makefile.win))
 
 
