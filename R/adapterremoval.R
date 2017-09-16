@@ -1,13 +1,13 @@
 #' @name identify_adapters
 #' @title identify adapters for paired-end reads
-#' @description This function can be use to call \code{AdapterRemoval}
-#' that wrapped in shared library for adapters identifying.
+#' @description This function can be use to call wrapped \code{AdapterRemoval}
+#' binary for adapters identifying.
 #' @param file1 \code{Character} vector. It can be file paths with #1
 #' mates paired with file paths in file2
 #' And it can also be interleaved file paths when argument
 #' interleaved=\code{TRUE}
 #' @param file2 \code{Character} vector. It contains file paths with
-#' #2 mates paired with file paths in seq1.
+#' #2 mates paired with file paths in file1.
 #' For interleaved paired-end sequencing files(argument
 #' interleaved=\code{TRUE}),it must to be setted to \code{NULL}.
 #' @param ... Additional arguments to be passed on to the binaries.
@@ -81,8 +81,8 @@ identify_adapters <- function(file1,file2,...,basename = NULL,
 
 #' @name remove_adapters
 #' @title Interface to bowtie2 of adapterremoval-2.2.1a
-#' @description This function can be use to call \code{AdapterRemoval}
-#' that wrapped in shared library.
+#' @description This function can be use to call wrapped \code{AdapterRemoval}
+#' binary.
 #' @param file1 \code{Character} vector. For single-end sequencing,
 #' it contains sequence file paths.
 #' For paired-end sequencing, it can be file paths with #1 mates paired
@@ -129,7 +129,7 @@ identify_adapters <- function(file1,file2,...,basename = NULL,
 #' function arguments. See the output of
 #' \code{adapterremoval_usage()} for details about available parameters.
 #' @author Zheng Wei
-#' @return An invisible \code{Integer} of the shared library call status.
+#' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistake.
 #' Otherwise the value is non-zero.
 #' @references    Schubert, Lindgreen, and Orlando (2016). AdapterRemoval
@@ -166,7 +166,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
     }
     if(!is.null(file2)){
         if(interleaved){
-            stop("Argumnet `seq2` has to be NULL when interleaved=TRUE")
+            stop("Argumnet `file2` has to be NULL when interleaved=TRUE")
         }else{
             file2<-trimws(as.character(file2))
             if(length(file1)!=length(file2)){
@@ -230,7 +230,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
 #' Note that some arguments to the
 #' adapterremoval are invalid if they are
 #' already handled as explicit function arguments.
-#' @return An invisible \code{Integer} of the shared library call status.
+#' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes.
 #' Otherwise the value is non-zero.
 #' @author Zheng Wei
@@ -248,7 +248,7 @@ adapterremoval_usage<- function(){
 #' @name adapterremoval_version
 #' @title Print version information of adapterremoval
 #' @description Print version information of adapterremoval
-#' @return An invisible \code{Integer} of the shared library call status.
+#' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes
 #' @author  Zheng Wei
 #' @references Schubert, Lindgreen, and Orlando (2016).

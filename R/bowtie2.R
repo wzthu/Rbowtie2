@@ -1,7 +1,7 @@
 #' @name bowtie2
 #' @title Interface to bowtie2 of bowtie2-2.2.3
-#' @description This function can be use to call \code{bowtie2}
-#' that wrapped in shared library.
+#' @description This function can be use to call wrapped \code{bowtie2}
+#' binary.
 #' @param bt2Index \code{Character} scalar. bowtie2 index files
 #' prefix: 'dir/basename'
 #' (minus trailing '.*.bt2' of 'dir/basename.*.bt2').
@@ -37,7 +37,7 @@
 #' function arguments. See the output of
 #' \code{bowtie2_usage()} for details about available parameters.
 #' @author Zheng Wei
-#' @return An invisible \code{Integer} of the shared library call
+#' @return An invisible \code{Integer} of call
 #' status. The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
 #' @references Langmead, B., & Salzberg, S. L. (2012).
@@ -55,7 +55,7 @@
 #' "reads_1.fastq")
 #' reads_2 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads",
 #' "reads_2.fastq")
-#' if(file.exists(file.path(td, "lambda_virus"))){
+#' if(file.exists(file.path(td, "lambda_virus.1.bt2"))){
 #'     cmdout<-bowtie2(bt2Index = file.path(td, "lambda_virus"),
 #'        samOutput = file.path(td, "result.sam"),
 #'        seq1=reads_1,seq2=reads_2,overwrite=TRUE,"--threads 3");cmdout
@@ -128,8 +128,8 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
 
 #' @name bowtie2-build
 #' @title Interface to bowtie2-build of bowtie2-2.2.3
-#' @description This function can be use to call \code{bowtie2-build}
-#' that wrapped in shared library.
+#' @description This function can be use to call wrapped \code{bowtie2-build}
+#' binary
 #' @param references \code{Character} vector. The path to the files containing
 #' the references for which to
 #' build a bowtie index.
@@ -152,7 +152,7 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
 #' See the output of
 #' \code{bowtie2_build_usage()} for details about available parameters.
 #' @author Zheng Wei
-#' @return An invisible \code{Integer} of the shared library call status.
+#' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
@@ -203,7 +203,7 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 #' @title Print version information of bowtie2-2.2.3
 #' @description Print version information of bowtie2-2.2.3
 #' @author Zheng Wei
-#' @return An invisible \code{Integer} of the shared library call status.
+#' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
@@ -224,7 +224,7 @@ bowtie2_version <- function(){
 #' bowtie2 are invalid if they are
 #' already handled as explicit function arguments.
 #' @author Zheng Wei
-#' @return An invisible \code{Integer} of the shared library call status.
+#' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
@@ -245,7 +245,7 @@ bowtie2_usage <- function(){
 #' bowtie2_build_usage are invalid if they are
 #' already handled as explicit function arguments.
 #' @author Zheng Wei
-#' @return An invisible \code{Integer} of the shared library call status.
+#' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
 #' @references Langmead B, Salzberg S.
