@@ -78,7 +78,6 @@ reads_1 and reads_2 are raw paired-end reads file with fastq format.
 adapters is two adapters character vector. 
 
 ```{r idad}
-
 td <- tempdir()
 reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fq")
 reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fq")
