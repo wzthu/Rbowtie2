@@ -111,17 +111,12 @@ OBJS_SEARCH = $(SRCS_SEARCH:.cpp=.o)
 OBJS_BUILD = $(SRCS_BUILD:.cpp=.o)
 
 
-.PHONY: all clean bowtie2-align-s bowtie2-build-s install
+.PHONY: all clean bowtie2-align-s bowtie2-build-s
 
-all: bowtie2-build-s bowtie2-align-s install
+all: bowtie2-build-s bowtie2-align-s
+	cp bowtie2-align-s ../../inst
+	cp bowtie2-build-s ../../inst
 
-
-#bowtie2-align-s: bt2_search.cpp $(SEARCH_CPPS) $(SHARED_CPPS) $(HEADERS)
-#	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $<  $(SHARED_CPPS) $(SEARCH_CPPS_MAIN)
-
-	
-#bowtie2-build-s: bt2_build.cpp $(SHARED_CPPS) $(HEADERS)
-#	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $<  $(SHARED_CPPS) $(SEARCH_CPPS_MAIN)
 .cc.o:
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< 
 
@@ -135,9 +130,7 @@ bowtie2-align-s: $(OBJS_SEARCH)
 
 
 
-install:
-	cp bowtie2-align-s ../../inst
-	cp bowtie2-build-s ../../inst
+
 
 clean:
 	rm -f ../../inst/bowtie2-align-s
