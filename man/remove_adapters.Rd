@@ -52,18 +52,18 @@ interleaved paired-end sequencing data.}
 if setting \code{TRUE}.}
 }
 \value{
-An invisible \code{Integer} of the shared library call status.
+An invisible \code{Integer} of call status.
 The value is 0 when there is not any mistake.
 Otherwise the value is non-zero.
 }
 \description{
-This function can be use to call \code{AdapterRemoval}
-that wrapped in shared library.
+This function can be use to call wrapped \code{AdapterRemoval}
+binary.
 }
 \details{
 All additional arguments in ... are interpreted as additional
 parameters to be passed on to
-bowtie2_build. All of them should be \code{Character} or \code{Numeric}
+remove_adapters. All of them should be \code{Character} or \code{Numeric}
 scalar. You can put all aditional
 arguments in one \code{Character}(e.g. "--threads 8") with white space
 splited just like command line,

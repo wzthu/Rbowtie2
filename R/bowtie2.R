@@ -26,7 +26,7 @@
 #' files if setting \code{TRUE}.
 #' @details All additional arguments in ... are interpreted as
 #' additional parameters to be passed on to
-#' bowtie2_build. All of them should be \code{Character} or
+#' bowtie2. All of them should be \code{Character} or
 #' \code{Numeric} scalar. You can put all aditional
 #' arguments in one \code{Character}(e.g. "--threads 8 --no-mixed")
 #' with white space splited just like command line,

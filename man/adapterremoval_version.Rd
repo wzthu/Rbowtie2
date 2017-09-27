@@ -7,7 +7,7 @@
 adapterremoval_version()
 }
 \value{
-An invisible \code{Integer} of the shared library call status.
+An invisible \code{Integer} of call status.
 The value is 0 when there is not any mistakes
 }
 \description{

@@ -13,7 +13,7 @@ And it can also be interleaved file paths when argument
 interleaved=\code{TRUE}}
 
 \item{file2}{\code{Character} vector. It contains file paths with
-#2 mates paired with file paths in seq1.
+#2 mates paired with file paths in file1.
 For interleaved paired-end sequencing files(argument
 interleaved=\code{TRUE}),it must to be setted to \code{NULL}.}
 
@@ -30,13 +30,13 @@ files if setting \code{TRUE}.}
 An invisible \code{Character} vector of adapters for each mate.
 }
 \description{
-This function can be use to call \code{AdapterRemoval}
-that wrapped in shared library for adapters identifying.
+This function can be use to call wrapped \code{AdapterRemoval}
+binary for adapters identifying.
 }
 \details{
 All additional arguments in ... are interpreted as
 additional parameters to be passed on to
-bowtie2_build. All of them should be \code{Character} or
+identify_adapters. All of them should be \code{Character} or
 \code{Numeric} scalar. You can put all aditional
 arguments in one \code{Character}(e.g. "--threads 8") with white
  space splited just like command line,

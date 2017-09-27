@@ -38,18 +38,18 @@ interleaved paired-end sequencing data.}
 files if setting \code{TRUE}.}
 }
 \value{
-An invisible \code{Integer} of the shared library call
+An invisible \code{Integer} of call
 status. The value is 0 when there is not any mistakes
 Otherwise the value is non-zero.
 }
 \description{
-This function can be use to call \code{bowtie2}
-that wrapped in shared library.
+This function can be use to call wrapped \code{bowtie2}
+binary.
 }
 \details{
 All additional arguments in ... are interpreted as
 additional parameters to be passed on to
-bowtie2_build. All of them should be \code{Character} or
+bowtie2. All of them should be \code{Character} or
 \code{Numeric} scalar. You can put all aditional
 arguments in one \code{Character}(e.g. "--threads 8 --no-mixed")
 with white space splited just like command line,
@@ -72,7 +72,7 @@ reads_1 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads",
 "reads_1.fastq")
 reads_2 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads",
 "reads_2.fastq")
-if(file.exists(file.path(td, "lambda_virus"))){
+if(file.exists(file.path(td, "lambda_virus.1.bt2"))){
     cmdout<-bowtie2(bt2Index = file.path(td, "lambda_virus"),
        samOutput = file.path(td, "result.sam"),
        seq1=reads_1,seq2=reads_2,overwrite=TRUE,"--threads 3");cmdout

@@ -25,13 +25,13 @@ See below for details.}
 if setting \code{TRUE}.}
 }
 \value{
-An invisible \code{Integer} of the shared library call status.
+An invisible \code{Integer} of call status.
 The value is 0 when there is not any mistakes
 Otherwise the value is non-zero.
 }
 \description{
-This function can be use to call \code{bowtie2-build}
-that wrapped in shared library.
+This function can be use to call wrapped \code{bowtie2-build}
+binary
 }
 \details{
 All additional arguments in ... are interpreted as additional
