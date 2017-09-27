@@ -18,7 +18,7 @@
 #' files if setting \code{TRUE}.
 #' @details All additional arguments in ... are interpreted as
 #' additional parameters to be passed on to
-#' bowtie2_build. All of them should be \code{Character} or
+#' identify_adapters. All of them should be \code{Character} or
 #' \code{Numeric} scalar. You can put all aditional
 #' arguments in one \code{Character}(e.g. "--threads 8") with white
 #'  space splited just like command line,
@@ -117,7 +117,7 @@ identify_adapters <- function(file1,file2,...,basename = NULL,
 #' if setting \code{TRUE}.
 #' @details All additional arguments in ... are interpreted as additional
 #' parameters to be passed on to
-#' bowtie2_build. All of them should be \code{Character} or \code{Numeric}
+#' remove_adapters. All of them should be \code{Character} or \code{Numeric}
 #' scalar. You can put all aditional
 #' arguments in one \code{Character}(e.g. "--threads 8") with white space
 #' splited just like command line,
