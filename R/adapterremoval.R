@@ -230,9 +230,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
 #' Note that some arguments to the
 #' adapterremoval are invalid if they are
 #' already handled as explicit function arguments.
-#' @return An invisible \code{Integer} of call status.
-#' The value is 0 when there is not any mistakes.
-#' Otherwise the value is non-zero.
+#' @return AdapterRemoval available arguments and their usage.
 #' @author Zheng Wei
 #' @references Schubert, Lindgreen, and Orlando (2016).
 #' AdapterRemoval v2: rapid adapter trimming, identification, and read merging.
@@ -241,7 +239,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
 #' @examples
 #' adapterremoval_usage()
 adapterremoval_usage<- function(){
-    invisible(.callbinary("AdapterRemoval","-h"))
+    .callbinary("AdapterRemoval","-h")
 }
 
 

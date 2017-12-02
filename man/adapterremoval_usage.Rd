@@ -7,9 +7,7 @@
 adapterremoval_usage()
 }
 \value{
-An invisible \code{Integer} of call status.
-The value is 0 when there is not any mistakes.
-Otherwise the value is non-zero.
+AdapterRemoval available arguments and their usage.
 }
 \description{
 Print available arguments for adapterremoval.
