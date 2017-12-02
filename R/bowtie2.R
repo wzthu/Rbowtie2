@@ -224,9 +224,7 @@ bowtie2_version <- function(){
 #' bowtie2 are invalid if they are
 #' already handled as explicit function arguments.
 #' @author Zheng Wei
-#' @return An invisible \code{Integer} of call status.
-#' The value is 0 when there is not any mistakes
-#' Otherwise the value is non-zero.
+#' @return bowtie2 available arguments and their usage.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
 #' alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2_usage
@@ -236,7 +234,7 @@ bowtie2_usage <- function(){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
-    invisible(.callbinary("bowtie2-align-s","-h"))
+    .callbinary("bowtie2-align-s","-h")
 }
 
 #' @name bowtie2_build_usage
@@ -245,9 +243,7 @@ bowtie2_usage <- function(){
 #' bowtie2_build_usage are invalid if they are
 #' already handled as explicit function arguments.
 #' @author Zheng Wei
-#' @return An invisible \code{Integer} of call status.
-#' The value is 0 when there is not any mistakes
-#' Otherwise the value is non-zero.
+#' @return bowtie2_build available arguments and their usage.
 #' @references Langmead B, Salzberg S.
 #' Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
 #' @export bowtie2_build_usage
@@ -257,7 +253,7 @@ bowtie2_build_usage <- function() {
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
-    invisible(.callbinary("bowtie2-build-s","-h"))
+    .callbinary("bowtie2-build-s","-h")
 }
 
 
