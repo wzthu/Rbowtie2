@@ -256,7 +256,7 @@ adapterremoval_usage<- function(){
 #' @examples
 #' adapterremoval_version()
 adapterremoval_version<- function(){
-    invisible(.callbinary("AdapterRemoval","--version"))
+    .callbinary("AdapterRemoval","--version")
 }
 
 .callbinary<- function(bin, args)

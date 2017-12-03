@@ -215,7 +215,7 @@ bowtie2_version <- function(){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
-    invisible(.callbinary("bowtie2-align-s","--version"))
+    .callbinary("bowtie2-align-s","--version")
 }
 
 #' @name bowtie2_usage
@@ -229,7 +229,7 @@ bowtie2_version <- function(){
 #' alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2_usage
 #' @examples
-#' cmdout<-bowtie2_usage();cmdout
+#' bowtie2_usage()
 bowtie2_usage <- function(){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
@@ -248,7 +248,7 @@ bowtie2_usage <- function(){
 #' Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
 #' @export bowtie2_build_usage
 #' @examples
-#' cmdout<-bowtie2_build_usage();cmdout
+#' bowtie2_build_usage()
 bowtie2_build_usage <- function() {
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
