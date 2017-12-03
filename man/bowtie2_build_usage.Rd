@@ -15,7 +15,7 @@ bowtie2_build_usage are invalid if they are
 already handled as explicit function arguments.
 }
 \examples{
-cmdout<-bowtie2_build_usage();cmdout
+bowtie2_build_usage()
 }
 \references{
 Langmead B, Salzberg S.

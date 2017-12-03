@@ -108,13 +108,13 @@ you can call function below to print all options available.
 The fixed arguments like file1, file2 and basename etc. are invalid.
 
 ```{r adrmusage}
-(cmdout<-adapterremoval_usage())
+adapterremoval_usage()
 ```
 
 You can get version information by call:
 
 ```{r adrmversion}
-(cmdout<-adapterremoval_version())
+adapterremoval_version()
 ```
 
 
@@ -146,7 +146,7 @@ you can call function below to print all options available.
 The fixed arguments references, bt2Index are invalid.
 
 ```{r bt2bdusage}
-(cmdout<-bowtie2_build_usage())
+bowtie2_build_usage()
 ```
 
 #### Bowtie2 Alignment
@@ -176,13 +176,13 @@ you can call function below to print all options available.
 The fixed arguments like bt2Index, samOutput and seq1 etc. are invalid.
 
 ```{r bt2usage}
-(cmdout<-bowtie2_usage())
+bowtie2_usage()
 ```
 
 You can get version information by call:
 
 ```{r bt2version}
-(cmdout<-bowtie2_version())
+bowtie2_version()
 ```
 
 
