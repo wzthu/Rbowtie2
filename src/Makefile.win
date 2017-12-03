@@ -1,44 +1,50 @@
 #CXX = $(BINPREF)/g++ -std=gnu++11
-include ${R_HOME}/etc${R_ARCH}/Makeconf
+#include ${R_HOME}/etc${R_ARCH}/Makeconf
 ADRM_DIR = adapterremoval
 BT2_DIR = bowtie2
 
-ifeq "$(WIN)" "64"
+#ifeq "$(WIN)" "64"
 
 .PHONY:  clean all
 
 all: 
 	mkdir -p ../inst
-	(cd	$(ADRM_DIR) && ($(MAKE) CXX="$(BINPREF)/g++ -std=gnu++11" -f Makefile.win))
-	(cd $(BT2_DIR) && ($(MAKE) CXX="$(BINPREF)/g++" -f Makefile.win))
+	(cd	$(ADRM_DIR) && ($(MAKE) -f"${R_HOME}/etc${R_ARCH}/Makeconf"  -fMakefile.win))
+	(cd $(BT2_DIR) && ($(MAKE) -f"${R_HOME}/etc${R_ARCH}/Makeconf" -fMakefile.win))
 
 
 
 clean:
-	(cd	$(ADRM_DIR) && ($(MAKE) clean -f Makefile.win))
-	(cd	$(BT2_DIR) && ($(MAKE) clean -f Makefile.win))
-
-
-else
-
-.PHONY: clean all
-
-all: 
-	mkdir -p ../inst
-	(cd	$(ADRM_DIR) && ($(MAKE) CXX="$(BINPREF)/g++ -std=gnu++11" -f Makefile.win))
-	$(CXX) -c  bowtie2_32.cpp
-	$(CXX) bowtie2_32.o -o bowtie2-align-s
-	$(CXX) bowtie2_32.o -o bowtie2-build-s
-	cp bowtie2-build-s ../inst
-	cp bowtie2-align-s ../inst
-
-
-clean:
-	(cd	$(ADRM_DIR) && ($(MAKE) clean -f Makefile))
+	(cd	$(ADRM_DIR) && ($(MAKE) clean -fMakefile.win))
+	(cd	$(BT2_DIR) && ($(MAKE) clean -fMakefile.win))
 	rm -f ../inst/bowtie2-build-s
 	rm -f ../inst/bowtie2-align-s
 	rm -f bowtie2-build-s
 	rm -f bowtie2-align-s
 	rm -f *.o
 
-endif
+
+#else
+
+#.PHONY: clean all
+
+#all: 
+#	mkdir -p ../inst
+#	(cd	$(ADRM_DIR) && ($(MAKE) -f"${R_HOME}/etc${R_ARCH}/Makeconf" -f Makefile.win))
+#	$(CXX) -c  bowtie2_32.cpp
+#	$(CXX) bowtie2_32.o -o bowtie2-align-s
+#	$(CXX) bowtie2_32.o -o bowtie2-build-s
+#	cp bowtie2-build-s ../inst
+#	cp bowtie2-align-s ../inst
+
+
+#clean:
+#	(cd	$(ADRM_DIR) && ($(MAKE) clean -fMakefile.win))
+#	(cd	$(BT2_DIR) && ($(MAKE) clean -fMakefile.win))
+#	rm -f ../inst/bowtie2-build-s
+#	rm -f ../inst/bowtie2-align-s
+#	rm -f bowtie2-build-s
+#	rm -f bowtie2-align-s
+#	rm -f *.o
+
+#endif

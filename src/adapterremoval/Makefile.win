@@ -1,8 +1,8 @@
 
 
-CXXFLAGS = -O3
+CXXFLAGS = -std=gnu++11 -O3 
 CPPFLAGS = -D_REENTRANT -lpthread -DNDEBUG 
-
+#CXX="$(BINPREF)/g++ -std=gnu++11"
 #CPPFLAGS = -pthread -lz -DAR_GZIP_SUPPORT  -DNDEBUG 
 
 SRCS = adapterset.cc \
