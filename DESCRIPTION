@@ -1,7 +1,7 @@
 Package: Rbowtie2
 Type: Package
 Title: An R Wrapper for Bowtie2 and AdapterRemoval 
-Version: 1.7.0
+Version: 1.8.0
 Date: 2017-08-18
 Author: Zheng Wei, Wei Zhang
 Maintainer: Zheng Wei <wzweizheng@qq.com>
