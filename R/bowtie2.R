@@ -63,12 +63,12 @@
 #' }
 #'
 
-bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
+bowtie2 <- function(bt2lIndex,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
                     overwrite=FALSE){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
-    bt2Index <-trimws(as.character(bt2Index))
+    bt2Index <-trimws(as.character(bt2lIndex))
     samOutput<-trimws(as.character(samOutput))
 
     seq1<-trimws(as.character(seq1))
@@ -97,16 +97,16 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
 
     checkFileExist(seq1,"seq1")
     checkFileExist(seq2,"seq2")
-    checkPathExist(bt2Index,"bt2Index")
-    checkFileExist(paste0(bt2Index,".1.bt2"),"bt2Index")
-    checkFileExist(paste0(bt2Index,".2.bt2"),"bt2Index")
-    checkFileExist(paste0(bt2Index,".3.bt2"),"bt2Index")
+    checkPathExist(bt2Index,"bt2lIndex")
+    checkFileExist(paste0(bt2Index,".1.bt2l"),"bt2lIndex")
+    checkFileExist(paste0(bt2Index,".2.bt2l"),"bt2lIndex")
+    checkFileExist(paste0(bt2Index,".3.bt2l"),"bt2lIndex")
     checkFileExist(paste0(bt2Index,".4.bt2"),"bt2Index")
-    checkFileExist(paste0(bt2Index,".rev.1.bt2"),"bt2Index")
-    checkFileExist(paste0(bt2Index,".rev.2.bt2"),"bt2Index")
+    checkFileExist(paste0(bt2Index,".rev.1.bt2l"),"bt2lIndex")
+    checkFileExist(paste0(bt2Index,".rev.2.bt2l"),"bt2lIndex")
     checkFileCreatable(samOutput,"samOutput",overwrite)
 
-    argvs = c("-x",bt2Index)
+    argvs = c("-x",bt2lIndex)
     seq1<-paste0(seq1,collapse = ",")
     if(is.null(seq2)){
         if(interleaved){
@@ -121,7 +121,7 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
 
     argvs <- c(paramArray,argvs,"-S",samOutput)
 
-    invisible(.callbinary("bowtie2-align-s",paste(argvs,collapse = " ")))
+    invisible(.callbinary("bowtie2-align-l",paste(argvs,collapse = " ")))
 
 }
 
@@ -173,29 +173,29 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
 #' cmdout<-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
 #' overwrite=TRUE);cmdout
 
-bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
+bowtie2_build <- function(references,bt2lIndex,...,overwrite=FALSE){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     references<- trimws(as.character(references))
-    bt2Index <- trimws(as.character(bt2Index))
+    bt2lIndex <- trimws(as.character(bt2lIndex))
 
     paramArray<-checkAddArgus("noinvalid",...)
 
     checkFileExist(references,"references")
-    checkPathExist(bt2Index,"bt2Index")
-    checkFileCreatable(paste0(bt2Index,".1.bt2"),"bt2Index",overwrite)
-    checkFileCreatable(paste0(bt2Index,".2.bt2"),"bt2Index",overwrite)
-    checkFileCreatable(paste0(bt2Index,".3.bt2"),"bt2Index",overwrite)
-    checkFileCreatable(paste0(bt2Index,".4.bt2"),"bt2Index",overwrite)
-    checkFileCreatable(paste0(bt2Index,".rev.1.bt2"),"bt2Index",overwrite)
-    checkFileCreatable(paste0(bt2Index,".rev.2.bt2"),"bt2Index",overwrite)
+    checkPathExist(bt2lIndex,"bt2Index")
+    checkFileCreatable(paste0(bt2Index,".1.bt2l"),"bt2lIndex",overwrite)
+    checkFileCreatable(paste0(bt2Index,".2.bt2l"),"bt2lIndex",overwrite)
+    checkFileCreatable(paste0(bt2Index,".3.bt2l"),"bt2lIndex",overwrite)
+    checkFileCreatable(paste0(bt2Index,".4.bt2l"),"bt2lIndex",overwrite)
+    checkFileCreatable(paste0(bt2Index,".rev.1.bt2l"),"bt2lIndex",overwrite)
+    checkFileCreatable(paste0(bt2Index,".rev.2.bt2l"),"bt2lIndex",overwrite)
 
     references<-paste0(references,collapse = ",")
-    argvs <- c(paramArray,references,bt2Index)
+    argvs <- c(paramArray,references,bt2lIndex)
 
 
-    invisible(.callbinary("bowtie2-build-s",paste(argvs,collapse = " ")))
+    invisible(.callbinary("bowtie2-build-l",paste(argvs,collapse = " ")))
 
 }
 
@@ -215,7 +215,7 @@ bowtie2_version <- function(){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
-    .callbinary("bowtie2-align-s","--version")
+    .callbinary("bowtie2-align-l","--version")
 }
 
 #' @name bowtie2_usage
@@ -234,7 +234,7 @@ bowtie2_usage <- function(){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
-    .callbinary("bowtie2-align-s","-h")
+    .callbinary("bowtie2-align-l","-h")
 }
 
 #' @name bowtie2_build_usage
@@ -253,7 +253,7 @@ bowtie2_build_usage <- function() {
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
-    .callbinary("bowtie2-build-s","-h")
+    .callbinary("bowtie2-build-l","-h")
 }
 
 
