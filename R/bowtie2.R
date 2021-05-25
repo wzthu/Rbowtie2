@@ -183,7 +183,7 @@ bowtie2_build <- function(references,bt2lIndex,...,overwrite=FALSE){
     paramArray<-checkAddArgus("noinvalid",...)
 
     checkFileExist(references,"references")
-    checkPathExist(bt2lIndex,"bt2Index")
+    checkPathExist(bt2lIndex,"bt2lIndex")
     checkFileCreatable(paste0(bt2lIndex,".1.bt2l"),"bt2lIndex",overwrite)
     checkFileCreatable(paste0(bt2lIndex,".2.bt2l"),"bt2lIndex",overwrite)
     checkFileCreatable(paste0(bt2lIndex,".3.bt2l"),"bt2lIndex",overwrite)
