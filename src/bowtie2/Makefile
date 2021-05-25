@@ -110,9 +110,11 @@ OBJS_BUILD = $(SRCS_BUILD:.cpp=.o)
 
 .PHONY: all clean bowtie2-align-s bowtie2-build-s
 
-all: bowtie2-build-s bowtie2-align-s
+all: bowtie2-build-s bowtie2-align-s bowtie2-build-l bowtie2-align-l
 	cp bowtie2-align-s ../../inst
 	cp bowtie2-build-s ../../inst
+	cp bowtie2-align-l ../../inst
+	cp bowtie2-build-l ../../inst
 
 
 .cc.o:
@@ -123,9 +125,14 @@ all: bowtie2-build-s bowtie2-align-s
 bowtie2-build-s: $(OBJS_BUILD)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^
 	
+bowtie2-build-l: $(OBJS_BUILD)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^
+	
 bowtie2-align-s: $(OBJS_SEARCH)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^ 
-
+	
+bowtie2-align-l: $(OBJS_SEARCH)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^ 
 
 
 clean:
@@ -133,4 +140,6 @@ clean:
 	rm -f ../../inst/bowtie2-build-s
 	rm -f bowtie2-align-s
 	rm -f bowtie2-build-s
+	rm -f bowtie2-align-l
+	rm -f bowtie2-build-l
 	rm -f *.o
