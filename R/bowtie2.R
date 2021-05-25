@@ -68,7 +68,7 @@ bowtie2 <- function(bt2lIndex,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
-    bt2Index <-trimws(as.character(bt2lIndex))
+    bt2lIndex <-trimws(as.character(bt2lIndex))
     samOutput<-trimws(as.character(samOutput))
 
     seq1<-trimws(as.character(seq1))
@@ -97,13 +97,13 @@ bowtie2 <- function(bt2lIndex,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
 
     checkFileExist(seq1,"seq1")
     checkFileExist(seq2,"seq2")
-    checkPathExist(bt2Index,"bt2lIndex")
-    checkFileExist(paste0(bt2Index,".1.bt2l"),"bt2lIndex")
-    checkFileExist(paste0(bt2Index,".2.bt2l"),"bt2lIndex")
-    checkFileExist(paste0(bt2Index,".3.bt2l"),"bt2lIndex")
-    checkFileExist(paste0(bt2Index,".4.bt2"),"bt2Index")
-    checkFileExist(paste0(bt2Index,".rev.1.bt2l"),"bt2lIndex")
-    checkFileExist(paste0(bt2Index,".rev.2.bt2l"),"bt2lIndex")
+    checkPathExist(bt2lIndex,"bt2lIndex")
+    checkFileExist(paste0(bt2lIndex,".1.bt2l"),"bt2lIndex")
+    checkFileExist(paste0(bt2lIndex,".2.bt2l"),"bt2lIndex")
+    checkFileExist(paste0(bt2lIndex,".3.bt2l"),"bt2lIndex")
+    checkFileExist(paste0(bt2lIndex,".4.bt2"),"bt2Index")
+    checkFileExist(paste0(bt2lIndex,".rev.1.bt2l"),"bt2lIndex")
+    checkFileExist(paste0(bt2lIndex,".rev.2.bt2l"),"bt2lIndex")
     checkFileCreatable(samOutput,"samOutput",overwrite)
 
     argvs = c("-x",bt2lIndex)
@@ -184,12 +184,12 @@ bowtie2_build <- function(references,bt2lIndex,...,overwrite=FALSE){
 
     checkFileExist(references,"references")
     checkPathExist(bt2lIndex,"bt2Index")
-    checkFileCreatable(paste0(bt2Index,".1.bt2l"),"bt2lIndex",overwrite)
-    checkFileCreatable(paste0(bt2Index,".2.bt2l"),"bt2lIndex",overwrite)
-    checkFileCreatable(paste0(bt2Index,".3.bt2l"),"bt2lIndex",overwrite)
-    checkFileCreatable(paste0(bt2Index,".4.bt2l"),"bt2lIndex",overwrite)
-    checkFileCreatable(paste0(bt2Index,".rev.1.bt2l"),"bt2lIndex",overwrite)
-    checkFileCreatable(paste0(bt2Index,".rev.2.bt2l"),"bt2lIndex",overwrite)
+    checkFileCreatable(paste0(bt2lIndex,".1.bt2l"),"bt2lIndex",overwrite)
+    checkFileCreatable(paste0(bt2lIndex,".2.bt2l"),"bt2lIndex",overwrite)
+    checkFileCreatable(paste0(bt2lIndex,".3.bt2l"),"bt2lIndex",overwrite)
+    checkFileCreatable(paste0(bt2lIndex,".4.bt2l"),"bt2lIndex",overwrite)
+    checkFileCreatable(paste0(bt2lIndex,".rev.1.bt2l"),"bt2lIndex",overwrite)
+    checkFileCreatable(paste0(bt2lIndex,".rev.2.bt2l"),"bt2lIndex",overwrite)
 
     references<-paste0(references,collapse = ",")
     argvs <- c(paramArray,references,bt2lIndex)
