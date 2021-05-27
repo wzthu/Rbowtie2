@@ -233,7 +233,7 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
     }
     
     references<-paste0(references,collapse = ",")
-    argvs <- c(paramArray,references,bt2ndex)
+    argvs <- c(paramArray,references,bt2Index)
 
     if (total_size > smallIndex_max_size)
         invisible(.callbinary("bowtie2-build-l",paste(argvs,collapse = " ")))
