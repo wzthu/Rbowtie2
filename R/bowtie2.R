@@ -117,7 +117,7 @@ bowtie2 <- function(bt2Index,indexFormat = 's',samOutput,seq1,...,seq2=NULL,inte
         checkFileExist(paste0(bt2Index,".1.bt2l"),"bt2lIndex")
         checkFileExist(paste0(bt2Index,".2.bt2l"),"bt2lIndex")
         checkFileExist(paste0(bt2Index,".3.bt2l"),"bt2lIndex")
-        checkFileExist(paste0(bt2Index,".4.bt2l"),"bt2lndex")
+        checkFileExist(paste0(bt2Index,".4.bt2l"),"bt2lIndex")
         checkFileExist(paste0(bt2Index,".rev.1.bt2l"),"bt2lIndex")
         checkFileExist(paste0(bt2Index,".rev.2.bt2l"),"bt2lIndex")
     }
