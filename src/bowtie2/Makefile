@@ -69,7 +69,7 @@ BUILD_CPPS = diff_sample.cpp
 BUILD_CPPS_MAIN = $(BUILD_CPPS) bowtie_build_main.cpp
 
 
-VERSION = 2.3.2
+VERSION = 2.4.4
 
 
 SSE_FLAG=-msse2
@@ -84,7 +84,7 @@ FILE_FLAGS     = -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
 
 
 DEFS=-fno-strict-aliasing \
-     -DBOWTIE2_VERSION="\"2.3.2\"" \
+     -DBOWTIE2_VERSION="\"2.4.4\"" \
      -DBUILD_HOST="\"Rbowtie2\"" \
      -DBUILD_TIME="\"2017\"" \
      -DCOMPILER_VERSION="\"C++11\"" \
@@ -138,6 +138,8 @@ bowtie2-align-l: $(OBJS_SEARCH)
 clean:
 	rm -f ../../inst/bowtie2-align-s
 	rm -f ../../inst/bowtie2-build-s
+	rm -f ../../inst/bowtie2-align-l
+	rm -f ../../inst/bowtie2-build-l
 	rm -f bowtie2-align-s
 	rm -f bowtie2-build-s
 	rm -f bowtie2-align-l

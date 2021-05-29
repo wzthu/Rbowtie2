@@ -1,5 +1,5 @@
 #' @name bowtie2
-#' @title Interface to bowtie2 of bowtie2-2.2.3
+#' @title Interface to bowtie2 of bowtie2-2.4.4
 #' @description This function can be use to call wrapped \code{bowtie2}
 #' binary.
 #' @param bt2Index \code{Character} scalar. bowtie2 index files
@@ -148,7 +148,7 @@ bowtie2 <- function(bt2Index,indexFormat = 's',samOutput,seq1,...,seq2=NULL,inte
 
 
 #' @name bowtie2-build
-#' @title Interface to bowtie2-build of bowtie2-2.2.3
+#' @title Interface to bowtie2-build of bowtie2-2.4.4
 #' @description This function can be use to call wrapped \code{bowtie2-build}
 #' binary
 #' @param references \code{Character} vector. The path to the files containing
@@ -214,6 +214,9 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
         total_size = total_size + file.size(filename)
     }
     
+    print(total_size)
+    print(smallIndex_max_size)
+    
     if (total_size > smallIndex_max_size){
         checkFileCreatable(paste0(bt2Index,".1.bt2l"),"bt2Index",overwrite)
         checkFileCreatable(paste0(bt2Index,".2.bt2l"),"bt2Index",overwrite)
@@ -242,8 +245,8 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 }
 
 #' @name bowtie2_version
-#' @title Print version information of bowtie2-2.2.3
-#' @description Print version information of bowtie2-2.2.3
+#' @title Print version information of bowtie2-2.4.4
+#' @description Print version information of bowtie2-2.4.4
 #' @author Zheng Wei
 #' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes
