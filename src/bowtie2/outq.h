@@ -26,13 +26,14 @@
 #include "read.h"
 #include "threading.h"
 #include "mem_ids.h"
+#include <vector>
 
 /**
  * Encapsulates a list of lines of output.  If the earliest as-yet-unreported
  * read has id N and Bowtie 2 wants to write a record for read with id N+1, we
  * resize the lines_ and committed_ lists to have at least 2 elements (1 for N,
  * 1 for N+1) and return the BTString * associated with the 2nd element.  When
- * the user calls commit() for the read with id N, 
+ * the user calls commit() for the read with id N,
  */
 class OutputQueue {
 
@@ -45,10 +46,10 @@ public:
 		bool reorder,
 		size_t nthreads,
 		bool threadSafe,
+		int perThreadBufSize,
 		TReadId rdid = 0) :
 		obuf_(obuf),
 		cur_(rdid),
-		nstarted_(0),
 		nfinished_(0),
 		nflushed_(0),
 		lines_(RES_CAT),
@@ -56,9 +57,35 @@ public:
 		finished_(RES_CAT),
 		reorder_(reorder),
 		threadSafe_(threadSafe),
-        mutex_m()
+		mutex_m(),
+		nthreads_(nthreads),
+		perThreadBuf(NULL),
+		perThreadCounter(NULL),
+		perThreadBufSize_(perThreadBufSize)
 	{
-		assert(nthreads <= 1 || threadSafe);
+		nstarted_=0;
+		assert(nthreads_ <= 2 || threadSafe);
+		if(!reorder)
+		{
+			perThreadBuf = new BTString*[nthreads_];
+			perThreadCounter = new int[nthreads_];
+			size_t i = 0;
+			for(i=0;i<nthreads_;i++)
+			{
+				perThreadBuf[i] = new BTString[perThreadBufSize_];
+				perThreadCounter[i] = 0;
+			}
+		}
+	}
+
+	~OutputQueue() {
+		if(perThreadBuf != NULL) {
+			for (size_t i = 0; i < nthreads_; i++) {
+				delete[] perThreadBuf[i];
+			}
+			delete[] perThreadBuf;
+			delete[] perThreadCounter;
+		}
 	}
 
 	/**
@@ -66,19 +93,19 @@ public:
 	 * the read with the given id.
 	 */
 	void beginRead(TReadId rdid, size_t threadId);
-	
+
 	/**
-	 * Writer is finished writing to 
+	 * Writer is finished writing to
 	 */
 	void finishRead(const BTString& rec, TReadId rdid, size_t threadId);
-	
+
 	/**
 	 * Return the number of records currently being buffered.
 	 */
 	size_t size() const {
 		return lines_.size();
 	}
-	
+
 	/**
 	 * Return the number of records that have been flushed so far.
 	 */
@@ -109,7 +136,7 @@ protected:
 
 	OutFileBuf&     obuf_;
 	TReadId         cur_;
-	TReadId         nstarted_;
+	std::atomic<TReadId> nstarted_;
 	TReadId         nfinished_;
 	TReadId         nflushed_;
 	EList<BTString> lines_;
@@ -118,6 +145,18 @@ protected:
 	bool            reorder_;
 	bool            threadSafe_;
 	MUTEX_T         mutex_m;
+
+	// used for output read buffer
+	size_t nthreads_;
+	BTString** perThreadBuf;
+	int* 		perThreadCounter;
+	int perThreadBufSize_;
+
+private:
+
+	void flushImpl(bool force);
+	void beginReadImpl(TReadId rdid, size_t threadId);
+	void finishReadImpl(const BTString& rec, TReadId rdid, size_t threadId);
 };
 
 class OutputQueueMark {
@@ -134,11 +173,11 @@ public:
 	{
 		q_.beginRead(rdid, threadId);
 	}
-	
+
 	~OutputQueueMark() {
 		q_.finishRead(rec_, rdid_, threadId_);
 	}
-	
+
 protected:
 	OutputQueue& q_;
 	const BTString& rec_;

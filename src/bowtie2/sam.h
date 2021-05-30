@@ -61,6 +61,7 @@ public:
 		const StrList& refnames,  // reference sequence names
 		const LenList& reflens,   // reference sequence lengths
 		bool truncQname,          // truncate read name to 255?
+		bool appendComment,	  // append FASTA/Q comment to sam record
 		bool omitsec,             // omit secondary SEQ/QUAL
 		bool noUnal,              // omit unaligned reads
 		const std::string& pg_id, // id
@@ -105,6 +106,7 @@ public:
 		bool print_zu,
 		bool print_zt) :
 		truncQname_(truncQname),
+		appendComment_(appendComment),
 		omitsec_(omitsec),
 		noUnal_(noUnal),
 		pg_id_(pg_id),
@@ -208,7 +210,7 @@ public:
 			}
 		}
 	}
-	
+
 	/**
 	 * Print a read name in a way that doesn't violate SAM's character
 	 * constraints. [!-?A-~]{1,255} (i.e. [33, 63], [65, 126])
@@ -221,21 +223,22 @@ public:
 		const
 	{
 		size_t namelen = name.length();
-		if(omitSlashMate &&
-		   namelen >= 2 &&
-		   name[namelen-2] == '/' &&
-		   (name[namelen-1] == '1' || name[namelen-1] == '2' || name[namelen-1] == '3'))
-		{
-			namelen -= 2;
-		}
 		if(truncQname_ && namelen > 255) {
 			namelen = 255;
 		}
 		for(size_t i = 0; i < namelen; i++) {
 			if(truncQname_ && isspace(name[i])) {
-				return;
+				break;
 			}
 			o.append(name[i]);
+		}
+		size_t olen = o.length();
+		if(omitSlashMate &&
+		   olen >= 2 &&
+		   o[olen-2] == '/' &&
+		   (o[olen-1] == '1' || o[olen-1] == '2' || o[olen-1] == '3'))
+		{
+			o.resize(olen-2);
 		}
 	}
 
@@ -246,7 +249,7 @@ public:
 		BTString& o,
 		size_t i)
 		const;
-	
+
 	/**
 	 * Print SAM header to given output buffer.
 	 */
@@ -305,8 +308,27 @@ public:
 		const PerReadMetrics& prm, // per-read metrics
 		const Scoring& sc)         // scoring scheme
 		const;
-	
+
 	/**
+	 * Print optional flags that that have been preserve from BAM input
+	 */
+	void printPreservedOptFlags(BTString& o, const Read& rd) const;
+
+	/**
+	 * Append FASTA/Q comment to SAM record
+	 */
+        template <typename TStr>
+        void printComment(BTString &o, TStr &name) const {
+		if (appendComment_) {
+			size_t i;
+
+			for (i = 0; i < name.length() && !isspace(name[i]); i++) ;
+			o.append('\t');
+			o.append(name.toZBuf() + i + 1);
+		}
+	}
+
+        /**
 	 * Return true iff we should try to obey the SAM spec's recommendations
 	 * that:
 	 *
@@ -316,7 +338,7 @@ public:
 	bool omitSecondarySeqQual() const {
 		return omitsec_;
 	}
-	
+
 	bool omitUnalignedReads() const {
 		return noUnal_;
 	}
@@ -324,9 +346,10 @@ public:
 protected:
 
 	bool truncQname_;   // truncate QNAME to 255 chars?
-	bool omitsec_;      // omit secondary 
+	bool appendComment_;// Append FASTA/Q comment to SAM record
+	bool omitsec_;      // omit secondary
 	bool noUnal_;       // omit unaligned reads
-	
+
 	std::string pg_id_; // @PG ID: Program record identifier
 	std::string pg_pn_; // @PG PN: Program name
 	std::string pg_vn_; // @PG VN: Program version
@@ -334,7 +357,7 @@ protected:
 	std::string rgs_;   // Read-group string to add to all records
 	const StrList& refnames_; // reference sequence names
 	const LenList& reflens_;  // reference sequence lengths
-	
+
 	// Which alignment flags to print?
 
 	// Following are printed by BWA-SW
@@ -361,7 +384,7 @@ protected:
 	bool print_yt_; // YT:Z: String representing alignment type
 	bool print_ys_; // YS:i: Score of other mate
 	bool print_zs_; // ZS:i: Pseudo-random seed
-	
+
 	bool print_xr_; // XR:Z: Original read string
 	bool print_xt_; // XT:i: Time taken to align
 	bool print_xd_; // XD:i: DP problems

@@ -17,8 +17,9 @@
  * along with Bowtie 2.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <mutex>
+
 #include "aligner_cache.h"
-#include "tinythread.h"
 
 #ifndef NDEBUG
 /**
@@ -51,16 +52,14 @@ bool SAVal::repOk(const AlignmentCache& ac) const {
  * Add a new association between a read sequnce ('seq') and a
  * reference sequence ('')
  */
-bool AlignmentCache::addOnTheFly(
+bool AlignmentCache::addOnTheFlyImpl(
 	QVal& qv,         // qval that points to the range of reference substrings
 	const SAKey& sak, // the key holding the reference substring
 	TIndexOffU topf,    // top range elt in BWT index
 	TIndexOffU botf,    // bottom range elt in BWT index
 	TIndexOffU topb,    // top range elt in BWT' index
-	TIndexOffU botb,    // bottom range elt in BWT' index
-	bool getLock)
+	TIndexOffU botb)    // bottom range elt in BWT' index
 {
-    ThreadSafe ts(lockPtr(), shared_ && getLock);
 	bool added = true;
 	// If this is the first reference sequence we're associating with
 	// the query sequence, initialize the QVal.
@@ -100,8 +99,25 @@ bool AlignmentCache::addOnTheFly(
 	}
 	// Now that we know all allocations have succeeded, we can do a few final
 	// updates
-	
-	return true; 
+
+	return true;
+}
+
+bool AlignmentCache::addOnTheFly(
+	QVal& qv,         // qval that points to the range of reference substrings
+	const SAKey& sak, // the key holding the reference substring
+	TIndexOffU topf,    // top range elt in BWT index
+	TIndexOffU botf,    // bottom range elt in BWT index
+	TIndexOffU topb,    // top range elt in BWT' index
+	TIndexOffU botb,    // bottom range elt in BWT' index
+	bool getLock)
+{
+	if(shared_ && getLock) {
+		ThreadSafe ts(mutex_m);
+		return addOnTheFlyImpl(qv, sak, topf, botf, topb, botb);
+	} else {
+		return addOnTheFlyImpl(qv, sak, topf, botf, topb, botb);
+	}
 }
 
 #ifdef ALIGNER_CACHE_MAIN

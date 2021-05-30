@@ -69,6 +69,7 @@ enum {
 	ARG_QUALS2,                 // --Q2
 	ARG_QSEQ,                   // --qseq
 	ARG_SEED_SUMM,              // --seed-summary
+	ARG_SC_UNMAPPED,            // --soft-clipped-unmapped-tlen
 	ARG_OVERHANG,               // --overhang
 	ARG_NO_CACHE,               // --no-cache
 	ARG_USE_CACHE,              // --cache
@@ -152,8 +153,15 @@ enum {
 	ARG_DESC_FMOPS,             // --desc-fmops
 	ARG_LOG_DP,                 // --log-dp
 	ARG_LOG_DP_OPP,             // --log-dp-opp
-	ARG_INTERLEAVED_FASTQ       // --interleaved
+	ARG_XEQ,                    // --xeq
+	ARG_THREAD_CEILING,         // --thread-ceiling
+	ARG_THREAD_PIDDIR,          // --thread-piddir
+	ARG_INTERLEAVED,            // --interleaved
+	ARG_TRIM_TO,                // --trim-to
+	ARG_PRESERVE_TAGS,          // --preserve-tags
+	ARG_ALIGN_PAIRED_READS,     // --align-paired-reads
+	ARG_SRA_ACC,                // --sra-acc
+        ARG_SAM_APPEND_COMMENT,     // --sam-append-comment
 };
 
 #endif
-

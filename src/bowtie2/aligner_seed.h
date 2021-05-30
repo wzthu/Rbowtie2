@@ -817,8 +817,11 @@ public:
 	/**
 	 * Return average number of hits per seed.
 	 */
-	float averageHitsPerSeed() const {
-		return (float)numElts_ / (float)nonzTot_;
+	uint64_t averageHitsPerSeed() const {
+		if (nonzTot_ == 0)
+			return std::numeric_limits<uint64_t>::max();
+		else
+			return numElts_ / nonzTot_;
 	}
 
 	/**
@@ -841,7 +844,7 @@ public:
 	size_t numRepeatSeeds() const {
 		return repTot_;
 	}
-
+	
 	/**
 	 * Return fraction of seeds that align repetitively.
 	 */
@@ -1401,7 +1404,6 @@ struct SeedSearchMetrics {
 	 * SeedSearchMetrics object shread by multiple threads.
 	 */
 	void merge(const SeedSearchMetrics& m, bool getLock = false) {
-        ThreadSafe ts(&mutex_m, getLock);
 		seedsearch   += m.seedsearch;
 		nrange       += m.nrange;
 		nelt         += m.nelt;

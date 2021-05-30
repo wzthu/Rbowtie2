@@ -28,6 +28,12 @@
 #include <stdint.h>
 #include <stdexcept>
 #include "assert_helpers.h"
+#include <errno.h>
+#include <stdlib.h>
+#include <zlib.h>
+#ifdef WITH_ZSTD
+#include "zstd_decompress.h"
+#endif
 
 /**
  * Simple, fast helper for determining if a character is a newline.
@@ -66,6 +72,19 @@ public:
 		assert(_in != NULL);
 	}
 
+	FileBuf(gzFile in) {
+		init();
+		_zIn = in;
+		assert(_zIn != NULL);
+	}
+#ifdef WITH_ZSTD
+	FileBuf(zstdStrm *zstdIn) {
+		init();
+		_zstdIn = zstdIn;
+		assert(_zstdIn != NULL);
+	}
+#endif
+
 	FileBuf(std::ifstream *inf) {
 		init();
 		_inf = inf;
@@ -76,6 +95,11 @@ public:
 		init();
 		_ins = ins;
 		assert(_ins != NULL);
+	}
+
+
+	~FileBuf() {
+		close();
 	}
 
 	/**
@@ -93,6 +117,12 @@ public:
 			fclose(_in);
 		} else if(_inf != NULL) {
 			_inf->close();
+		} else if(_zIn != NULL) {
+			gzclose(_zIn);
+#ifdef WITH_ZSTD
+		} else if(_zstdIn != NULL) {
+			zstdClose(_zstdIn);
+#endif
 		} else {
 			// can't close _ins
 		}
@@ -102,7 +132,10 @@ public:
 	 * Get the next character of input and advance.
 	 */
 	int get() {
-		assert(_in != NULL || _inf != NULL || _ins != NULL);
+		assert(_in != NULL || _zIn != NULL || _inf != NULL || _ins != NULL);
+#ifdef WITH_ZSTD
+		assert(zstdIn != NULL)
+#endif
 		int c = peek();
 		if(c != -1) {
 			_cur++;
@@ -123,20 +156,59 @@ public:
 	 */
 	void newFile(FILE *in) {
 		_in = in;
+		_zIn = NULL;
 		_inf = NULL;
 		_ins = NULL;
+#ifdef WITH_ZSTD
+		_zstdIn = NULL;
+#endif
 		_cur = BUF_SZ;
 		_buf_sz = BUF_SZ;
 		_done = false;
 	}
 
 	/**
+	 * Initialize the buffer with a new gz file.
+	 */
+	void newFile(gzFile in) {
+		_in = NULL;
+		_zIn = in;
+		_inf = NULL;
+		_ins = NULL;
+#ifdef WITH_ZSTD
+		_zstdIn = NULL;
+#endif
+		_cur = BUF_SZ;
+		_buf_sz = BUF_SZ;
+		_done = false;
+	}
+
+#ifdef WITH_ZSTD
+	/**
+	 * Initialize the buffer with a new ZSTD file.
+	 */
+	void newFile(zstdStrm *s) {
+		_in = NULL;
+		_zIn = NULL;
+		_inf = NULL;
+		_ins = NULL;
+		_zstdIn = s;
+		_cur = BUF_SZ;
+		_buf_sz = BUF_SZ;
+		_done = false;
+	}
+#endif
+	/**
 	 * Initialize the buffer with a new ifstream.
 	 */
 	void newFile(std::ifstream *__inf) {
 		_in = NULL;
+		_zIn = NULL;
 		_inf = __inf;
 		_ins = NULL;
+#ifdef WITH_ZSTD
+		_zstdIn = NULL;
+#endif
 		_cur = BUF_SZ;
 		_buf_sz = BUF_SZ;
 		_done = false;
@@ -147,8 +219,12 @@ public:
 	 */
 	void newFile(std::istream *__ins) {
 		_in = NULL;
+		_zIn = NULL;
 		_inf = NULL;
 		_ins = __ins;
+#ifdef WITH_ZSTD
+		_zstdIn = NULL;
+#endif
 		_cur = BUF_SZ;
 		_buf_sz = BUF_SZ;
 		_done = false;
@@ -165,6 +241,12 @@ public:
 		} else if(_ins != NULL) {
 			_ins->clear();
 			_ins->seekg(0, std::ios::beg);
+		} else if (_zIn != NULL) {
+			gzrewind(_zIn);
+#ifdef WITH_ZSTD
+		} else if (_zstdIn) {
+			zstdRewind(_zstdIn);
+#endif
 		} else {
 			rewind(_in);
 		}
@@ -179,7 +261,10 @@ public:
 	 * Occasionally we'll need to read in a new buffer's worth of data.
 	 */
 	int peek() {
-		assert(_in != NULL || _inf != NULL || _ins != NULL);
+		assert(_in != NULL || _zIn != NULL || _inf != NULL || _ins != NULL);
+#ifdef WITH_ZSTD
+		assert(zstdIn != NULL);
+#endif
 		assert_leq(_cur, _buf_sz);
 		if(_cur == _buf_sz) {
 			if(_done) {
@@ -192,15 +277,21 @@ public:
 				if(_inf != NULL) {
 					_inf->read((char*)_buf, BUF_SZ);
 					_buf_sz = _inf->gcount();
+				} else if(_zIn != NULL) {
+					_buf_sz = gzread(_zIn, (void *)_buf, BUF_SZ);
 				} else if(_ins != NULL) {
 					_ins->read((char*)_buf, BUF_SZ);
 					_buf_sz = _ins->gcount();
-				} else {
+#ifdef WITH_ZSTD
+                                } else if (_zstdIn != NULL) {
+					_buf_sz = zstdRead(_zstdIn, (void *)_buf, BUF_SZ);
+#endif
+                                } else {
 					assert(_in != NULL);
 					// TODO: consider an _unlocked function
 					_buf_sz = fread(_buf, 1, BUF_SZ, _in);
-				}
-				_cur = 0;
+                                }
+                                _cur = 0;
 				if(_buf_sz == 0) {
 					// Exhausted, and we have nothing to return to the
 					// caller
@@ -431,8 +522,12 @@ private:
 
 	void init() {
 		_in = NULL;
+		_zIn = NULL;
 		_inf = NULL;
 		_ins = NULL;
+#ifdef WITH_ZSTD
+		_zstdIn = NULL;
+#endif
 		_cur = _buf_sz = BUF_SZ;
 		_done = false;
 		_lastn_cur = 0;
@@ -441,6 +536,10 @@ private:
 
 	static const size_t BUF_SZ = 256 * 1024;
 	FILE     *_in;
+	gzFile   _zIn;
+#ifdef WITH_ZSTD
+	zstdStrm *_zstdIn;
+#endif
 	std::ifstream *_inf;
 	std::istream  *_ins;
 	size_t    _cur;
@@ -599,7 +698,10 @@ public:
 		if(cur_ + slen > BUF_SZ) {
 			if(cur_ > 0) flush();
 			if(slen >= BUF_SZ) {
-				fwrite(s.c_str(), slen, 1, out_);
+				if (slen != fwrite(s.c_str(), 1, slen, out_)) {
+					std::cerr << "Error: outputting data" << std::endl;
+					throw 1;
+				}
 			} else {
 				memcpy(&buf_[cur_], s.data(), slen);
 				assert_eq(0, cur_);
@@ -622,7 +724,10 @@ public:
 		if(cur_ + slen > BUF_SZ) {
 			if(cur_ > 0) flush();
 			if(slen >= BUF_SZ) {
-				fwrite(s.toZBuf(), slen, 1, out_);
+				if (slen != fwrite(s.toZBuf(), 1, slen, out_)) {
+					std::cerr << "Error outputting data" << std::endl;
+					throw 1;
+				}
 			} else {
 				memcpy(&buf_[cur_], s.toZBuf(), slen);
 				assert_eq(0, cur_);
@@ -643,7 +748,10 @@ public:
 		if(cur_ + len > BUF_SZ) {
 			if(cur_ > 0) flush();
 			if(len >= BUF_SZ) {
-				fwrite(s, len, 1, out_);
+				if (fwrite(s, len, 1, out_) != 1) {
+					std::cerr << "Error outputting data" << std::endl;
+					throw 1;
+				}
 			} else {
 				memcpy(&buf_[cur_], s, len);
 				assert_eq(0, cur_);
@@ -684,7 +792,10 @@ public:
 	}
 
 	void flush() {
-		if(!fwrite((const void *)buf_, cur_, 1, out_)) {
+		if(cur_ != fwrite((const void *)buf_, 1, cur_, out_)) {
+			if (errno == EPIPE) {
+				exit(EXIT_SUCCESS);
+			}
 			std::cerr << "Error while flushing and closing output" << std::endl;
 			throw 1;
 		}

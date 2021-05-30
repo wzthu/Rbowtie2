@@ -30,12 +30,14 @@ enum file_format {
 	FASTA = 1,
 	FASTA_CONT,
 	FASTQ,
-	INTERLEAVED,
+	BAM,
 	TAB_MATE5,
 	TAB_MATE6,
 	RAW,
 	CMDLINE,
-	QSEQ
+	QSEQ,
+	SRA_FASTA,
+	SRA_FASTQ
 };
 
 static const std::string file_format_names[] = {
@@ -43,12 +45,14 @@ static const std::string file_format_names[] = {
 	"FASTA",
 	"FASTA sampling",
 	"FASTQ",
-	"Tabbed mated",
+	"BAM",
+	"Tabbed 5-field",
+	"Tabbed 6-field",
 	"Raw",
 	"Command line",
-	"Chain file",
-	"Random",
-	"Qseq"
+	"Qseq",
+    "SRA Fasta",
+    "SRA Fastq"
 };
 
 #endif /*FORMATS_H_*/

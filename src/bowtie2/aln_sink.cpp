@@ -358,160 +358,160 @@ void AlnSink::printAlSumm(
 
 	bool canRep = repThresh != MAX_SIZE_T;
 	if(hadoopOut) {
-		cout << "reporter:counter:Bowtie,Reads processed," << met.nread << endl;
+		cerr << "reporter:counter:Bowtie,Reads processed," << met.nread << endl;
 	}
 	uint64_t totread = met.nread;
 	if(totread > 0) {
-		cout << "" << met.nread << " reads; of these:" << endl;
+		cerr << "" << met.nread << " reads; of these:" << endl;
 	} else {
 		assert_eq(0, met.npaired);
 		assert_eq(0, met.nunpaired);
-		cout << "" << totread << " reads" << endl;
+		cerr << "" << totread << " reads" << endl;
 	}
 	uint64_t totpair = met.npaired;
 	if(totpair > 0) {
 		// Paired output
-		cout << "  " << totpair << " (";
-		printPct(cout, totpair, totread);
-		cout << ") were paired; of these:" << endl;
+		cerr << "  " << totpair << " (";
+		printPct(cerr, totpair, totread);
+		cerr << ") were paired; of these:" << endl;
 
 		// Concordants
-		cout << "    " << met.nconcord_0 << " (";
-		printPct(cout, met.nconcord_0, met.npaired);
-		cout << ") aligned concordantly 0 times" << endl;
+		cerr << "    " << met.nconcord_0 << " (";
+		printPct(cerr, met.nconcord_0, met.npaired);
+		cerr << ") aligned concordantly 0 times" << endl;
 		if(canRep) {
 			// Print the number that aligned concordantly exactly once
 			assert_eq(met.nconcord_uni, met.nconcord_uni1+met.nconcord_uni2);
-			cout << "    " << met.nconcord_uni1 << " (";
-			printPct(cout, met.nconcord_uni1, met.npaired);
-			cout << ") aligned concordantly exactly 1 time" << endl;
+			cerr << "    " << met.nconcord_uni1 << " (";
+			printPct(cerr, met.nconcord_uni1, met.npaired);
+			cerr << ") aligned concordantly exactly 1 time" << endl;
 			
 			// Print the number that aligned concordantly more than once but
 			// fewer times than the limit
 			
-			cout << "    " << met.nconcord_uni2+met.nconcord_rep << " (";
-			printPct(cout, met.nconcord_uni2+met.nconcord_rep, met.npaired);
-			cout << ") aligned concordantly >1 times" << endl;
+			cerr << "    " << met.nconcord_uni2+met.nconcord_rep << " (";
+			printPct(cerr, met.nconcord_uni2+met.nconcord_rep, met.npaired);
+			cerr << ") aligned concordantly >1 times" << endl;
 		} else {
 			// Print the number that aligned concordantly exactly once
 			assert_eq(met.nconcord_uni, met.nconcord_uni1+met.nconcord_uni2);
-			cout << "    " << met.nconcord_uni1 << " (";
-			printPct(cout, met.nconcord_uni1, met.npaired);
-			cout << ") aligned concordantly exactly 1 time" << endl;
+			cerr << "    " << met.nconcord_uni1 << " (";
+			printPct(cerr, met.nconcord_uni1, met.npaired);
+			cerr << ") aligned concordantly exactly 1 time" << endl;
 
 			// Print the number that aligned concordantly more than once
-			cout << "    " << met.nconcord_uni2 << " (";
-			printPct(cout, met.nconcord_uni2, met.npaired);
-			cout << ") aligned concordantly >1 times" << endl;
+			cerr << "    " << met.nconcord_uni2 << " (";
+			printPct(cerr, met.nconcord_uni2, met.npaired);
+			cerr << ") aligned concordantly >1 times" << endl;
 		}
 		if(discord) {
 			// TODO: what about discoardant and on separate chromosomes?
 		
 			// Bring out the unaligned pair total so we can subtract discordants
-			cout << "    ----" << endl;
-			cout << "    " << met.nconcord_0
+			cerr << "    ----" << endl;
+			cerr << "    " << met.nconcord_0
 			     << " pairs aligned concordantly 0 times; of these:" << endl;
 			// Discordants
-			cout << "      " << met.ndiscord << " (";
-			printPct(cout, met.ndiscord, met.nconcord_0);
-			cout << ") aligned discordantly 1 time" << endl;
+			cerr << "      " << met.ndiscord << " (";
+			printPct(cerr, met.ndiscord, met.nconcord_0);
+			cerr << ") aligned discordantly 1 time" << endl;
 		}
 		uint64_t ncondiscord_0 = met.nconcord_0 - met.ndiscord;
 		if(mixed) {
 			// Bring out the unaligned pair total so we can subtract discordants
-			cout << "    ----" << endl;
-			cout << "    " << ncondiscord_0
+			cerr << "    ----" << endl;
+			cerr << "    " << ncondiscord_0
 			     << " pairs aligned 0 times concordantly or discordantly; of these:" << endl;
-			cout << "      " << (ncondiscord_0 * 2) << " mates make up the pairs; of these:" << endl;
-			cout << "        " << met.nunp_0_0 << " " << "(";
-			printPct(cout, met.nunp_0_0, ncondiscord_0 * 2);
-			cout << ") aligned 0 times" << endl;
+			cerr << "      " << (ncondiscord_0 * 2) << " mates make up the pairs; of these:" << endl;
+			cerr << "        " << met.nunp_0_0 << " " << "(";
+			printPct(cerr, met.nunp_0_0, ncondiscord_0 * 2);
+			cerr << ") aligned 0 times" << endl;
 			if(canRep) {
 				// Print the number that aligned exactly once
 				assert_eq(met.nunp_0_uni, met.nunp_0_uni1+met.nunp_0_uni2);
-				cout << "        " << met.nunp_0_uni1 << " (";
-				printPct(cout, met.nunp_0_uni1, ncondiscord_0 * 2);
-				cout << ") aligned exactly 1 time" << endl;
+				cerr << "        " << met.nunp_0_uni1 << " (";
+				printPct(cerr, met.nunp_0_uni1, ncondiscord_0 * 2);
+				cerr << ") aligned exactly 1 time" << endl;
 
 				// Print the number that aligned more than once but fewer times
 				// than the limit
-				cout << "        " << met.nunp_0_uni2+met.nunp_0_rep << " (";
-				printPct(cout, met.nunp_0_uni2+met.nunp_0_rep, ncondiscord_0 * 2);
-				cout << ") aligned >1 times" << endl;
+				cerr << "        " << met.nunp_0_uni2+met.nunp_0_rep << " (";
+				printPct(cerr, met.nunp_0_uni2+met.nunp_0_rep, ncondiscord_0 * 2);
+				cerr << ") aligned >1 times" << endl;
 			} else {
 				// Print the number that aligned exactly once
 				assert_eq(met.nunp_0_uni, met.nunp_0_uni1+met.nunp_0_uni2);
-				cout << "        " << met.nunp_0_uni1 << " (";
-				printPct(cout, met.nunp_0_uni1, ncondiscord_0 * 2);
-				cout << ") aligned exactly 1 time" << endl;
+				cerr << "        " << met.nunp_0_uni1 << " (";
+				printPct(cerr, met.nunp_0_uni1, ncondiscord_0 * 2);
+				cerr << ") aligned exactly 1 time" << endl;
 
 				// Print the number that aligned more than once but fewer times
 				// than the limit
-				cout << "        " << met.nunp_0_uni2 << " (";
-				printPct(cout, met.nunp_0_uni2, ncondiscord_0 * 2);
-				cout << ") aligned >1 times" << endl;
+				cerr << "        " << met.nunp_0_uni2 << " (";
+				printPct(cerr, met.nunp_0_uni2, ncondiscord_0 * 2);
+				cerr << ") aligned >1 times" << endl;
 			}
 			
 			//if(canRep) {
 			//	// Bring out the repetitively aligned pair total so we can subtract discordants
-			//	cout << "    ----" << endl;
-			//	cout << "    " << met.nconcord_rep
+			//	cerr << "    ----" << endl;
+			//	cerr << "    " << met.nconcord_rep
 			//		 << " pairs aligned concordantly >" << repThresh
 			//		 << " times; of these:" << endl;
-			//	cout << "      " << (met.nconcord_rep * 2) << " mates make up the pairs; of these:" << endl;
+			//	cerr << "      " << (met.nconcord_rep * 2) << " mates make up the pairs; of these:" << endl;
 			//	
-			//	cout << "        " << met.nunp_rep_0 << " (";
-			//	printPct(cout, met.nunp_rep_0, met.nconcord_rep * 2);
-			//	cout << ") aligned 0 times" << endl;
+			//	cerr << "        " << met.nunp_rep_0 << " (";
+			//	printPct(cerr, met.nunp_rep_0, met.nconcord_rep * 2);
+			//	cerr << ") aligned 0 times" << endl;
 			//	
-			//	cout << "        " << met.nunp_rep_uni << " (";
-			//	printPct(cout, met.nunp_rep_uni, met.nconcord_rep * 2);
-			//	cout << ") aligned >0 and <=" << repThresh << " times" << endl;
+			//	cerr << "        " << met.nunp_rep_uni << " (";
+			//	printPct(cerr, met.nunp_rep_uni, met.nconcord_rep * 2);
+			//	cerr << ") aligned >0 and <=" << repThresh << " times" << endl;
 			//	
-			//	cout << "        " << met.nunp_rep_rep << " (";
-			//	printPct(cout, met.nunp_rep_rep, met.nconcord_rep * 2);
-			//	cout << ") aligned >" << repThresh << " times" << endl;
+			//	cerr << "        " << met.nunp_rep_rep << " (";
+			//	printPct(cerr, met.nunp_rep_rep, met.nconcord_rep * 2);
+			//	cerr << ") aligned >" << repThresh << " times" << endl;
 			//}
 		}
 	}
 	uint64_t totunpair = met.nunpaired;
 	if(totunpair > 0) {
 		// Unpaired output
-		cout << "  " << totunpair << " (";
-		printPct(cout, totunpair, totread);
-		cout << ") were unpaired; of these:" << endl;
+		cerr << "  " << totunpair << " (";
+		printPct(cerr, totunpair, totread);
+		cerr << ") were unpaired; of these:" << endl;
 		
-		cout << "    " << met.nunp_0 << " (";
-		printPct(cout, met.nunp_0, met.nunpaired);
-		cout << ") aligned 0 times" << endl;
+		cerr << "    " << met.nunp_0 << " (";
+		printPct(cerr, met.nunp_0, met.nunpaired);
+		cerr << ") aligned 0 times" << endl;
 		if(hadoopOut) {
-			cout << "reporter:counter:Bowtie 2,Unpaired reads with 0 alignments,"
+			cerr << "reporter:counter:Bowtie 2,Unpaired reads with 0 alignments,"
 			     << met.nunpaired << endl;
 		}
 		
 		if(canRep) {
 			// Print the number that aligned exactly once
 			assert_eq(met.nunp_uni, met.nunp_uni1+met.nunp_uni2);
-			cout << "    " << met.nunp_uni1 << " (";
-			printPct(cout, met.nunp_uni1, met.nunpaired);
-			cout << ") aligned exactly 1 time" << endl;
+			cerr << "    " << met.nunp_uni1 << " (";
+			printPct(cerr, met.nunp_uni1, met.nunpaired);
+			cerr << ") aligned exactly 1 time" << endl;
 
 			// Print the number that aligned more than once but fewer times
 			// than the limit
-			cout << "    " << met.nunp_uni2+met.nunp_rep << " (";
-			printPct(cout, met.nunp_uni2+met.nunp_rep, met.nunpaired);
-			cout << ") aligned >1 times" << endl;
+			cerr << "    " << met.nunp_uni2+met.nunp_rep << " (";
+			printPct(cerr, met.nunp_uni2+met.nunp_rep, met.nunpaired);
+			cerr << ") aligned >1 times" << endl;
 		} else {
 			// Print the number that aligned exactly once
 			assert_eq(met.nunp_uni, met.nunp_uni1+met.nunp_uni2);
-			cout << "    " << met.nunp_uni1 << " (";
-			printPct(cout, met.nunp_uni1, met.nunpaired);
-			cout << ") aligned exactly 1 time" << endl;
+			cerr << "    " << met.nunp_uni1 << " (";
+			printPct(cerr, met.nunp_uni1, met.nunpaired);
+			cerr << ") aligned exactly 1 time" << endl;
 
 			// Print the number that aligned more than once
-			cout << "    " << met.nunp_uni2 << " (";
-			printPct(cout, met.nunp_uni2, met.nunpaired);
-			cout << ") aligned >1 times" << endl;
+			cerr << "    " << met.nunp_uni2 << " (";
+			printPct(cerr, met.nunp_uni2, met.nunpaired);
+			cerr << ") aligned >1 times" << endl;
 		}
 	}
 	uint64_t tot_al_cand = totunpair + totpair*2;
@@ -523,8 +523,8 @@ void AlnSink::printAlSumm(
 		met.nunp_uni +
 		met.nunp_rep;
 	assert_leq(tot_al, tot_al_cand);
-	printPct(cout, tot_al, tot_al_cand);
-	cout << " overall alignment rate" << endl;
+	printPct(cerr, tot_al, tot_al_cand);
+	cerr << " overall alignment rate" << endl;
 }
 
 /**
@@ -658,7 +658,9 @@ void AlnSinkWrap::finishRead(
 	const PerReadMetrics& prm,      // per-read metrics
 	const Scoring& sc,              // scoring scheme
 	bool suppressSeedSummary,       // = true
-	bool suppressAlignments)        // = false
+	bool suppressAlignments,        // = false
+	bool scUnMapped,                // = false
+	bool xeq)                       // = false
 {
 	obuf_.clear();
 	OutputQueueMark qqm(g_.outq(), obuf_, rdid_, threadid_);
@@ -776,7 +778,9 @@ void AlnSinkWrap::finishRead(
 				st_.params().mixed,
 				true,       // primary
 				true,       // opp aligned
-				rs2->fw()); // opp fw
+				rs2->fw(),  // opp fw
+				scUnMapped,
+				xeq);
 			AlnFlags flags2(
 				ALN_FLAG_PAIR_CONCORD_MATE2,
 				st_.params().mhitsSet(),
@@ -789,7 +793,9 @@ void AlnSinkWrap::finishRead(
 				st_.params().mixed,
 				false,      // primary
 				true,       // opp aligned
-				rs1->fw()); // opp fw
+				rs1->fw(),  // opp fw
+				scUnMapped,
+				xeq);
 			// Issue: we only set the flags once, but some of the flags might
 			// vary from pair to pair among the pairs we're reporting.  For
 			// instance, whether the a given mate aligns to the forward strand.
@@ -838,7 +844,7 @@ void AlnSinkWrap::finishRead(
 			//g_.outq().finishRead(obuf_, rdid_, threadid_);
 			return;
 		}
-		// Report concordant paired-end alignments if possible
+		// Report disconcordant paired-end alignments if possible
 		else if(ndiscord > 0) {
 			ASSERT_ONLY(bool ret =) prepareDiscordants();
 			assert(ret);
@@ -861,7 +867,9 @@ void AlnSinkWrap::finishRead(
 				st_.params().mixed,
 				true,       // primary
 				true,       // opp aligned
-				rs2->fw()); // opp fw
+				rs2->fw(),  // opp fw
+				scUnMapped,
+				xeq);
 			AlnFlags flags2(
 				ALN_FLAG_PAIR_DISCORD_MATE2,
 				st_.params().mhitsSet(),
@@ -874,7 +882,9 @@ void AlnSinkWrap::finishRead(
 				st_.params().mixed,
 				false,      // primary
 				true,       // opp aligned
-				rs1->fw()); // opp fw
+				rs1->fw(),  // opp fw
+				scUnMapped,
+				xeq);
 			SeedAlSumm ssm1, ssm2;
 			sr1->toSeedAlSumm(ssm1);
 			sr2->toSeedAlSumm(ssm2);
@@ -1174,7 +1184,9 @@ void AlnSinkWrap::finishRead(
 				st_.params().mixed,
 				true,   // primary
 				repRs2 != NULL,                    // opp aligned
-				repRs2 == NULL || repRs2->fw());   // opp fw
+				repRs2 == NULL || repRs2->fw(),    // opp fw
+				scUnMapped,
+				xeq);
 			for(size_t i = 0; i < rs1u_.size(); i++) {
 				rs1u_[i].setMateParams(ALN_RES_TYPE_UNPAIRED_MATE1, NULL, flags1);
 			}
@@ -1196,7 +1208,9 @@ void AlnSinkWrap::finishRead(
 				st_.params().mixed,
 				true,   // primary
 				repRs1 != NULL,                  // opp aligned
-				repRs1 == NULL || repRs1->fw()); // opp fw
+				repRs1 == NULL || repRs1->fw(),  // opp fw
+				scUnMapped,
+				xeq);
 			for(size_t i = 0; i < rs2u_.size(); i++) {
 				rs2u_[i].setMateParams(ALN_RES_TYPE_UNPAIRED_MATE2, NULL, flags2);
 			}
@@ -1295,7 +1309,9 @@ void AlnSinkWrap::finishRead(
 				st_.params().mixed,
 				true,           // primary
 				repRs2 != NULL, // opp aligned
-				(repRs2 != NULL) ? repRs2->fw() : false); // opp fw
+				(repRs2 != NULL) ? repRs2->fw() : false, // opp fw
+				scUnMapped,
+				xeq);
 			g_.reportUnaligned(
 				obuf_,      // string to write output to
 				staln_,
@@ -1341,7 +1357,9 @@ void AlnSinkWrap::finishRead(
 				st_.params().mixed,
 				true,           // primary
 				repRs1 != NULL, // opp aligned
-				(repRs1 != NULL) ? repRs1->fw() : false); // opp fw
+				(repRs1 != NULL) ? repRs1->fw() : false, // opp fw
+				scUnMapped,
+				xeq);
 			g_.reportUnaligned(
 				obuf_,      // string to write output to
 				staln_,
@@ -1911,7 +1929,8 @@ void AlnSinkSam::appendMate(
 		fl |= (flags.readMate1() ?
 			SAM_FLAG_FIRST_IN_PAIR : SAM_FLAG_SECOND_IN_PAIR);
 		if(flags.mateAligned()) {
-			if(!flags.isOppFw()) {
+			bool oppFw = (rso != NULL) ? rso->fw() : flags.isOppFw();
+			if (!oppFw) {
 				fl |= SAM_FLAG_MATE_STRAND;
 			}
 		}
@@ -1979,7 +1998,7 @@ void AlnSinkSam::appendMate(
 	}
 	// CIGAR
 	if(rs != NULL) {
-		staln.buildCigar(false);
+		staln.buildCigar(flags.xeq());
 		staln.writeCigar(&o, NULL);
 		o.append('\t');
 	} else {
@@ -2092,6 +2111,8 @@ void AlnSinkSam::appendMate(
 			prm,         // per-read metrics
 			sc);         // scoring scheme
 	}
+	samc_.printPreservedOptFlags(o, rd);
+	samc_.printComment(o, rd.name);
 	o.append('\n');
 }
 
@@ -2119,7 +2140,7 @@ bool testDones(
 }
 
 int main(void) {
-	cout << "Case 1 (simple unpaired 1) ... ";
+	cerr << "Case 1 (simple unpaired 1) ... ";
 	{
 		uint64_t nconcord = 0, ndiscord = 0, nunpair1 = 0, nunpair2 = 0;
 		bool pairMax = false, unpair1Max = false, unpair2Max = false;
@@ -2154,9 +2175,9 @@ int main(void) {
 		assert(!unpair1Max);
 		assert(!unpair2Max);
 	}
-	cout << "PASSED" << endl;
+	cerr << "PASSED" << endl;
 
-	cout << "Case 2 (simple unpaired 1) ... ";
+	cerr << "Case 2 (simple unpaired 1) ... ";
 	{
 		uint64_t nconcord = 0, ndiscord = 0, nunpair1 = 0, nunpair2 = 0;
 		bool pairMax = false, unpair1Max = false, unpair2Max = false;
@@ -2199,9 +2220,9 @@ int main(void) {
 		assert(unpair1Max);
 		assert(!unpair2Max);
 	}
-	cout << "PASSED" << endl;
+	cerr << "PASSED" << endl;
 
-	cout << "Case 3 (simple paired 1) ... ";
+	cerr << "Case 3 (simple paired 1) ... ";
 	{
 		uint64_t nconcord = 0, ndiscord = 0, nunpair1 = 0, nunpair2 = 0;
 		bool pairMax = false, unpair1Max = false, unpair2Max = false;
@@ -2260,9 +2281,9 @@ int main(void) {
 		assert(!unpair1Max); // because !mixed
 		assert(!unpair2Max); // because !mixed
 	}
-	cout << "PASSED" << endl;
+	cerr << "PASSED" << endl;
 
-	cout << "Case 4 (simple paired 2) ... ";
+	cerr << "Case 4 (simple paired 2) ... ";
 	{
 		uint64_t nconcord = 0, ndiscord = 0, nunpair1 = 0, nunpair2 = 0;
 		bool pairMax = false, unpair1Max = false, unpair2Max = false;
@@ -2321,9 +2342,9 @@ int main(void) {
 		assert(unpair1Max);
 		assert(unpair2Max);
 	}
-	cout << "PASSED" << endl;
+	cerr << "PASSED" << endl;
 
-	cout << "Case 5 (potential discordant after concordant) ... ";
+	cerr << "Case 5 (potential discordant after concordant) ... ";
 	{
 		uint64_t nconcord = 0, ndiscord = 0, nunpair1 = 0, nunpair2 = 0;
 		bool pairMax = false, unpair1Max = false, unpair2Max = false;
@@ -2358,9 +2379,9 @@ int main(void) {
 		assert(!unpair1Max);
 		assert(!unpair2Max);
 	}
-	cout << "PASSED" << endl;
+	cerr << "PASSED" << endl;
 
-	cout << "Case 6 (true discordant) ... ";
+	cerr << "Case 6 (true discordant) ... ";
 	{
 		uint64_t nconcord = 0, ndiscord = 0, nunpair1 = 0, nunpair2 = 0;
 		bool pairMax = false, unpair1Max = false, unpair2Max = false;
@@ -2394,9 +2415,9 @@ int main(void) {
 		assert(!unpair1Max);
 		assert(!unpair2Max);
 	}
-	cout << "PASSED" << endl;
+	cerr << "PASSED" << endl;
 
-	cout << "Case 7 (unaligned pair & uniquely aligned mate, mixed-mode) ... ";
+	cerr << "Case 7 (unaligned pair & uniquely aligned mate, mixed-mode) ... ";
 	{
 		uint64_t nconcord = 0, ndiscord = 0, nunpair1 = 0, nunpair2 = 0;
 		bool pairMax = false, unpair1Max = false, unpair2Max = false;
@@ -2434,9 +2455,9 @@ int main(void) {
 		assert(unpair1Max);
 		assert(!unpair2Max);
 	}
-	cout << "PASSED" << endl;
+	cerr << "PASSED" << endl;
 
-	cout << "Case 8 (unaligned pair & uniquely aligned mate, NOT mixed-mode) ... ";
+	cerr << "Case 8 (unaligned pair & uniquely aligned mate, NOT mixed-mode) ... ";
 	{
 		uint64_t nconcord = 0, ndiscord = 0, nunpair1 = 0, nunpair2 = 0;
 		bool pairMax = false, unpair1Max = false, unpair2Max = false;
@@ -2474,9 +2495,9 @@ int main(void) {
 		assert(!unpair1Max); // not really relevant
 		assert(!unpair2Max); // not really relevant
 	}
-	cout << "PASSED" << endl;
+	cerr << "PASSED" << endl;
 
-	cout << "Case 9 (repetitive pair, only one mate repetitive) ... ";
+	cerr << "Case 9 (repetitive pair, only one mate repetitive) ... ";
 	{
 		uint64_t nconcord = 0, ndiscord = 0, nunpair1 = 0, nunpair2 = 0;
 		bool pairMax = false, unpair1Max = false, unpair2Max = false;
@@ -2530,7 +2551,7 @@ int main(void) {
 		assert(unpair1Max); // not really relevant
 		assert(unpair2Max); // not really relevant
 	}
-	cout << "PASSED" << endl;
+	cerr << "PASSED" << endl;
 }
 
 #endif /*def ALN_SINK_MAIN*/

@@ -11,6 +11,7 @@ all:
 	mkdir -p ../inst
 	(cd	$(ADRM_DIR) && ($(MAKE) -f"${R_HOME}/etc${R_ARCH}/Makeconf"  -fMakefile.win))
 	(cd $(BT2_DIR) && ($(MAKE) -f"${R_HOME}/etc${R_ARCH}/Makeconf" -fMakefile.win))
+	(cd	$(BT2_DIR) && ($(MAKE) move -fMakefile.win))
 
 
 

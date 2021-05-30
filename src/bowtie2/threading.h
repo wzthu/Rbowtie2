@@ -20,82 +20,79 @@
 #ifndef THREADING_H_
 #define THREADING_H_
 
-#include <iostream>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <iostream>
+#include <mutex>
 
-#ifdef WITH_TBB
-# include <tbb/mutex.h>
-# include <tbb/spin_mutex.h>
-# include <tbb/queuing_mutex.h>
-# ifdef WITH_AFFINITY
-#  include <sched.h>
-#  include <tbb/task_group.h>
-#  include <tbb/task_scheduler_observer.h>
-#  include <tbb/atomic.h>
-#  include <tbb/task_scheduler_init.h>
-# endif
+#include "bt2_locks.h"
+
+#ifdef WITH_QUEUELOCK
+#define MUTEX_T mcs_lock
+#elif defined(NO_SPINLOCK)
+#define MUTEX_T std::mutex
 #else
-# include "tinythread.h"
-# include "fast_mutex.h"
+#define MUTEX_T spin_lock
+#endif
+
+struct thread_tracking_pair {
+	int tid;
+	std::atomic<int>* done;
+};
+
+#if defined(_TTHREAD_WIN32_)
+#define SLEEP(x) Sleep(x)
+#else
+#define SLEEP(x) do { \
+	const static timespec ts_tmp_ = {0, 1000000 * x}; \
+	nanosleep(&ts_tmp_, NULL); \
+} while(false)
 #endif
 
 #ifdef NO_SPINLOCK
-# ifdef WITH_TBB
 #   ifdef WITH_QUEUELOCK
-#  	define MUTEX_T tbb::queuing_mutex
+#       define MUTEX_T mcs_lock
 #   else
-#       define MUTEX_T tbb::mutex
+#       define MUTEX_T std::mutex
 #   endif
-# else
-#   define MUTEX_T tthread::mutex
-# endif
 #else
 # ifdef WITH_TBB
-#   define MUTEX_T tbb::spin_mutex
-# else
-#   define MUTEX_T tthread::fast_mutex
+#   define MUTEX_T spin_lock
 # endif
 #endif /* NO_SPINLOCK */
-
-
 /**
  * Wrap a lock; obtain lock upon construction, release upon destruction.
  */
 class ThreadSafe {
 public:
 
-	ThreadSafe() : ptr_mutex(NULL) { }
-	
-	ThreadSafe(MUTEX_T* ptr_mutex, bool locked = true) : ptr_mutex(NULL) {
-		if(locked) {
-#if WITH_TBB && NO_SPINLOCK && WITH_QUEUELOCK
-			//have to use the heap as we can't copy
-			//the scoped lock
-			this->ptr_mutex = new MUTEX_T::scoped_lock(*ptr_mutex);
-#else
-			this->ptr_mutex = ptr_mutex;
-			ptr_mutex->lock();
+	ThreadSafe(MUTEX_T& mutex) :
+#if NO_SPINLOCK && WITH_QUEUELOCK
+		node_{},
 #endif
-		}
+		mutex_(mutex) {
+#if NO_SPINLOCK && WITH_QUEUELOCK
+		mutex_.lock(node_);
+#else
+		mutex_.lock();
+#endif
+
 	}
 
 	~ThreadSafe() {
-		if (ptr_mutex != NULL)
-#if WITH_TBB && NO_SPINLOCK && WITH_QUEUELOCK
-			delete ptr_mutex;
+#if NO_SPINLOCK && WITH_QUEUELOCK
+		mutex_.unlock(node_);
 #else
-			ptr_mutex->unlock();
+		mutex_.unlock();
 #endif
 	}
 
 private:
-#if WITH_TBB && NO_SPINLOCK && WITH_QUEUELOCK
-	MUTEX_T::scoped_lock* ptr_mutex;
-#else
-	MUTEX_T *ptr_mutex;
+#if NO_SPINLOCK && WITH_QUEUELOCK
+	MUTEX_T::mcs_node node_;
 #endif
+	MUTEX_T& mutex_;
 };
 
 #ifdef WITH_TBB
@@ -103,7 +100,7 @@ private:
 //ripped entirely from;
 //https://software.intel.com/en-us/blogs/2013/10/31/applying-intel-threading-building-blocks-observers-for-thread-affinity-on-intel
 class concurrency_tracker: public tbb::task_scheduler_observer {
-    tbb::atomic<int> num_threads;
+    std::atomic<int> num_threads;
 public:
     concurrency_tracker() : num_threads() { observe(true); }
     /*override*/ void on_scheduler_entry( bool ) { ++num_threads; }
@@ -117,7 +114,7 @@ class pinning_observer: public tbb::task_scheduler_observer {
     int ncpus;
 
     const int pinning_step;
-    tbb::atomic<int> thread_index;
+    std::atomic<int> thread_index;
 public:
     pinning_observer( int pinning_step=1 ) : pinning_step(pinning_step), thread_index() {
         for ( ncpus = sizeof(cpu_set_t)/CHAR_BIT; ncpus < 16*1024 /* some reasonable limit */; ncpus <<= 1 ) {

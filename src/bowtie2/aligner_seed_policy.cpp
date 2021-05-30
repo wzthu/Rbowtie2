@@ -409,6 +409,25 @@ void SeedAlignmentPolicy::parseString(
 				}
 				// Set type to =quality
 				penMmcType = COST_MODEL_QUAL;
+				/* The match penalty may get set before
+				 * the --ignore-quals parameter gets parsed.
+				 * Since the match penalty policy depends on
+				 * the whether or not --ignore-quals was set
+				 * we do a check here and adjust the parameter
+				 * accordingly.
+				 */
+				if (ignoreQuals) {
+					if (gVerbose)
+						cerr << "Changing MMP=Q," << penMmcMax << " to ";
+					penMmcMin = penMmcMax;
+					penMmcType = COST_MODEL_CONSTANT;
+					if (gVerbose) {
+						cerr << "MMP=C," << penMmcMax
+						     << " because of --ignore-quals"
+						     << endl;
+					}
+
+				}
 			} else if(ctoks[0][0] == 'R') {
 				// Set type to=Maq-quality
 				penMmcType = COST_MODEL_ROUNDED_QUAL;
@@ -534,9 +553,9 @@ void SeedAlignmentPolicy::parseString(
 		 *          interval is determined by IVAL.
 		 */
 		else if(tag == "SEED") {
-			if(ctoks.size() > 2) {
+			if(ctoks.size() > 1) {
 				cerr << "Error parsing alignment policy setting "
-				     << "'" << tag.c_str() << "'; RHS must have 1 or 2 tokens, "
+				     << "'" << tag.c_str() << "'; RHS must have 1 token, "
 					 << "had " << ctoks.size() << ".  "
 					 << "Policy: '" << s.c_str() << "'" << endl;
 				assert(false); throw 1;
@@ -552,13 +571,6 @@ void SeedAlignmentPolicy::parseString(
 					cerr << "Error: -N was set to a number less than 0 (" << multiseedMms << ")" << endl;
 					throw 1;
 				}
-			}
-			if(ctoks.size() >= 2) {
-				istringstream tmpss(ctoks[1]);
-				tmpss >> multiseedLen;
-			} else {
-				multiseedLen = gDefaultSeedLen;
-;
 			}
 		}
 		else if(tag == "SEEDLEN") {
