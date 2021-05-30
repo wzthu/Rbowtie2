@@ -20,8 +20,12 @@ clean:
 	(cd	$(BT2_DIR) && ($(MAKE) clean -fMakefile.win))
 	rm -f ../inst/bowtie2-build-s
 	rm -f ../inst/bowtie2-align-s
+	rm -f ../inst/bowtie2-build-l
+	rm -f ../inst/bowtie2-align-l
 	rm -f bowtie2-build-s
 	rm -f bowtie2-align-s
+	rm -f bowtie2-build-l
+	rm -f bowtie2-align-l
 	rm -f *.o
 
 
