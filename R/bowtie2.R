@@ -63,16 +63,13 @@
 #' }
 #'
 
-bowtie2 <- function(bt2Index,indexFormat = 's',samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
+bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
                     overwrite=FALSE){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     
-    if (indexFormat != 's' && indexFormat != 'l'){
-        return("indexFormat must be either s (.bt2) or l (.bt2l)")
-    }
-    
+    bt2Index <- file.path(tools::file_path_as_absolute(dirname(bt2Index)), basename(bt2Index))
     bt2Index <-trimws(as.character(bt2Index))
     samOutput<-trimws(as.character(samOutput))
 
@@ -91,11 +88,11 @@ bowtie2 <- function(bt2Index,indexFormat = 's',samOutput,seq1,...,seq2=NULL,inte
 
     if(interleaved){
         if(length(seq1)>1){
-            stop(paste0("Argumnet `seq1` has to be a SINGLE file",
+            stop(paste0("Argument `seq1` has to be a SINGLE file",
                         " path rather than a vector of paths"))
         }
         if(!is.null(seq2)){
-            stop("Argumnet `seq2` has to be NULL when interleaved=TRUE")
+            stop("Argument `seq2` has to be NULL when interleaved=TRUE")
         }
     }
 
@@ -103,8 +100,9 @@ bowtie2 <- function(bt2Index,indexFormat = 's',samOutput,seq1,...,seq2=NULL,inte
     checkFileExist(seq1,"seq1")
     checkFileExist(seq2,"seq2")
     checkPathExist(bt2Index,"bt2Index")
+    indexFormat <- checkIndexType(bt2Index)
     
-    if (indexFormat == 's'){
+    if (indexFormat == "SMALL"){
         checkFileExist(paste0(bt2Index,".1.bt2"),"bt2Index")
         checkFileExist(paste0(bt2Index,".2.bt2"),"bt2Index")
         checkFileExist(paste0(bt2Index,".3.bt2"),"bt2Index")
@@ -113,13 +111,19 @@ bowtie2 <- function(bt2Index,indexFormat = 's',samOutput,seq1,...,seq2=NULL,inte
         checkFileExist(paste0(bt2Index,".rev.2.bt2"),"bt2Index")
     }
     
-    else{
+    else if (indexFormat == "LARGE"){
         checkFileExist(paste0(bt2Index,".1.bt2l"),"bt2Index")
         checkFileExist(paste0(bt2Index,".2.bt2l"),"bt2Index")
         checkFileExist(paste0(bt2Index,".3.bt2l"),"bt2Index")
         checkFileExist(paste0(bt2Index,".4.bt2l"),"bt2Index")
         checkFileExist(paste0(bt2Index,".rev.1.bt2l"),"bt2Index")
         checkFileExist(paste0(bt2Index,".rev.2.bt2l"),"bt2Index")
+    }
+    
+    else{
+        stop(paste0("Could not find either a valid small (.bt2) or large (.bt2l)", 
+                    " index with basename of ",basename(bt2Index), " at location ",
+                    dirname(bt2Index)))
     }
     
     checkFileCreatable(samOutput,"samOutput",overwrite)
@@ -139,10 +143,12 @@ bowtie2 <- function(bt2Index,indexFormat = 's',samOutput,seq1,...,seq2=NULL,inte
 
     argvs <- c(paramArray,argvs,"-S",samOutput)
 
-    if (indexFormat == 's')
+    if (indexFormat == "SMALL")
         invisible(.callbinary("bowtie2-align-s",paste(argvs,collapse = " ")))
-    else
+    else if (indexFormat == "LARGE")
         invisible(.callbinary("bowtie2-align-l",paste(argvs,collapse = " ")))
+    else
+        stop("Bug exists that needs to be fixed")
 
 }
 

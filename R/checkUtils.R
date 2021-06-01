@@ -1,3 +1,20 @@
+checkIndexType <- function(filePath){
+    if (!file.exists(paste0(filePath,".1.bt2"))){
+        if (!file.exists(paste0(filePath,".1.bt2l"))){
+            return("ERROR")
+        }
+        else{
+            return("LARGE")
+        }
+    }
+    else{
+        return("SMALL")
+    }
+} 
+
+
+
+
 checkFileExist <- function(filePath,argname){
     if(!is.null(filePath)){
         for(i in seq_along(filePath)){
