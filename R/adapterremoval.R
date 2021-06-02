@@ -259,10 +259,13 @@ adapterremoval_version<- function(){
     .callbinary("AdapterRemoval","--version")
 }
 
-.callbinary<- function(bin, args)
+.callbinary<- function(bin, args, path = NULL)
 {
     args <- gsub("^ *| *$", "", args)
     call <- paste(shQuote(file.path(system.file(package="Rbowtie2"), bin)), args)
     output <- system(call, intern=TRUE,show.output.on.console=TRUE)
-    return(output)
+    if (!is.null(path))
+        return(path)
+    else
+        return(output)
 }

@@ -6,7 +6,8 @@
 \usage{
 bowtie2(
   bt2Index,
-  samOutput,
+  outputPath,
+  outputType = "sam",
   seq1,
   ...,
   seq2 = NULL,
@@ -19,8 +20,11 @@ bowtie2(
 index prefix: dir/basename
 (minus trailing .bt2 or .bt2l of dir/basename.*.bt2 or dir/basename.*.bt2l).}
 
-\item{samOutput}{\code{Character} scalar. A path to a SAM file
-used for the alignment output (dir/replace_name.sam).}
+\item{outputPath}{\code{Character} scalar. A path to the alignment output file
+(dir/basename) (minus trailing .sam or .bam).}
+
+\item{outputType}{\code{Character} scalar. Specifies the type of output alignment file
+to be created. Default is set to "sam" but user can also specify "bam" instead.}
 
 \item{seq1}{\code{Character} vector. For single-end sequencing,
 it contains sequence file paths.

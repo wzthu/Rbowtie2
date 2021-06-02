@@ -2,11 +2,14 @@
 #' @title Interface to bowtie2 using bowtie2-2.4.4
 #' @description This function can be use to call the wrapped \code{bowtie2-align-s}
 #'  or \code{bowtie2-align-l} binary.
+#' @importFrom magrittr %>%
 #' @param bt2Index \code{Character} scalar. Path to bowtie2 index files including
 #' index prefix: dir/basename
 #' (minus trailing .bt2 or .bt2l of dir/basename.*.bt2 or dir/basename.*.bt2l).
-#' @param samOutput \code{Character} scalar. A path to a SAM file
-#' used for the alignment output (dir/replace_name.sam).
+#' @param outputPath \code{Character} scalar. A path to the alignment output file
+#' (dir/basename) (minus trailing .sam or .bam).
+#' @param outputType \code{Character} scalar. Specifies the type of output alignment file
+#' to be created. Default is set to "sam" but user can also specify "bam" instead. 
 #' @param seq1 \code{Character} vector. For single-end sequencing,
 #' it contains sequence file paths.
 #' For paired-end sequencing, it can be file paths with #1 mates
@@ -63,15 +66,21 @@
 #' }
 #'
 
-bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
+bowtie2 <- function(bt2Index,outputPath,outputType = "sam", seq1,...,seq2=NULL,interleaved=FALSE,
                     overwrite=FALSE){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     
+    if (outputType != "sam" && outputType != "bam"){
+        return("Specify either 'sam' or 'bam' for outputType input")
+    }
+    
+    
     # Convert local path into absolute path for debugging purposes
     bt2Index <- file.path(tools::file_path_as_absolute(dirname(bt2Index)), basename(bt2Index))
     bt2Index <-trimws(as.character(bt2Index))
+    samOutput <- file.path(tools::file_path_as_absolute(dirname(outputPath)), paste0(basename(outputPath),".sam"))
     samOutput<-trimws(as.character(samOutput))
 
     seq1<-trimws(as.character(seq1))
@@ -148,11 +157,45 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
     # Combine explicit and optional arguments together
     argvs <- c(paramArray,argvs,"-S",samOutput)
 
-    # Call corresponding bowtie-align binary depending on index type
-    if (indexFormat == "SMALL")
-        invisible(.callbinary("bowtie2-align-s",paste(argvs,collapse = " ")))
-    else if (indexFormat == "LARGE")
-        invisible(.callbinary("bowtie2-align-l",paste(argvs,collapse = " ")))
+    # Call corresponding bowtie-align binary depending on index type and output type
+    if (indexFormat == "SMALL"){
+        if(outputType == "sam"){
+            invisible(.callbinary("bowtie2-align-s",paste(argvs,collapse = " ")))
+        }
+        else if (outputType == "bam"){
+            invisible(.callbinary("bowtie2-align-s",paste(argvs,collapse = " "), path = samOutput)
+                      %>%
+                          Rsamtools::asBam(file = ., 
+                                           destination = file.path(tools::file_path_as_absolute(dirname(outputPath)), basename(outputPath)),
+                                           overwrite = overwrite, 
+                                           indexDestination = FALSE))
+            
+            invisible(file.remove(samOutput))
+            
+        }
+        else{
+            stop("Bug exists that needs to be fixed")
+        }
+    }
+    else if (indexFormat == "LARGE"){
+        if(outputType == "sam"){
+            invisible(.callbinary("bowtie2-align-l",paste(argvs,collapse = " ")))
+        }
+        else if (outputType == "bam"){
+            invisible(.callbinary("bowtie2-align-l",paste(argvs,collapse = " "), path = samOutput)
+                      %>%
+                          Rsamtools::asBam(file = ., 
+                                           destination = file.path(tools::file_path_as_absolute(dirname(outputPath)), basename(outputPath)),
+                                           overwrite = overwrite, 
+                                           indexDestination = FALSE))
+            
+            invisible(file.remove(samOutput))
+        }
+        else{
+            stop("Bug exists that needs to be fixed")
+        }
+    }
+        
     else
         stop("Bug exists that needs to be fixed")
 
