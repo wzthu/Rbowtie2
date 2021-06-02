@@ -2,18 +2,25 @@
 % Please edit documentation in R/bowtie2.R
 \name{bowtie2}
 \alias{bowtie2}
-\title{Interface to bowtie2 of bowtie2-2.2.3}
+\title{Interface to bowtie2 using bowtie2-2.4.4}
 \usage{
-bowtie2(bt2Index, samOutput, seq1, ..., seq2 = NULL, interleaved = FALSE,
-  overwrite = FALSE)
+bowtie2(
+  bt2Index,
+  samOutput,
+  seq1,
+  ...,
+  seq2 = NULL,
+  interleaved = FALSE,
+  overwrite = FALSE
+)
 }
 \arguments{
-\item{bt2Index}{\code{Character} scalar. bowtie2 index files
-prefix: 'dir/basename'
-(minus trailing '.*.bt2' of 'dir/basename.*.bt2').}
+\item{bt2Index}{\code{Character} scalar. Path to bowtie2 index files including
+index prefix: dir/basename
+(minus trailing .bt2 or .bt2l of dir/basename.*.bt2 or dir/basename.*.bt2l).}
 
 \item{samOutput}{\code{Character} scalar. A path to a SAM file
-used for the alignment output.}
+used for the alignment output (dir/replace_name.sam).}
 
 \item{seq1}{\code{Character} vector. For single-end sequencing,
 it contains sequence file paths.
@@ -43,15 +50,15 @@ status. The value is 0 when there is not any mistakes
 Otherwise the value is non-zero.
 }
 \description{
-This function can be use to call wrapped \code{bowtie2}
-binary.
+This function can be use to call the wrapped \code{bowtie2-align-s}
+ or \code{bowtie2-align-l} binary.
 }
 \details{
 All additional arguments in ... are interpreted as
-additional parameters to be passed on to
+additional parameters to be passed to 
 bowtie2. All of them should be \code{Character} or
 \code{Numeric} scalar. You can put all aditional
-arguments in one \code{Character}(e.g. "--threads 8 --no-mixed")
+arguments in one \code{Character} (e.g. "--threads 8 --no-mixed")
 with white space splited just like command line,
 or put them in different \code{Character}
 (e.g. "--threads","8","--no-mixed"). Note that some
@@ -85,5 +92,5 @@ Langmead, B., & Salzberg, S. L. (2012).
 Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 }
 \author{
-Zheng Wei
+Zheng Wei, Rahul Varki
 }

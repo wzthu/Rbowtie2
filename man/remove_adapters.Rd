@@ -4,9 +4,18 @@
 \alias{remove_adapters}
 \title{Interface to bowtie2 of adapterremoval-2.2.1a}
 \usage{
-remove_adapters(file1, ..., adapter1 = NULL, output1 = NULL, file2 = NULL,
-  adapter2 = NULL, output2 = NULL, basename = NULL, interleaved = FALSE,
-  overwrite = FALSE)
+remove_adapters(
+  file1,
+  ...,
+  adapter1 = NULL,
+  output1 = NULL,
+  file2 = NULL,
+  adapter2 = NULL,
+  output2 = NULL,
+  basename = NULL,
+  interleaved = FALSE,
+  overwrite = FALSE
+)
 }
 \arguments{
 \item{file1}{\code{Character} vector. For single-end sequencing,

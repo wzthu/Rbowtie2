@@ -4,7 +4,13 @@
 \alias{bowtie2_usage}
 \title{Print available arguments for bowtie2}
 \usage{
-bowtie2_usage()
+bowtie2_usage(indexType = "s")
+}
+\arguments{
+\item{indexType}{\code{Character} scalar. Defaults to 's' which shows help
+document of the small bowtie2-align binary. 
+Can optionally pass 'l' which shows help document of the large 
+bowtie2-align binary.}
 }
 \value{
 bowtie2 available arguments and their usage.
@@ -22,5 +28,5 @@ Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
 alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 }
 \author{
-Zheng Wei
+Zheng Wei, Rahul Varki
 }

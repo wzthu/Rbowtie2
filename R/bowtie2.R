@@ -1,12 +1,12 @@
 #' @name bowtie2
-#' @title Interface to bowtie2 of bowtie2-2.4.4
-#' @description This function can be use to call wrapped \code{bowtie2}
-#' binary.
-#' @param bt2Index \code{Character} scalar. bowtie2 index files
-#' prefix: 'dir/basename'
-#' (minus trailing '.*.bt2' of 'dir/basename.*.bt2').
+#' @title Interface to bowtie2 using bowtie2-2.4.4
+#' @description This function can be use to call the wrapped \code{bowtie2-align-s}
+#'  or \code{bowtie2-align-l} binary.
+#' @param bt2Index \code{Character} scalar. Path to bowtie2 index files including
+#' index prefix: dir/basename
+#' (minus trailing .bt2 or .bt2l of dir/basename.*.bt2 or dir/basename.*.bt2l).
 #' @param samOutput \code{Character} scalar. A path to a SAM file
-#' used for the alignment output.
+#' used for the alignment output (dir/replace_name.sam).
 #' @param seq1 \code{Character} vector. For single-end sequencing,
 #' it contains sequence file paths.
 #' For paired-end sequencing, it can be file paths with #1 mates
@@ -25,10 +25,10 @@
 #' @param overwrite \code{Logical}. Force overwriting of existing
 #' files if setting \code{TRUE}.
 #' @details All additional arguments in ... are interpreted as
-#' additional parameters to be passed on to
+#' additional parameters to be passed to 
 #' bowtie2. All of them should be \code{Character} or
 #' \code{Numeric} scalar. You can put all aditional
-#' arguments in one \code{Character}(e.g. "--threads 8 --no-mixed")
+#' arguments in one \code{Character} (e.g. "--threads 8 --no-mixed")
 #' with white space splited just like command line,
 #' or put them in different \code{Character}
 #' (e.g. "--threads","8","--no-mixed"). Note that some
@@ -36,7 +36,7 @@
 #' bowtie2 are invalid if they are already handled as explicit
 #' function arguments. See the output of
 #' \code{bowtie2_usage()} for details about available parameters.
-#' @author Zheng Wei
+#' @author Zheng Wei, Rahul Varki
 #' @return An invisible \code{Integer} of call
 #' status. The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
@@ -69,13 +69,14 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     
+    # Convert local path into absolute path for debugging purposes
     bt2Index <- file.path(tools::file_path_as_absolute(dirname(bt2Index)), basename(bt2Index))
     bt2Index <-trimws(as.character(bt2Index))
     samOutput<-trimws(as.character(samOutput))
 
     seq1<-trimws(as.character(seq1))
-
-
+    
+    # If paired mates are provided then they should be the same length
     if(!is.null(seq2)){
         seq2<-trimws(as.character(seq2))
         if(length(seq1)!=length(seq2)){
@@ -96,10 +97,12 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
         }
     }
 
-
+    # Check if files and paths provided actually exist otherwise warning appears
     checkFileExist(seq1,"seq1")
     checkFileExist(seq2,"seq2")
     checkPathExist(bt2Index,"bt2Index")
+    
+    # Detect whether index at path provided is small (.bt2), large (.bt2l), or non-existent
     indexFormat <- checkIndexType(bt2Index)
     
     if (indexFormat == "SMALL"){
@@ -128,6 +131,7 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
     
     checkFileCreatable(samOutput,"samOutput",overwrite)
 
+    # Create the explicit arguments for the binaries
     argvs = c("-x",bt2Index)
     seq1<-paste0(seq1,collapse = ",")
     if(is.null(seq2)){
@@ -141,8 +145,10 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
         argvs <- c(argvs,"-1",seq1,"-2",seq2)
     }
 
+    # Combine explicit and optional arguments together
     argvs <- c(paramArray,argvs,"-S",samOutput)
 
+    # Call corresponding bowtie-align binary depending on index type
     if (indexFormat == "SMALL")
         invisible(.callbinary("bowtie2-align-s",paste(argvs,collapse = " ")))
     else if (indexFormat == "LARGE")
@@ -154,15 +160,15 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
 
 
 #' @name bowtie2-build
-#' @title Interface to bowtie2-build of bowtie2-2.4.4
-#' @description This function can be use to call wrapped \code{bowtie2-build}
-#' binary
+#' @title Interface to bowtie2-build using bowtie2-2.4.4
+#' @description This function can be use to call the wrapped \code{bowtie2-build-s}
+#'  or \code{bowtie2-build-l} binary
 #' @param references \code{Character} vector. The path to the files containing
 #' the references for which to
 #' build a bowtie index.
 #' @param bt2Index \code{Character} scalar. Write bowtie2 index data to files
 #' with this prefix: 'dir/basename'.
-#' If the files with path like 'dir/basename.*.bt2' already exists,
+#' If the files with path like dir/basename.*.bt2 or dir/basename.*.bt2l already exists,
 #' the function function will cast an error,
 #' unless argument overwrite is \code{TRUE}.
 #' @param ... Additional arguments to be passed on to the binaries.
@@ -172,13 +178,13 @@ bowtie2 <- function(bt2Index,samOutput,seq1,...,seq2=NULL,interleaved=FALSE,
 #' @details All additional arguments in ... are interpreted as additional
 #' parameters to be passed on to
 #' bowtie2_build. All of them should be \code{Character} or
-#' \code{Numeric} scalar. You can put all aditional
-#' arguments in one \code{Character}(e.g. "--threads 8 --quiet") with white
+#' \code{Numeric} scalar. You can put all additional
+#' arguments in one \code{Character} (e.g. "--threads 8 --quiet") with white
 #' space splited just like command line,
-#' or put them in different \code{Character}(e.g. "--threads","8","--quiet").
+#' or put them in different \code{Character} (e.g. "--threads","8","--quiet").
 #' See the output of
 #' \code{bowtie2_build_usage()} for details about available parameters.
-#' @author Zheng Wei
+#' @author Zheng Wei, Rahul Varki
 #' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
@@ -209,8 +215,12 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 
     paramArray<-checkAddArgus("noinvalid",...)
 
+    # Check if reference file exists and path to place the bowtie indexes exist
     checkFileExist(references,"references")
     checkPathExist(bt2Index,"bt2Index")
+    
+    # Check whether to build small (.bt2) or large (.bt2l) indexes
+    # Same calculation used as the bowtie wrapper
     
     delta = 200
     smallIndex_max_size = 4*1024**3 - delta
@@ -220,9 +230,8 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
         total_size = total_size + file.size(filename)
     }
     
-    print(total_size)
-    print(smallIndex_max_size)
-    
+    # If the total file size of the reference files is larger than 
+    # the max small index size then we create large indexes (.bt2l)
     if (total_size > smallIndex_max_size){
         checkFileCreatable(paste0(bt2Index,".1.bt2l"),"bt2Index",overwrite)
         checkFileCreatable(paste0(bt2Index,".2.bt2l"),"bt2Index",overwrite)
@@ -231,6 +240,8 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
         checkFileCreatable(paste0(bt2Index,".rev.1.bt2l"),"bt2Index",overwrite)
         checkFileCreatable(paste0(bt2Index,".rev.2.bt2l"),"bt2Index",overwrite)
     }
+    
+    # If not then we create small indexes (.bt2)
     else{
         
         checkFileCreatable(paste0(bt2Index,".1.bt2"),"bt2Index",overwrite)
@@ -241,9 +252,11 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
         checkFileCreatable(paste0(bt2Index,".rev.2.bt2"),"bt2Index",overwrite)
     }
     
+    # Combine explicit and optional arguments together
     references<-paste0(references,collapse = ",")
     argvs <- c(paramArray,references,bt2Index)
 
+    # Call corresponding bowtie-build binary depending on index type
     if (total_size > smallIndex_max_size)
         invisible(.callbinary("bowtie2-build-l",paste(argvs,collapse = " ")))
     else
@@ -253,7 +266,11 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 #' @name bowtie2_version
 #' @title Print version information of bowtie2-2.4.4
 #' @description Print version information of bowtie2-2.4.4
-#' @author Zheng Wei
+#' @author Zheng Wei, Rahul Varki
+#' @param indexType \code{Character} scalar. Defaults to 's' which shows version
+#' number of the small bowtie2-build and bowtie-align binaries. 
+#' Can optionally pass 'l' which shows version number of the large bowtie2-build
+#' and bowtie2-align binaries.
 #' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
@@ -262,11 +279,19 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 #' @export bowtie2_version
 #' @examples
 #' cmdout<-bowtie2_version();cmdout
-bowtie2_version <- function(){
+bowtie2_version <- function(indexType = 's'){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
-    .callbinary("bowtie2-align-l","--version")
+    
+    if (indexType == 'l'){
+        #.callbinary("bowtie2-build-l","--version")
+        .callbinary("bowtie2-align-l","--version")
+    }
+    else{
+        #.callbinary("bowtie2-build-s","--version")
+        .callbinary("bowtie2-align-s","--version")
+    }
 }
 
 #' @name bowtie2_usage
@@ -274,18 +299,26 @@ bowtie2_version <- function(){
 #' @description Note that some arguments to the
 #' bowtie2 are invalid if they are
 #' already handled as explicit function arguments.
-#' @author Zheng Wei
+#' @author Zheng Wei, Rahul Varki
+#' @param indexType \code{Character} scalar. Defaults to 's' which shows help
+#' document of the small bowtie2-align binary. 
+#' Can optionally pass 'l' which shows help document of the large 
+#' bowtie2-align binary.
 #' @return bowtie2 available arguments and their usage.
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
 #' alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 #' @export bowtie2_usage
 #' @examples
 #' bowtie2_usage()
-bowtie2_usage <- function(){
+bowtie2_usage <- function(indexType = 's'){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
-    .callbinary("bowtie2-align-l","-h")
+    
+    if (indexType == 'l')
+        .callbinary("bowtie2-align-l","-h")
+    else
+        .callbinary("bowtie2-align-s","-h")
 }
 
 #' @name bowtie2_build_usage
@@ -293,18 +326,26 @@ bowtie2_usage <- function(){
 #' @description Note that some arguments to the
 #' bowtie2_build_usage are invalid if they are
 #' already handled as explicit function arguments.
-#' @author Zheng Wei
+#' @author Zheng Wei, Rahul Varki
+#' @param indexType \code{Character} scalar. Defaults to 's' which shows help
+#' document of the small bowtie2-build binary. 
+#' Can optionally pass 'l' which shows help document of the large 
+#' bowtie2-build binary
 #' @return bowtie2_build available arguments and their usage.
 #' @references Langmead B, Salzberg S.
 #' Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
 #' @export bowtie2_build_usage
 #' @examples
 #' bowtie2_build_usage()
-bowtie2_build_usage <- function() {
+bowtie2_build_usage <- function(indexType = 's') {
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
-    .callbinary("bowtie2-build-l","-h")
+    
+    if (indexType == 'l')
+        .callbinary("bowtie2-build-l","-h")
+    else
+        .callbinary("bowtie2-build-s","-h")
 }
 
 

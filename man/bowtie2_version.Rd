@@ -2,9 +2,15 @@
 % Please edit documentation in R/bowtie2.R
 \name{bowtie2_version}
 \alias{bowtie2_version}
-\title{Print version information of bowtie2-2.2.3}
+\title{Print version information of bowtie2-2.4.4}
 \usage{
-bowtie2_version()
+bowtie2_version(indexType = "s")
+}
+\arguments{
+\item{indexType}{\code{Character} scalar. Defaults to 's' which shows version
+number of the small bowtie2-build and bowtie-align binaries. 
+Can optionally pass 'l' which shows version number of the large bowtie2-build
+and bowtie2-align binaries.}
 }
 \value{
 An invisible \code{Integer} of call status.
@@ -12,7 +18,7 @@ The value is 0 when there is not any mistakes
 Otherwise the value is non-zero.
 }
 \description{
-Print version information of bowtie2-2.2.3
+Print version information of bowtie2-2.4.4
 }
 \examples{
 cmdout<-bowtie2_version();cmdout
@@ -22,5 +28,5 @@ Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
 alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 }
 \author{
-Zheng Wei
+Zheng Wei, Rahul Varki
 }

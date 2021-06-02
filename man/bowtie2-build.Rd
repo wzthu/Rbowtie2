@@ -3,7 +3,7 @@
 \name{bowtie2-build}
 \alias{bowtie2-build}
 \alias{bowtie2_build}
-\title{Interface to bowtie2-build of bowtie2-2.2.3}
+\title{Interface to bowtie2-build using bowtie2-2.4.4}
 \usage{
 bowtie2_build(references, bt2Index, ..., overwrite = FALSE)
 }
@@ -14,7 +14,7 @@ build a bowtie index.}
 
 \item{bt2Index}{\code{Character} scalar. Write bowtie2 index data to files
 with this prefix: 'dir/basename'.
-If the files with path like 'dir/basename.*.bt2' already exists,
+If the files with path like dir/basename.*.bt2 or dir/basename.*.bt2l already exists,
 the function function will cast an error,
 unless argument overwrite is \code{TRUE}.}
 
@@ -30,17 +30,17 @@ The value is 0 when there is not any mistakes
 Otherwise the value is non-zero.
 }
 \description{
-This function can be use to call wrapped \code{bowtie2-build}
-binary
+This function can be use to call the wrapped \code{bowtie2-build-s}
+ or \code{bowtie2-build-l} binary
 }
 \details{
 All additional arguments in ... are interpreted as additional
 parameters to be passed on to
 bowtie2_build. All of them should be \code{Character} or
-\code{Numeric} scalar. You can put all aditional
-arguments in one \code{Character}(e.g. "--threads 8 --quiet") with white
+\code{Numeric} scalar. You can put all additional
+arguments in one \code{Character} (e.g. "--threads 8 --quiet") with white
 space splited just like command line,
-or put them in different \code{Character}(e.g. "--threads","8","--quiet").
+or put them in different \code{Character} (e.g. "--threads","8","--quiet").
 See the output of
 \code{bowtie2_build_usage()} for details about available parameters.
 }
@@ -64,5 +64,5 @@ Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
 alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 }
 \author{
-Zheng Wei
+Zheng Wei, Rahul Varki
 }
