@@ -21,6 +21,8 @@
 #' For single-end sequencing files and interleaved paired-end
 #' sequencing files(argument interleaved=\code{TRUE}),
 #' it must be \code{NULL}.
+#' @param bamFile \code{Character} vector. File path to bam file that contains
+#' unaligned reads.
 #' @param ... Additional arguments to be passed on to the binaries.
 #' See below for details.
 #' @param interleaved \code{Logical}. Set \code{TRUE} when files are
@@ -66,14 +68,14 @@
 #' }
 #'
 
-bowtie2 <- function(bt2Index,outputPath,outputType = "sam", seq1,...,seq2=NULL,interleaved=FALSE,
-                    overwrite=FALSE){
+bowtie2 <- function(bt2Index,outputPath,outputType = "sam", seq1=NULL,..., seq2=NULL,bamFile=NULL,
+                    interleaved=FALSE, overwrite=FALSE){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     
     if (outputType != "sam" && outputType != "bam"){
-        return("Specify either 'sam' or 'bam' for outputType input")
+        stop(paste0("Specify either 'sam' or 'bam' for outputType input"))
     }
     
     
@@ -83,7 +85,11 @@ bowtie2 <- function(bt2Index,outputPath,outputType = "sam", seq1,...,seq2=NULL,i
     samOutput <- file.path(tools::file_path_as_absolute(dirname(outputPath)), paste0(basename(outputPath),".sam"))
     samOutput<-trimws(as.character(samOutput))
 
-    seq1<-trimws(as.character(seq1))
+    if (!is.null(seq1))
+        seq1<-trimws(as.character(seq1))
+    else if (!is.null(bamFile))
+        bamFile <- trimws(as.character(bamFile))
+    
     
     # If paired mates are provided then they should be the same length
     if(!is.null(seq2)){
@@ -93,7 +99,7 @@ bowtie2 <- function(bt2Index,outputPath,outputType = "sam", seq1,...,seq2=NULL,i
                         "`seq1` and `seq2` should be the same length"))
         }
     }
-    paramArray<-checkAddArgus("-x|--interleaved|-U|-1|-2|-S",...)
+    paramArray<-checkAddArgus("-x|--interleaved|-U|-1|-2|-b|-S",...)
 
 
     if(interleaved){
@@ -142,16 +148,26 @@ bowtie2 <- function(bt2Index,outputPath,outputType = "sam", seq1,...,seq2=NULL,i
 
     # Create the explicit arguments for the binaries
     argvs = c("-x",bt2Index)
-    seq1<-paste0(seq1,collapse = ",")
-    if(is.null(seq2)){
+
+    if(!is.null(seq1) && is.null(seq2)){
         if(interleaved){
+            seq1<-paste0(seq1,collapse = ",")
             argvs <- c(argvs,"--interleaved",seq1)
         }else{
+            seq1<-paste0(seq1,collapse = ",")
             argvs <- c(argvs,"-U",seq1)
         }
-    }else{
+    }else if(!is.null(seq1) && !is.null(seq2)){
+        seq1<-paste0(seq1,collapse = ",")
         seq2<-paste0(seq2,collapse = ",")
         argvs <- c(argvs,"-1",seq1,"-2",seq2)
+    }
+    else if (!is.null(bamFile)){
+        bamFile <- paste0(bamFile, collapse = ",")
+        argvs <- c(argvs,"-b",bamFile)
+    }
+    else{
+        stop(paste0("Either could not find input reads or bam file"))
     }
 
     # Combine explicit and optional arguments together
@@ -200,6 +216,7 @@ bowtie2 <- function(bt2Index,outputPath,outputType = "sam", seq1,...,seq2=NULL,i
         stop("Bug exists that needs to be fixed")
 
 }
+
 
 
 #' @name bowtie2-build
