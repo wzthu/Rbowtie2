@@ -19,6 +19,12 @@ Otherwise the value is non-zero.
 \description{
 Print version information of bowtie2-2.4.4
 }
+\examples{
+\donttest{
+bowtie2_version()
+bowtie2_verision(indexType = 'l')
+}
+}
 \references{
 Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
 alignment with Bowtie 2. Nature methods, 9(4), 357-359.

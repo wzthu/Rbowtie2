@@ -12,9 +12,6 @@ Encoding: UTF-8
 Suggests: 
       knitr,
       rmarkdown
-Imports:
-      magrittr,
-      Rsamtools
 SystemRequirements: C++11
 Archs: x64
 RoxygenNote: 7.1.1

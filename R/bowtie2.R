@@ -392,7 +392,7 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 #' @examples
 #' \donttest{
 #' bowtie2_version()
-#' bowtie2_verision(indexType = 'l)
+#' bowtie2_verision(indexType = 'l')
 #' }
 bowtie2_version <- function(indexType = 's'){
     if(R.Version()$arch=="i386"){
