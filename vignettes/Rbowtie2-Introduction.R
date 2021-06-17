@@ -47,8 +47,12 @@ reads_2 <- system.file(package="Rbowtie2", "extdata",
                        "bt2", "reads", "reads_2.fastq")
 if(file.exists(file.path(td, "lambda_virus.1.bt2"))){
     (cmdout<-bowtie2(bt2Index = file.path(td, "lambda_virus"),
-        samOutput = file.path(td, "result.sam"),
-    seq1=reads_1,seq2=reads_2,overwrite=TRUE,"--threads 3"))
+        output = file.path(td, "result"),
+        outputType = "sam",
+        seq1=reads_1,
+        seq2=reads_2,
+        overwrite=TRUE,
+        "--threads 3"))
     head(readLines(file.path(td, "result.sam")))
 }
 

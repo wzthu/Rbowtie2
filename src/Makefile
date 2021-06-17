@@ -1,5 +1,6 @@
 ADRM_DIR = adapterremoval
 BT2_DIR = bowtie2
+SAM_DIR = samtools-1.12
 
 CXX = g++
 
@@ -7,6 +8,8 @@ CXX = g++
 
 all: 
 	mkdir -p ../inst
+	(cd $(SAM_DIR) && ($(MAKE) CXX="$(CXX)" -f Makefile))
+	mv ./samtools-1.12/samtools ../inst/
 	(cd	$(ADRM_DIR) && ($(MAKE) CXX="$(CXX) -std=gnu++11" -f Makefile))
 	(cd $(BT2_DIR) && ($(MAKE) CXX="$(CXX)" -f Makefile))
 	(cd	$(BT2_DIR) && ($(MAKE) move -f Makefile))
@@ -18,6 +21,7 @@ clean:
 	(cd	$(BT2_DIR) && ($(MAKE) clean -f Makefile))
 	rm -f *.so
 	rm -f *.o
+	rm -f ../inst/samtools
 
 
 

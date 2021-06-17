@@ -3,18 +3,18 @@
 \name{bowtie2-build}
 \alias{bowtie2-build}
 \alias{bowtie2_build}
-\title{Interface to bowtie2-build using bowtie2-2.4.4}
+\title{Interface to bowtie2-2.4.4 build function}
 \usage{
 bowtie2_build(references, bt2Index, ..., overwrite = FALSE)
 }
 \arguments{
 \item{references}{\code{Character} vector. The path to the files containing
-the references for which to
-build a bowtie index.}
+the references for which to build a bowtie index.}
 
 \item{bt2Index}{\code{Character} scalar. Write bowtie2 index data to files
-with this prefix: 'dir/basename'.
-If the files with path like dir/basename.*.bt2 or dir/basename.*.bt2l already exists,
+with this basename: 'path_to_index/index_basename'.
+If the files like path_to_index/index_basename.*.bt2 or 
+path_to_index/index_basename.*.bt2l already exist,
 the function function will cast an error,
 unless argument overwrite is \code{TRUE}.}
 
@@ -39,25 +39,32 @@ parameters to be passed on to
 bowtie2_build. All of them should be \code{Character} or
 \code{Numeric} scalar. You can put all additional
 arguments in one \code{Character} (e.g. "--threads 8 --quiet") with white
-space splited just like command line,
+space splitted just like command line,
 or put them in different \code{Character} (e.g. "--threads","8","--quiet").
 See the output of
 \code{bowtie2_build_usage()} for details about available parameters.
 }
 \examples{
+\donttest{
 td <- tempdir()
+
 ## Building a bowtie2 index
+
 refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),
 full=TRUE)
-cmdout<-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
-"--threads 4 --quiet",overwrite=TRUE);cmdout
+
+bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
+"--threads 4 --quiet",overwrite=TRUE)
+
 ## Use additional arguments in another way
-cmdout<-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
-"--threads",4,"--quiet",overwrite=TRUE);cmdout
-## The function will print the output
-## during the process without "--quiet" argument.
-cmdout<-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
-overwrite=TRUE);cmdout
+
+bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
+"--threads",4,"--quiet",overwrite=TRUE)
+
+## The function will print the output during the process without "--quiet" argument.
+bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
+overwrite=TRUE)
+}
 }
 \references{
 Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read

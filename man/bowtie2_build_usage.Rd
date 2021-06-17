@@ -10,7 +10,7 @@ bowtie2_build_usage(indexType = "s")
 \item{indexType}{\code{Character} scalar. Defaults to 's' which shows help
 document of the small bowtie2-build binary. 
 Can optionally pass 'l' which shows help document of the large 
-bowtie2-build binary}
+bowtie2-build binary.}
 }
 \value{
 bowtie2_build available arguments and their usage.
@@ -21,7 +21,11 @@ bowtie2_build_usage are invalid if they are
 already handled as explicit function arguments.
 }
 \examples{
+\donttest{
 bowtie2_build_usage()
+bowtie2_build_usage(indexType = "l")
+}
+
 }
 \references{
 Langmead B, Salzberg S.

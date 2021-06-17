@@ -14,7 +14,9 @@ The value is 0 when there is not any mistakes
 Print version information of adapterremoval
 }
 \examples{
+\donttest{
 adapterremoval_version()
+}
 }
 \references{
 Schubert, Lindgreen, and Orlando (2016).

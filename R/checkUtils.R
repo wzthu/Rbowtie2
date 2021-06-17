@@ -1,16 +1,23 @@
 #'@name checkIndexType
+#'
 #'@title Determine bowtie2 index type
+#'
 #'@description This is an internal function that is not meant to be used outside
 #'of the package. It determines whether the given index library comprises of 
 #'small indexes (.bt2) or large indexes (.bt2l)
+#'
 #'@param filePath \code{Character} scalar. Path to bowtie2 index files including
-#'index prefix: dir/basename
-#'(minus trailing .bt2 or .bt2l of dir/basename.*.bt2 or dir/basename.*.bt2l).
+#'index basename: path_to_index/index_basename
+#'(minus trailing .bt2 or .bt2l of path_to_index/index_basename.*.bt2 
+#'or path_to_index/index_basename.*.bt2l).
+#'
 #'@details The function first tries to determine whether dir/basename.1.bt2 
 #'exists and if it doesn't exist then it tries to determine whether 
 #'dir/basename.1.bt2l exists. If neither of those files exist then there is an 
 #'issue with the index files that must be addressed.
+#'
 #'@author Rahul Varki
+#'
 #'@return \code{Character} scalar. Returns either "SMALL" if the .bt2 file is found,
 #'"LARGE" if the .bt2l file is found, or "ERROR" if neither the .bt2 nor .bt2l file 
 #'is found.

@@ -8,9 +8,8 @@ bowtie2_version(indexType = "s")
 }
 \arguments{
 \item{indexType}{\code{Character} scalar. Defaults to 's' which shows version
-number of the small bowtie2-build and bowtie-align binaries. 
-Can optionally pass 'l' which shows version number of the large bowtie2-build
-and bowtie2-align binaries.}
+number of the small bowtie-align binary. 
+Can optionally pass 'l' which shows version number of the large bowtie2-align binary.}
 }
 \value{
 An invisible \code{Integer} of call status.
@@ -19,9 +18,6 @@ Otherwise the value is non-zero.
 }
 \description{
 Print version information of bowtie2-2.4.4
-}
-\examples{
-cmdout<-bowtie2_version();cmdout
 }
 \references{
 Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read

@@ -21,7 +21,10 @@ bowtie2 are invalid if they are
 already handled as explicit function arguments.
 }
 \examples{
+\donttest{
 bowtie2_usage()
+bowtie2_usage(indexType = 'l')
+}
 }
 \references{
 Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read

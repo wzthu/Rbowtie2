@@ -16,7 +16,9 @@ adapterremoval are invalid if they are
 already handled as explicit function arguments.
 }
 \examples{
+\donttest{
 adapterremoval_usage()
+}
 }
 \references{
 Schubert, Lindgreen, and Orlando (2016).

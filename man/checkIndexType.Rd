@@ -8,8 +8,9 @@ checkIndexType(filePath)
 }
 \arguments{
 \item{filePath}{\code{Character} scalar. Path to bowtie2 index files including
-index prefix: dir/basename
-(minus trailing .bt2 or .bt2l of dir/basename.*.bt2 or dir/basename.*.bt2l).}
+index basename: path_to_index/index_basename
+(minus trailing .bt2 or .bt2l of path_to_index/index_basename.*.bt2 
+or path_to_index/index_basename.*.bt2l).}
 }
 \value{
 \code{Character} scalar. Returns either "SMALL" if the .bt2 file is found,
