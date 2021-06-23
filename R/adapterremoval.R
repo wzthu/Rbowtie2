@@ -270,7 +270,7 @@ adapterremoval_version<- function(){
 #' @title Make system call for binaries
 #' @description Function that makes the system call for either the bowtie binaries 
 #' or the samtools binary. Note it is not intended to be used outside of package
-#' @return The output of the system call.
+#' @return The output of the system call or the path provided.
 #' @author Zheng Wei, Rahul Varki
 #' @param bin1 \code{Character}. The binary needed for the system call.
 #' @param args1 \code{Character}. The arguments to pass to the binary.
@@ -278,8 +278,9 @@ adapterremoval_version<- function(){
 #' @param bin2 \code{Character}. Optional: Another binary that can be used in the system call.
 #' Generally the output of the first binary is piped to the this binary.
 #' @param args2 \code{Character} Optional: The arguments to pass to this binary.
+#' @param path \code{Character} Optional: If passed to function, returns the path
 
-.callbinary<- function(bin1, args1, op = NULL, bin2 = NULL, args2 = NULL)
+.callbinary<- function(bin1, args1, op = NULL, bin2 = NULL, args2 = NULL, path = NULL)
 {
     args1 <- gsub("^ *| *$", "", args1)
     args2 <- gsub("^ *| *$", "", args2)
@@ -293,5 +294,8 @@ adapterremoval_version<- function(){
     
     output <- system(call, intern=TRUE,show.output.on.console=TRUE)
     
-    return(output)
+    if (!is.null(path))
+        return(path)
+    else
+        return(output)
 }

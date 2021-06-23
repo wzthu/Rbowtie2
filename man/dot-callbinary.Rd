@@ -4,7 +4,7 @@
 \alias{.callbinary}
 \title{Make system call for binaries}
 \usage{
-.callbinary(bin1, args1, op = NULL, bin2 = NULL, args2 = NULL)
+.callbinary(bin1, args1, op = NULL, bin2 = NULL, args2 = NULL, path = NULL)
 }
 \arguments{
 \item{bin1}{\code{Character}. The binary needed for the system call.}
@@ -17,9 +17,11 @@
 Generally the output of the first binary is piped to the this binary.}
 
 \item{args2}{\code{Character} Optional: The arguments to pass to this binary.}
+
+\item{path}{\code{Character} Optional: If passed to function, returns the path}
 }
 \value{
-The output of the system call.
+The output of the system call or the path provided.
 }
 \description{
 Function that makes the system call for either the bowtie binaries 

@@ -5,6 +5,8 @@
 #' @description This function can be use to call the wrapped \code{bowtie2-align-s}
 #'  or \code{bowtie2-align-l} binary.
 #'  
+#' @importFrom magrittr %>%
+#'  
 #' @param bt2Index \code{Character} scalar. Path to bowtie2 index files including
 #' index basename: path_to_index/index_basename
 #' (minus trailing .bt2 or .bt2l of path_to_index/index_basename.*.bt2 
@@ -206,7 +208,9 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
     if (outputType == "sam")
         argvs <- c(paramArray,argvs,"-S",samOutput)
     else if (outputType == "bam")
-        argvs <- c(paramArray,argvs)
+        # If samtools is used rather than Rsamtools then uncomment
+        # argvs <- c(paramArray,argvs)
+        argvs <- c(paramArray,argvs,"-S",samOutput)
     else
         stop("A non valid output type was allowed to be passed to the function and a bug exists")
 
@@ -217,8 +221,16 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
         }
         else if (outputType == "bam"){
             bamOutput <- paste0(tools::file_path_sans_ext(samOutput),".bam")
-            argsam <- c("view","-bS",">",bamOutput)
-            invisible(.callbinary("bowtie2-align-s",paste(argvs,collapse = " ")," | ","samtools",paste(argsam,collapse = " ")))
+            # If samtools is used rather than Rsamtools then uncomment
+            # argsam <- c("view","-bS",">",bamOutput)
+            invisible(.callbinary("bowtie2-align-s",paste(argvs,collapse = " "), path = samOutput)
+                      %>%
+                        Rsamtools::asBam(file = ., 
+                                         destination = tools::file_path_sans_ext(bamOutput),
+                                         overwrite = overwrite, 
+                                         indexDestination = FALSE))
+            
+            invisible(file.remove(samOutput))
         }
         else{
             stop("A non valid output type was allowed to be passed to the function and a bug exists")
@@ -230,8 +242,16 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
         }
         else if (outputType == "bam"){
             bamOutput <- paste0(tools::file_path_sans_ext(samOutput),".bam")
-            argsam <- c("view","-bS",">",bamOutput)
-            invisible(.callbinary("bowtie2-align-l",paste(argvs,collapse = " ")," | ","samtools",paste(argsam,collapse = " ")))
+            # If samtools is used rather than Rsamtools then uncomment 
+            # argsam <- c("view","-bS",">",bamOutput)
+            invisible(.callbinary("bowtie2-align-l",paste(argvs,collapse = " "), path = samOutput)
+                      %>%
+                        Rsamtools::asBam(file = ., 
+                                         destination = tools::file_path_sans_ext(bamOutput),
+                                         overwrite = overwrite, 
+                                         indexDestination = FALSE))
+            
+            invisible(file.remove(samOutput))
         }
         else{
             stop("A non valid output type was allowed to be passed to the function and a bug exists")
