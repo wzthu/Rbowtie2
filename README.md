@@ -7,7 +7,7 @@ which might be not viable for some users. Replacing Rsamtools with samtools can 
 package with samtools on linux machines. This issue is currently under review.
 
 The package uses bowtie2-2.4.4. To update the bowtie version used in the package, delete the current bowtie package in src directory and replace it with 
-the current bowtie version. In the bowtie2 Makefile, all the .PHONY declarations can optionally be deleted besides clean. Change .PHONY clean to be this
+the current bowtie version. In the bowtie2 Makefile, all the .PHONY declarations can optionally be deleted besides .PHONY clean. Change .PHONY clean to be this
 
 
 .PHONY: clean
