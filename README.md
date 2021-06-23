@@ -9,6 +9,7 @@ package with samtools on linux machines. This issue is currently under review.
 The package uses bowtie2-2.4.4. To update the bowtie version used in the package, delete the current bowtie package in src directory and replace it with 
 the current bowtie version. In the bowtie2 Makefile, all the .PHONY declarations can optionally be deleted besides clean. Change .PHONY clean to be this
 
+
 .PHONY: clean
 
 clean:
@@ -28,6 +29,10 @@ clean:
 	rm -f bowtie2-align-l
 	rm -f bowtie2-build-l
 	rm -f *.o
+
+Add a .PHONY move declaration to the README and make it to be this
+
+
   
   
 
