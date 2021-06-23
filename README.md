@@ -30,7 +30,7 @@ clean:
 	rm -f bowtie2-build-l
 	rm -f *.o
 
-Add a .PHONY move declaration to the README and make it to be this
+Add a .PHONY move declaration to the bowtie2 Makefile and make it to be this
 
 .PHONY: move
 
