@@ -32,7 +32,14 @@ clean:
 
 Add a .PHONY move declaration to the README and make it to be this
 
+.PHONY: move
 
+move: bowtie2-build-s bowtie2-align-s bowtie2-build-l bowtie2-align-l
+
+	cp bowtie2-align-s ../../inst
+	cp bowtie2-build-s ../../inst
+	cp bowtie2-align-l ../../inst
+	cp bowtie2-build-l ../../inst
   
   
 
