@@ -1,5 +1,5 @@
 ADRM_DIR = adapterremoval
-BT2_DIR = bowtie2
+BT2_DIR = bowtie2-2.4.4
 # If samtools is used rather than Rsamtools then uncomment
 # SAM_DIR = samtools-1.12
 
@@ -8,8 +8,8 @@ CXX = g++
 .PHONY: all clean
 
 all:
+	mkdir -p ../inst
 	# If samtools is used rather than Rsamtools then uncomment
-	# mkdir -p ../inst
 	# (cd $(SAM_DIR) && ($(MAKE) CXX="$(CXX)" -f Makefile))
 	# mv ./samtools-1.12/samtools ../inst/
 	(cd	$(ADRM_DIR) && ($(MAKE) CXX="$(CXX) -std=gnu++11" -f Makefile))

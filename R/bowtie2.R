@@ -2,8 +2,8 @@
 #' 
 #' @title Interface to bowtie2-2.4.4 align function
 #' 
-#' @description This function can be use to call the wrapped \code{bowtie2-align-s}
-#'  or \code{bowtie2-align-l} binary.
+#' @description This function can be use to call the bowtie2 wrapper which wraps
+#' the \code{bowtie2-align-s} and the \code{bowtie2-align-l} binaries.
 #'  
 #' @importFrom magrittr %>%
 #'  
@@ -214,61 +214,36 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
     else
         stop("A non valid output type was allowed to be passed to the function and a bug exists")
 
-    # Call corresponding bowtie-align binary depending on index type and output type
-    if (indexFormat == "SMALL"){
-        if(outputType == "sam"){
-            invisible(.callbinary("bowtie2-align-s",paste(argvs,collapse = " ")))
-        }
-        else if (outputType == "bam"){
-            bamOutput <- paste0(tools::file_path_sans_ext(samOutput),".bam")
-            # If samtools is used rather than Rsamtools then uncomment
-            # argsam <- c("view","-bS",">",bamOutput)
-            invisible(.callbinary("bowtie2-align-s",paste(argvs,collapse = " "), path = samOutput)
-                      %>%
-                        Rsamtools::asBam(file = ., 
-                                         destination = tools::file_path_sans_ext(bamOutput),
-                                         overwrite = overwrite, 
-                                         indexDestination = FALSE))
-            
-            invisible(file.remove(samOutput))
-        }
-        else{
-            stop("A non valid output type was allowed to be passed to the function and a bug exists")
-        }
+    
+    # Call bowtie2 wrapper which handles whether large or small indexes are present
+    if(outputType == "sam"){
+        invisible(.callbinary("bowtie2",paste(argvs,collapse = " ")))
     }
-    else if (indexFormat == "LARGE"){
-        if(outputType == "sam"){
-            invisible(.callbinary("bowtie2-align-l",paste(argvs,collapse = " ")))
-        }
-        else if (outputType == "bam"){
-            bamOutput <- paste0(tools::file_path_sans_ext(samOutput),".bam")
-            # If samtools is used rather than Rsamtools then uncomment 
-            # argsam <- c("view","-bS",">",bamOutput)
-            invisible(.callbinary("bowtie2-align-l",paste(argvs,collapse = " "), path = samOutput)
-                      %>%
-                        Rsamtools::asBam(file = ., 
-                                         destination = tools::file_path_sans_ext(bamOutput),
-                                         overwrite = overwrite, 
-                                         indexDestination = FALSE))
-            
-            invisible(file.remove(samOutput))
-        }
-        else{
-            stop("A non valid output type was allowed to be passed to the function and a bug exists")
-        }
-    }
+    else if (outputType == "bam"){
+        bamOutput <- paste0(tools::file_path_sans_ext(samOutput),".bam")
+        # If samtools is used rather than Rsamtools then uncomment
+        # argsam <- c("view","-bS",">",bamOutput)
+        invisible(.callbinary("bowtie2",paste(argvs,collapse = " "), path = samOutput)
+                  %>%
+                    Rsamtools::asBam(file = ., 
+                                     destination = tools::file_path_sans_ext(bamOutput),
+                                     overwrite = overwrite, 
+                                     indexDestination = FALSE))
         
-    else
-        stop("An invalid index format was not handled and a bug exists")
-
+        invisible(file.remove(samOutput))
+    }
+    else{
+        stop("A non valid output type was allowed to be passed to the function and a bug exists")
+    }
 }
+
 
 #' @name bowtie2-build
 #' 
 #' @title Interface to bowtie2-2.4.4 build function
 #' 
-#' @description This function can be use to call the wrapped \code{bowtie2-build-s}
-#'  or \code{bowtie2-build-l} binary
+#' @description This function can be use to call the bowtie2-build wrapper which 
+#' wraps the \code{bowtie2-build-s} and the \code{bowtie2-build-l} binaries.
 #'  
 #' @param references \code{Character} vector. The path to the files containing
 #' the references for which to build a bowtie index.
@@ -379,11 +354,8 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
     references<-paste0(references,collapse = ",")
     argvs <- c(paramArray,references,bt2Index)
 
-    # Call corresponding bowtie-build binary depending on index type
-    if (total_size > smallIndex_max_size)
-        invisible(.callbinary("bowtie2-build-l", paste(argvs,collapse = " ")))
-    else
-        invisible(.callbinary("bowtie2-build-s", paste(argvs,collapse = " ")))
+    # Call bowtie2-build wrapper which handles whether small or large indexes will be built
+    invisible(.callbinary("bowtie2-build", paste(argvs,collapse = " ")))
 }
 
 
@@ -395,10 +367,6 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 #' @description Print version information of bowtie2-2.4.4
 #' 
 #' @author Zheng Wei, Rahul Varki
-#' 
-#' @param indexType \code{Character} scalar. Defaults to 's' which shows version
-#' number of the small bowtie-align binary. 
-#' Can optionally pass 'l' which shows version number of the large bowtie2-align binary.
 #' 
 #' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes
@@ -412,19 +380,14 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 #' @examples
 #' \donttest{
 #' bowtie2_version()
-#' bowtie2_verision(indexType = 'l')
 #' }
-bowtie2_version <- function(indexType = 's'){
+
+bowtie2_version <- function(){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     
-    if (indexType == 'l'){
-        .callbinary("bowtie2-align-l","--version")
-    }
-    else{
-        .callbinary("bowtie2-align-s","--version")
-    }
+    .callbinary("bowtie2","--version")
 }
 
 #' @name bowtie2_usage
@@ -437,11 +400,6 @@ bowtie2_version <- function(indexType = 's'){
 #' 
 #' @author Zheng Wei, Rahul Varki
 #' 
-#' @param indexType \code{Character} scalar. Defaults to 's' which shows help
-#' document of the small bowtie2-align binary. 
-#' Can optionally pass 'l' which shows help document of the large 
-#' bowtie2-align binary.
-#' 
 #' @return bowtie2 available arguments and their usage.
 #' 
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
@@ -452,17 +410,14 @@ bowtie2_version <- function(indexType = 's'){
 #' @examples
 #' \donttest{
 #' bowtie2_usage()
-#' bowtie2_usage(indexType = 'l')
 #' }
-bowtie2_usage <- function(indexType = 's'){
+
+bowtie2_usage <- function(){
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     
-    if (indexType == 'l')
-        .callbinary("bowtie2-align-l","-h")
-    else
-        .callbinary("bowtie2-align-s","-h")
+    .callbinary("bowtie2","-h")
 }
 
 #' @name bowtie2_build_usage
@@ -474,11 +429,6 @@ bowtie2_usage <- function(indexType = 's'){
 #' 
 #' @author Zheng Wei, Rahul Varki
 #' 
-#' @param indexType \code{Character} scalar. Defaults to 's' which shows help
-#' document of the small bowtie2-build binary. 
-#' Can optionally pass 'l' which shows help document of the large 
-#' bowtie2-build binary.
-#' 
 #' @return bowtie2_build available arguments and their usage.
 #' 
 #' @references Langmead B, Salzberg S.
@@ -489,18 +439,15 @@ bowtie2_usage <- function(indexType = 's'){
 #' @examples
 #' \donttest{
 #' bowtie2_build_usage()
-#' bowtie2_build_usage(indexType = "l")
 #' }
-#' 
-bowtie2_build_usage <- function(indexType = 's') {
+
+
+bowtie2_build_usage <- function() {
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     
-    if (indexType == 'l')
-        .callbinary("bowtie2-build-l","-h")
-    else
-        .callbinary("bowtie2-build-s","-h")
+    .callbinary("bowtie2-build","-h")
 }
 
 
