@@ -1,13 +1,15 @@
 # Rbowtie2
 Bioconductor package: an R wrapper for Bowtie2 and AdapterRemoval 
 
-The `Rbowtie2` package provides an R interface to the [bowtie2](https://github.com/BenLangmead/bowtie2) short read aligner by Langmead et al. (2009), and the [AdapterRemoval](https://github.com/MikkelSchubert/adapterremoval) package by Schubert, Lindgreen, and Orlando (2016). The `Rbowtie2` package allows users to remove adapter sequences from reads, build bowtie2 indexes (.bt2 or .bt2l), and to create bowtie2 alignment files (.sam or .bam). Note that creating a .bam requires that the corresponding .sam file first be created due to the asBam function of Rsamtools that is currently being used in the Rbowtie2 package. This might be not viable for some users. Replacing Rsamtools with samtools could potentially resolve this issue, and this README file will be updated if this change occurs.
+The `Rbowtie2` package provides an R interface to the [bowtie2](https://github.com/BenLangmead/bowtie2) short read aligner by Langmead et al. (2009), and the [AdapterRemoval](https://github.com/MikkelSchubert/adapterremoval) package by Schubert, Lindgreen, and Orlando (2016). The `Rbowtie2` package allows users to remove adapter sequences from reads, build bowtie2 indexes (.bt2 or .bt2l), and to create bowtie2 alignment files (.sam or .bam). Note that creating a .bam requires that the corresponding .sam file first be created due to the asBam function of Rsamtools that is currently being used in the `Rbowtie2` package. This might be not viable for some users. Replacing Rsamtools with samtools could potentially resolve this issue, and this README file will be updated if this change occurs.
+
+
+## Source Package Information
+The `Rbowtie2` package uses the bowtie2 v2.4.4 source code which was obtained from https://sourceforge.net/projects/bowtie-bio/. The folders doc, example, scripts, and some non-code files were deleted to reduce the package size. To manually update the bowtie2 source package, delete the current bowtie2 folder in the src directory and replace it with the current bowtie2 release version.   
 
 
 
-
-
-The package uses bowtie2-2.4.4. To update the bowtie version used in the package, delete the current bowtie package in src directory and replace it with 
+To update the bowtie version used in the package, delete the current bowtie package in src directory and replace it with 
 the current bowtie version. In the bowtie2 Makefile, all the .PHONY declarations can optionally be deleted besides .PHONY clean. Change .PHONY clean to be this
 
 
