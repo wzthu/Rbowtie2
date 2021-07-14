@@ -17,8 +17,9 @@ License: GPL (>= 3)
 Depends: R (>= 4.1.0)
 Encoding: UTF-8
 Suggests: 
-      knitr,
-      rmarkdown
+    knitr,
+    testthat (>= 3.0.0),
+    rmarkdown
 Imports:
       magrittr,
       Rsamtools
@@ -27,3 +28,4 @@ Archs: x64
 RoxygenNote: 7.1.1
 biocViews: Sequencing, Alignment, Preprocessing
 VignetteBuilder: knitr
+Config/testthat/edition: 3
