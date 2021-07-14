@@ -604,7 +604,10 @@ clean:
 	rm -f bowtie2-build-s
 	rm -f bowtie2-align-l
 	rm -f bowtie2-build-l
-	
+
+.PHONY: clean_dSYM
+clean_dSYM:
+	rm -rf *.dSYM
 	
 .PHONY: move
 move: bowtie2-build-s bowtie2-align-s bowtie2-build-l bowtie2-align-l bowtie2 bowtie2-build
