@@ -5,18 +5,12 @@ The `Rbowtie2` package provides an R interface to the [bowtie2](https://github.c
 
 
 ## Source Package Information
-The `Rbowtie2` package uses the bowtie2 v2.4.4 source code which was obtained from https://sourceforge.net/projects/bowtie-bio/. The folders doc, example, scripts, and some non-code files were deleted to reduce the package size. To manually update the bowtie2 source package, delete the current bowtie2 folder in the src directory and replace it with the current bowtie2 release version.   
+The `Rbowtie2` package uses the bowtie2 v2.4.4 source code which was obtained from https://sourceforge.net/projects/bowtie-bio/. The folders doc, example, scripts, and some non-code files were deleted to reduce the package size. To manually update the bowtie2 source package, delete the current bowtie2 folder in the src directory and replace it with the current bowtie2 release version. In the bowtie2 source directory there should be a Makefile. Open the Makefile and make the following changes:
 
-
-
-To update the bowtie version used in the package, delete the current bowtie package in src directory and replace it with 
-the current bowtie version. In the bowtie2 Makefile, all the .PHONY declarations can optionally be deleted besides .PHONY clean. Change .PHONY clean to be this
-
-
+1. Update the .PHONY clean declaration 
+```
 .PHONY: clean
-
 clean:
-
 	rm -f $(BOWTIE2_BIN_LIST) $(BOWTIE2_BIN_LIST_DBG) $(BOWTIE2_BIN_LIST_SAN) \
 	$(addsuffix .exe,$(BOWTIE2_BIN_LIST) $(BOWTIE2_BIN_LIST_DBG)) \
 	bowtie2-*.zip
@@ -27,23 +21,31 @@ clean:
 	rm -f ../../inst/bowtie2-build-s
 	rm -f ../../inst/bowtie2-align-l
 	rm -f ../../inst/bowtie2-build-l
+	rm -f ../../inst/bowtie2
+	rm -f ../../inst/bowtie2-build
 	rm -f bowtie2-align-s
 	rm -f bowtie2-build-s
 	rm -f bowtie2-align-l
 	rm -f bowtie2-build-l
-	rm -f *.o
+```
+2. Add a .PHONY clean_dSYM declaration (Primarily to delete large (>5Mb) files after package installation)
+```
+.PHONY: clean_dSYM
+clean_dSYM:
+	rm -rf *.dSYM
+```
 
-Add a .PHONY move declaration to the bowtie2 Makefile and make it to be this
-
+3. Add a .PHONY move declaration 
+```
 .PHONY: move
-
-move: bowtie2-build-s bowtie2-align-s bowtie2-build-l bowtie2-align-l
+move: bowtie2-build-s bowtie2-align-s bowtie2-build-l bowtie2-align-l bowtie2 bowtie2-build
 
 	cp bowtie2-align-s ../../inst
 	cp bowtie2-build-s ../../inst
 	cp bowtie2-align-l ../../inst
 	cp bowtie2-build-l ../../inst
-  
-  
+	cp bowtie2 ../../inst
+	cp bowtie2-build ../../inst
+```
 
 
