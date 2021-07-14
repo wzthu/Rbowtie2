@@ -14,9 +14,12 @@ checkFileCreatable(filePath, argname, overwrite)
 
 \item{overwrite}{\code{Logical} Will warn user of overwriting if set \code{TRUE}.}
 }
+\value{
+Indicates whether the file can be created at the path given.
+}
 \description{
 This is an internal function that is not meant to be used outside
-of the package. It determines whether the file at the end of the filepath can
+of the package. It determines whether the file at the end of the path can
 be created.
 }
 \author{

@@ -35,7 +35,6 @@
 #' BMC Research Notes, 12;9(1):88.
 #' @export identify_adapters
 #' @examples
-#' \donttest{
 #' td <- tempdir()
 #' reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fq")
 #' reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fq")
@@ -43,7 +42,7 @@
 #' basename = file.path(td,"reads")
 #' ,"--threads 2",overwrite=TRUE)
 #' adapters
-#' }
+
 identify_adapters <- function(file1,file2,...,basename = NULL,
     overwrite = FALSE){
     file1<-trimws(as.character(file1))
@@ -140,7 +139,6 @@ identify_adapters <- function(file1,file2,...,basename = NULL,
 #' BMC Research Notes, 12;9(1):88.
 #' @export remove_adapters
 #' @examples
-#' \donttest{
 #' td <- tempdir()
 #'
 #' # Identify adapters
@@ -155,7 +153,7 @@ identify_adapters <- function(file1,file2,...,basename = NULL,
 #' output1=file.path(td,"reads_1.trimmed.fq"),
 #' output2=file.path(td,"reads_2.trimmed.fq"),
 #' basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 3");cmdout
-#'}
+
 remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
                             file2 = NULL,adapter2 = NULL,output2 = NULL,
                             basename = NULL,interleaved = FALSE,
@@ -240,9 +238,8 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
 #' BMC Research Notes, 12;9(1):88.
 #' @export adapterremoval_usage
 #' @examples
-#' \donttest{
 #' adapterremoval_usage()
-#' }
+#' 
 adapterremoval_usage<- function(){
     .callbinary("AdapterRemoval","-h")
 }
@@ -259,26 +256,37 @@ adapterremoval_usage<- function(){
 #' BMC Research Notes, 12;9(1):88.
 #' @export adapterremoval_version
 #' @examples
-#' \donttest{
 #' adapterremoval_version()
-#' }
+#' 
 adapterremoval_version<- function(){
     .callbinary("AdapterRemoval","--version")
 }
 
 #' @name .callbinary
+#' 
 #' @title Make system call for binaries
-#' @description Function that makes the system call for either the bowtie binaries 
-#' or the samtools binary. Note it is not intended to be used outside of package
-#' @return The output of the system call or the path provided.
-#' @author Zheng Wei, Rahul Varki
-#' @param bin1 \code{Character}. The binary needed for the system call.
+#' 
+#' @description Function that makes a system call for the bowtie binaries. 
+#' Note it is not intended to be used outside of the package.
+#' 
+#' @author Zheng Wei
+#' 
+#' @param bin1 \code{Character}. The binary used for the system call.
+#' 
 #' @param args1 \code{Character}. The arguments to pass to the binary.
+#' 
 #' @param op \code{Character}. Optional: Generally used if needed to pipe to another binary.
+#' 
 #' @param bin2 \code{Character}. Optional: Another binary that can be used in the system call.
 #' Generally the output of the first binary is piped to the this binary.
-#' @param args2 \code{Character} Optional: The arguments to pass to this binary.
-#' @param path \code{Character} Optional: If passed to function, returns the path
+#' 
+#' @param args2 \code{Character} Optional: The arguments to pass to the second binary.
+#' 
+#' @param path \code{Character} Optional: If passed to function, returns the path.
+#' Needed for Rsamtools to convert from sam to bam. 
+#' 
+#' @return The output of the system call or the path provided.
+
 
 .callbinary<- function(bin1, args1, op = NULL, bin2 = NULL, args2 = NULL, path = NULL)
 {

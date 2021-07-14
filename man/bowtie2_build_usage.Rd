@@ -2,35 +2,26 @@
 % Please edit documentation in R/bowtie2.R
 \name{bowtie2_build_usage}
 \alias{bowtie2_build_usage}
-\title{Print available arguments for bowtie2_build_usage}
+\title{Print available arguments that can be passed to bowtie2_build()}
 \usage{
-bowtie2_build_usage(indexType = "s")
-}
-\arguments{
-\item{indexType}{\code{Character} scalar. Defaults to 's' which shows help
-document of the small bowtie2-build binary. 
-Can optionally pass 'l' which shows help document of the large 
-bowtie2-build binary.}
+bowtie2_build_usage()
 }
 \value{
-bowtie2_build available arguments and their usage.
+Information about available arguments that can be passed to bowtie2_build()
 }
 \description{
-Note that some arguments to the
-bowtie2_build_usage are invalid if they are
-already handled as explicit function arguments.
+Calling bowtie2_build_usage() prints the available arguments that 
+can be passed to the ... argument of the bowtie2_build() function of the package.  
+Note that some arguments are invalid if they are already handled as explicit 
+function arguments.
 }
 \examples{
-\donttest{
 bowtie2_build_usage()
-bowtie2_build_usage(indexType = "l")
-}
-
 }
 \references{
 Langmead B, Salzberg S.
 Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
 }
 \author{
-Zheng Wei, Rahul Varki
+Zheng Wei
 }

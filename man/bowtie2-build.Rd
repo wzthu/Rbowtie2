@@ -11,12 +11,9 @@ bowtie2_build(references, bt2Index, ..., overwrite = FALSE)
 \item{references}{\code{Character} vector. The path to the files containing
 the references for which to build a bowtie index.}
 
-\item{bt2Index}{\code{Character} scalar. Write bowtie2 index data to files
-with this basename: 'path_to_index/index_basename'.
-If the files like path_to_index/index_basename.*.bt2 or 
-path_to_index/index_basename.*.bt2l already exist,
-the function function will cast an error,
-unless argument overwrite is \code{TRUE}.}
+\item{bt2Index}{\code{Character} scalar. The path where the bowtie2 index
+files should be created. Include the basename of the index file at the end 
+of the path (i.e. path_to_index_dir/index_basename).}
 
 \item{...}{Additional arguments to be passed on to the binaries.
 See below for details.}
@@ -30,22 +27,19 @@ The value is 0 when there is not any mistakes
 Otherwise the value is non-zero.
 }
 \description{
-This function can be use to call the wrapped \code{bowtie2-build-s}
- or \code{bowtie2-build-l} binary
+This function can be use to call the bowtie2-build wrapper which 
+wraps the \code{bowtie2-build-s} and the \code{bowtie2-build-l} binaries.
 }
 \details{
 All additional arguments in ... are interpreted as additional
-parameters to be passed on to
-bowtie2_build. All of them should be \code{Character} or
-\code{Numeric} scalar. You can put all additional
+parameters to be passed on to bowtie2_build wrapper. All of them should be 
+\code{Character} or \code{Numeric} scalar. You can put all additional
 arguments in one \code{Character} (e.g. "--threads 8 --quiet") with white
-space splitted just like command line,
-or put them in different \code{Character} (e.g. "--threads","8","--quiet").
-See the output of
-\code{bowtie2_build_usage()} for details about available parameters.
+space separation, or put them in different \code{Character} 
+(e.g. "--threads","8","--quiet"). See the output of \code{bowtie2_build_usage()} 
+for details about available parameters.
 }
 \examples{
-\donttest{
 td <- tempdir()
 
 ## Building a bowtie2 index
@@ -65,11 +59,10 @@ bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
 bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
 overwrite=TRUE)
 }
-}
 \references{
 Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
 alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 }
 \author{
-Zheng Wei, Rahul Varki
+Zheng Wei
 }

@@ -7,7 +7,7 @@
 .callbinary(bin1, args1, op = NULL, bin2 = NULL, args2 = NULL, path = NULL)
 }
 \arguments{
-\item{bin1}{\code{Character}. The binary needed for the system call.}
+\item{bin1}{\code{Character}. The binary used for the system call.}
 
 \item{args1}{\code{Character}. The arguments to pass to the binary.}
 
@@ -16,17 +16,18 @@
 \item{bin2}{\code{Character}. Optional: Another binary that can be used in the system call.
 Generally the output of the first binary is piped to the this binary.}
 
-\item{args2}{\code{Character} Optional: The arguments to pass to this binary.}
+\item{args2}{\code{Character} Optional: The arguments to pass to the second binary.}
 
-\item{path}{\code{Character} Optional: If passed to function, returns the path}
+\item{path}{\code{Character} Optional: If passed to function, returns the path.
+Needed for Rsamtools to convert from sam to bam.}
 }
 \value{
 The output of the system call or the path provided.
 }
 \description{
-Function that makes the system call for either the bowtie binaries 
-or the samtools binary. Note it is not intended to be used outside of package
+Function that makes a system call for the bowtie binaries. 
+Note it is not intended to be used outside of the package.
 }
 \author{
-Zheng Wei, Rahul Varki
+Zheng Wei
 }

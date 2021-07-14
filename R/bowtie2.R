@@ -7,13 +7,15 @@
 #'  
 #' @importFrom magrittr %>%
 #'  
-#' @param bt2Index \code{Character} scalar. Path to bowtie2 index files including
-#' index basename: path_to_index/index_basename
-#' (minus trailing .bt2 or .bt2l of path_to_index/index_basename.*.bt2 
-#' or path_to_index/index_basename.*.bt2l).
+#' @param bt2Index \code{Character} scalar. The path where the bowtie2 index files 
+#' are located. Include the basename of the index files at the end of the path
+#' (i.e. path_to_index_dir/index_basename). Do not include the bowtie2 index file 
+#' extension (.bt2 or .bt2l)
 #' 
-#' @param output \code{Character} scalar. Path to the alignment output file including
-#' output file basename: path_to_output/output_basename (minus trailing .sam or .bam).
+#' @param output \code{Character} scalar. The path where the alignment output file 
+#' should be created. Include the basename of the alignment file at the end of the 
+#' path (i.e. path_to_output_dir/output_basename). Do not include the alignment 
+#' file extension (.sam or .bam).
 #' 
 #' @param outputType \code{Character} scalar. Specify the output alignment file type.
 #' Default is set to "sam" but can also be changed to "bam".
@@ -28,13 +30,14 @@
 #' @param seq2 \code{Character} vector. It contains file paths with
 #' #2 mates paired with file paths in seq1.
 #' For single-end sequencing files and interleaved paired-end
-#' sequencing files(argument interleaved=\code{TRUE}),
+#' sequencing files (argument interleaved=\code{TRUE}),
 #' it must be \code{NULL}.
 #' 
-#' @param bamFile \code{Character} vector. File path to a bam file that contains
-#' unaligned reads.
+#' @param bamFile \code{Character} vector. A path to a bam file that contains
+#' unaligned reads. If a bam file is provided then seq1 and seq2 must be 
+#' set to \code{NULL}
 #' 
-#' @param ... Additional arguments to be passed on to the binaries.
+#' @param ... Additional arguments to be passed on to the bowtie2 wrapper.
 #' See below for details.
 #' 
 #' @param interleaved \code{Logical}. Set \code{TRUE} when files are
@@ -44,19 +47,16 @@
 #' files if setting \code{TRUE}.
 #' 
 #' @details All additional arguments in ... are interpreted as
-#' additional parameters to be passed to 
-#' bowtie2. All of them should be \code{Character} or
-#' \code{Numeric} scalar. You can put all additional
-#' arguments in one \code{Character} (e.g. "--threads 8 --no-mixed")
-#' with white space splitted just like command line,
-#' or put them in different \code{Character}
-#' (e.g. "--threads","8","--no-mixed"). Note that some
-#' arguments ("-x","--interleaved","-U","-1","-2","-b","-S") to the
-#' bowtie2 are invalid if they are already handled as explicit
-#' function arguments. See the output of
-#' \code{bowtie2_usage()} for details about available parameters.
+#' additional parameters to be passed to bowtie2 wrapper. 
+#' All of them should be \code{Character} or \code{Numeric} scalar. 
+#' You can put all additional arguments in one \code{Character} 
+#' (e.g. "--threads 8 --no-mixed") with white space separation,
+#' or put them in different \code{Character} (e.g. "--threads","8","--no-mixed"). 
+#' Note that some arguments ("-x","--interleaved","-U","-1","-2","-b","-S") are
+#' invalid if they are already handled as explicit function arguments. 
+#' See the output of \code{bowtie2_usage()} for details about available parameters.
 #' 
-#' @author Zheng Wei, Rahul Varki
+#' @author Zheng Wei
 #' 
 #' @return An invisible \code{Integer} of call
 #' status. The value is 0 when there is not any mistakes
@@ -64,10 +64,10 @@
 #' 
 #' @references Langmead, B., & Salzberg, S. L. (2012).
 #' Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
+#' 
 #' @export bowtie2
 #' 
 #' @examples
-#' \donttest{
 #' td <- tempdir()
 #' 
 #' ## Building a bowtie2 index
@@ -85,10 +85,10 @@
 #' ## Bam file created
 #' bowtie2(bt2Index = file.path(td,"lambda_virus"), output = file.path(td,"example"), outputType = "bam", 
 #' seq1 = reads_1, seq2 = reads_2, overwrite = TRUE)
-#' }
 
-bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL,
-                    bamFile=NULL,interleaved=FALSE, overwrite=FALSE){
+
+bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
+                    bamFile=NULL, ..., interleaved=FALSE, overwrite=FALSE){
   
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
@@ -103,11 +103,11 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
     bt2Index <- file.path(tools::file_path_as_absolute(dirname(bt2Index)), basename(bt2Index))
     bt2Index <-trimws(as.character(bt2Index))
     
-    # Only used if output type is set to sam 
+    # Output alignment path for the sam file
     samOutput <- file.path(tools::file_path_as_absolute(dirname(output)), paste0(basename(output),".sam"))
     samOutput<-trimws(as.character(samOutput))
     
-    # Only used if output type is set to bam
+    # Output alignment path for the bam file (Only used if bam specified)
     bamOutput <- paste0(tools::file_path_sans_ext(samOutput),".bam")
     bamOutput <- trimws(as.character(bamOutput))
 
@@ -143,6 +143,7 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
     # Check if files and paths provided actually exist otherwise warning appears
     checkFileExist(seq1,"seq1")
     checkFileExist(seq2,"seq2")
+    checkFileExist(bamFile,"bamFile")
     checkPathExist(bt2Index,"bt2Index")
     
     # Detect whether index at path provided is small (.bt2), large (.bt2l), or non-existent
@@ -158,12 +159,12 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
     }
     
     else if (indexFormat == "LARGE"){
-        checkFileExist(paste0(bt2Index,".1.bt2l"),"bt2Index")
-        checkFileExist(paste0(bt2Index,".2.bt2l"),"bt2Index")
-        checkFileExist(paste0(bt2Index,".3.bt2l"),"bt2Index")
-        checkFileExist(paste0(bt2Index,".4.bt2l"),"bt2Index")
-        checkFileExist(paste0(bt2Index,".rev.1.bt2l"),"bt2Index")
-        checkFileExist(paste0(bt2Index,".rev.2.bt2l"),"bt2Index")
+        checkFileExist(paste0(bt2Index,".1.bt2l"),"bt2lIndex")
+        checkFileExist(paste0(bt2Index,".2.bt2l"),"bt2lIndex")
+        checkFileExist(paste0(bt2Index,".3.bt2l"),"bt2lIndex")
+        checkFileExist(paste0(bt2Index,".4.bt2l"),"bt2lIndex")
+        checkFileExist(paste0(bt2Index,".rev.1.bt2l"),"bt2lIndex")
+        checkFileExist(paste0(bt2Index,".rev.2.bt2l"),"bt2lIndex")
     }
     
     else{
@@ -177,6 +178,7 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
       checkFileCreatable(samOutput,"samOutput",overwrite)
     }
     else if (outputType == "bam"){
+      checkFileCreatable(samOutput,"samOutput",overwrite)
       checkFileCreatable(bamOutput,"bamOutput",overwrite)
     }
 
@@ -208,11 +210,9 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
     if (outputType == "sam")
         argvs <- c(paramArray,argvs,"-S",samOutput)
     else if (outputType == "bam")
-        # If samtools is used rather than Rsamtools then uncomment
-        # argvs <- c(paramArray,argvs)
         argvs <- c(paramArray,argvs,"-S",samOutput)
     else
-        stop("A non valid output type was allowed to be passed to the function and a bug exists")
+        stop("A non valid output type was allowed to be passed to the function")
 
     
     # Call bowtie2 wrapper which handles whether large or small indexes are present
@@ -220,9 +220,6 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
         invisible(.callbinary("bowtie2",paste(argvs,collapse = " ")))
     }
     else if (outputType == "bam"){
-        bamOutput <- paste0(tools::file_path_sans_ext(samOutput),".bam")
-        # If samtools is used rather than Rsamtools then uncomment
-        # argsam <- c("view","-bS",">",bamOutput)
         invisible(.callbinary("bowtie2",paste(argvs,collapse = " "), path = samOutput)
                   %>%
                     Rsamtools::asBam(file = ., 
@@ -233,7 +230,7 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
         invisible(file.remove(samOutput))
     }
     else{
-        stop("A non valid output type was allowed to be passed to the function and a bug exists")
+        stop("A non valid output type was allowed to be passed to the function")
     }
 }
 
@@ -248,12 +245,9 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
 #' @param references \code{Character} vector. The path to the files containing
 #' the references for which to build a bowtie index.
 #' 
-#' @param bt2Index \code{Character} scalar. Write bowtie2 index data to files
-#' with this basename: 'path_to_index/index_basename'.
-#' If the files like path_to_index/index_basename.*.bt2 or 
-#' path_to_index/index_basename.*.bt2l already exist,
-#' the function function will cast an error,
-#' unless argument overwrite is \code{TRUE}.
+#' @param bt2Index \code{Character} scalar. The path where the bowtie2 index
+#' files should be created. Include the basename of the index file at the end 
+#' of the path (i.e. path_to_index_dir/index_basename). 
 #' 
 #' @param ... Additional arguments to be passed on to the binaries.
 #' See below for details.
@@ -262,16 +256,14 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
 #' if setting \code{TRUE}.
 #' 
 #' @details All additional arguments in ... are interpreted as additional
-#' parameters to be passed on to
-#' bowtie2_build. All of them should be \code{Character} or
-#' \code{Numeric} scalar. You can put all additional
+#' parameters to be passed on to bowtie2_build wrapper. All of them should be 
+#' \code{Character} or \code{Numeric} scalar. You can put all additional
 #' arguments in one \code{Character} (e.g. "--threads 8 --quiet") with white
-#' space splitted just like command line,
-#' or put them in different \code{Character} (e.g. "--threads","8","--quiet").
-#' See the output of
-#' \code{bowtie2_build_usage()} for details about available parameters.
+#' space separation, or put them in different \code{Character} 
+#' (e.g. "--threads","8","--quiet"). See the output of \code{bowtie2_build_usage()} 
+#' for details about available parameters.
 #' 
-#' @author Zheng Wei, Rahul Varki
+#' @author Zheng Wei
 #' 
 #' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes
@@ -283,7 +275,6 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
 #' @export bowtie2_build
 #' 
 #' @examples
-#' \donttest{
 #' td <- tempdir()
 #' 
 #' ## Building a bowtie2 index
@@ -302,7 +293,7 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL,..., seq2=NULL
 #' ## The function will print the output during the process without "--quiet" argument.
 #' bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
 #' overwrite=TRUE)
-#' }
+
 
 bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
     if(R.Version()$arch=="i386"){
@@ -331,17 +322,16 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
     # If the total file size of the reference files is larger than 
     # the max small index size then we create large indexes (.bt2l)
     if (total_size > smallIndex_max_size){
-        checkFileCreatable(paste0(bt2Index,".1.bt2l"),"bt2Index",overwrite)
-        checkFileCreatable(paste0(bt2Index,".2.bt2l"),"bt2Index",overwrite)
-        checkFileCreatable(paste0(bt2Index,".3.bt2l"),"bt2Index",overwrite)
-        checkFileCreatable(paste0(bt2Index,".4.bt2l"),"bt2Index",overwrite)
-        checkFileCreatable(paste0(bt2Index,".rev.1.bt2l"),"bt2Index",overwrite)
-        checkFileCreatable(paste0(bt2Index,".rev.2.bt2l"),"bt2Index",overwrite)
+        checkFileCreatable(paste0(bt2Index,".1.bt2l"),"bt2lIndex",overwrite)
+        checkFileCreatable(paste0(bt2Index,".2.bt2l"),"bt2lIndex",overwrite)
+        checkFileCreatable(paste0(bt2Index,".3.bt2l"),"bt2lIndex",overwrite)
+        checkFileCreatable(paste0(bt2Index,".4.bt2l"),"bt2lIndex",overwrite)
+        checkFileCreatable(paste0(bt2Index,".rev.1.bt2l"),"bt2lIndex",overwrite)
+        checkFileCreatable(paste0(bt2Index,".rev.2.bt2l"),"bt2lIndex",overwrite)
     }
     
     # If not then we create small indexes (.bt2)
     else{
-        
         checkFileCreatable(paste0(bt2Index,".1.bt2"),"bt2Index",overwrite)
         checkFileCreatable(paste0(bt2Index,".2.bt2"),"bt2Index",overwrite)
         checkFileCreatable(paste0(bt2Index,".3.bt2"),"bt2Index",overwrite)
@@ -359,14 +349,14 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 }
 
 
-
 #' @name bowtie2_version
 #' 
 #' @title Print version information of bowtie2-2.4.4
 #' 
-#' @description Print version information of bowtie2-2.4.4
+#' @description Calling bowtie2_version() prints the version information of 
+#' the bowtie package used. 
 #' 
-#' @author Zheng Wei, Rahul Varki
+#' @author Zheng Wei
 #' 
 #' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes
@@ -378,9 +368,8 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
 #' @export bowtie2_version
 #' 
 #' @examples
-#' \donttest{
 #' bowtie2_version()
-#' }
+
 
 bowtie2_version <- function(){
     if(R.Version()$arch=="i386"){
@@ -392,15 +381,16 @@ bowtie2_version <- function(){
 
 #' @name bowtie2_usage
 #' 
-#' @title Print available arguments for bowtie2
+#' @title Print available arguments that can be passed to bowtie2()
 #' 
-#' @description Note that some arguments to the
-#' bowtie2 are invalid if they are
-#' already handled as explicit function arguments.
+#' @description Calling bowtie2_usage() prints the available arguments that can
+#' be passed to the ... argument of the bowtie2() function of the package.  
+#' Note that some arguments are invalid if they are already handled as explicit 
+#' function arguments.
 #' 
-#' @author Zheng Wei, Rahul Varki
+#' @author Zheng Wei
 #' 
-#' @return bowtie2 available arguments and their usage.
+#' @return Information about available arguments that can be passed to bowtie2().
 #' 
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
 #' alignment with Bowtie 2. Nature methods, 9(4), 357-359.
@@ -408,9 +398,8 @@ bowtie2_version <- function(){
 #' @export bowtie2_usage
 #' 
 #' @examples
-#' \donttest{
 #' bowtie2_usage()
-#' }
+
 
 bowtie2_usage <- function(){
     if(R.Version()$arch=="i386"){
@@ -422,14 +411,16 @@ bowtie2_usage <- function(){
 
 #' @name bowtie2_build_usage
 #' 
-#' @title Print available arguments for bowtie2_build_usage
-#' @description Note that some arguments to the
-#' bowtie2_build_usage are invalid if they are
-#' already handled as explicit function arguments.
+#' @title Print available arguments that can be passed to bowtie2_build()
 #' 
-#' @author Zheng Wei, Rahul Varki
+#' @description Calling bowtie2_build_usage() prints the available arguments that 
+#' can be passed to the ... argument of the bowtie2_build() function of the package.  
+#' Note that some arguments are invalid if they are already handled as explicit 
+#' function arguments.
 #' 
-#' @return bowtie2_build available arguments and their usage.
+#' @author Zheng Wei
+#' 
+#' @return Information about available arguments that can be passed to bowtie2_build()
 #' 
 #' @references Langmead B, Salzberg S.
 #' Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
@@ -437,9 +428,7 @@ bowtie2_usage <- function(){
 #' @export bowtie2_build_usage
 #' 
 #' @examples
-#' \donttest{
 #' bowtie2_build_usage()
-#' }
 
 
 bowtie2_build_usage <- function() {

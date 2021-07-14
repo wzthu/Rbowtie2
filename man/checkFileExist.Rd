@@ -11,6 +11,9 @@ checkFileExist(filePath, argname)
 
 \item{argname}{\code{Character} scalar. Name of the argument passed.}
 }
+\value{
+Stops the function if the file does not exist.
+}
 \description{
 This is an internal function that is not meant to be used outside
 of the package. It determines whether a specific file exists at the end of the

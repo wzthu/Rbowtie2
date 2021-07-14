@@ -48,7 +48,6 @@ explicit function arguments. See the output of
 \code{adapterremoval_usage()} for details about available parameters.
 }
 \examples{
-\donttest{
 td <- tempdir()
 reads_1 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_1.fq")
 reads_2 <- system.file(package="Rbowtie2", "extdata", "adrm", "reads_2.fq")
@@ -56,7 +55,6 @@ adapters <- identify_adapters(file1=reads_1,file2=reads_2,
 basename = file.path(td,"reads")
 ,"--threads 2",overwrite=TRUE)
 adapters
-}
 }
 \references{
 Schubert, Lindgreen, and Orlando (2016).

@@ -85,7 +85,6 @@ function arguments. See the output of
 \code{adapterremoval_usage()} for details about available parameters.
 }
 \examples{
-\donttest{
 td <- tempdir()
 
 # Identify adapters
@@ -100,7 +99,6 @@ adapter2 = adapters[2],
 output1=file.path(td,"reads_1.trimmed.fq"),
 output2=file.path(td,"reads_2.trimmed.fq"),
 basename=file.path(td,"reads.base"),overwrite=TRUE,"--threads 3");cmdout
-}
 }
 \references{
 Schubert, Lindgreen, and Orlando (2016). AdapterRemoval

@@ -52,6 +52,7 @@ if(file.exists(file.path(td, "lambda_virus.1.bt2"))){
         seq1=reads_1,
         seq2=reads_2,
         overwrite=TRUE,
+        bamFile = NULL,
         "--threads 3"))
     head(readLines(file.path(td, "result.sam")))
 }

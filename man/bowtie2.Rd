@@ -9,21 +9,23 @@ bowtie2(
   output,
   outputType = "sam",
   seq1 = NULL,
-  ...,
   seq2 = NULL,
   bamFile = NULL,
+  ...,
   interleaved = FALSE,
   overwrite = FALSE
 )
 }
 \arguments{
-\item{bt2Index}{\code{Character} scalar. Path to bowtie2 index files including
-index basename: path_to_index/index_basename
-(minus trailing .bt2 or .bt2l of path_to_index/index_basename.*.bt2 
-or path_to_index/index_basename.*.bt2l).}
+\item{bt2Index}{\code{Character} scalar. The path where the bowtie2 index files 
+are located. Include the basename of the index files at the end of the path
+(i.e. path_to_index_dir/index_basename). Do not include the bowtie2 index file 
+extension (.bt2 or .bt2l)}
 
-\item{output}{\code{Character} scalar. Path to the alignment output file including
-output file basename: path_to_output/output_basename (minus trailing .sam or .bam).}
+\item{output}{\code{Character} scalar. The path where the alignment output file 
+should be created. Include the basename of the alignment file at the end of the 
+path (i.e. path_to_output_dir/output_basename). Do not include the alignment 
+file extension (.sam or .bam).}
 
 \item{outputType}{\code{Character} scalar. Specify the output alignment file type.
 Default is set to "sam" but can also be changed to "bam".}
@@ -35,17 +37,18 @@ paired with file paths in seq2.
 And it can also be interleaved file paths when argument
 interleaved=\code{TRUE}.}
 
-\item{...}{Additional arguments to be passed on to the binaries.
-See below for details.}
-
 \item{seq2}{\code{Character} vector. It contains file paths with
 #2 mates paired with file paths in seq1.
 For single-end sequencing files and interleaved paired-end
-sequencing files(argument interleaved=\code{TRUE}),
+sequencing files (argument interleaved=\code{TRUE}),
 it must be \code{NULL}.}
 
-\item{bamFile}{\code{Character} vector. File path to a bam file that contains
-unaligned reads.}
+\item{bamFile}{\code{Character} vector. A path to a bam file that contains
+unaligned reads. If a bam file is provided then seq1 and seq2 must be 
+set to \code{NULL}}
+
+\item{...}{Additional arguments to be passed on to the bowtie2 wrapper.
+See below for details.}
 
 \item{interleaved}{\code{Logical}. Set \code{TRUE} when files are
 interleaved paired-end sequencing data.}
@@ -59,25 +62,21 @@ status. The value is 0 when there is not any mistakes
 Otherwise the value is non-zero.
 }
 \description{
-This function can be use to call the wrapped \code{bowtie2-align-s}
- or \code{bowtie2-align-l} binary.
+This function can be use to call the bowtie2 wrapper which wraps
+the \code{bowtie2-align-s} and the \code{bowtie2-align-l} binaries.
 }
 \details{
 All additional arguments in ... are interpreted as
-additional parameters to be passed to 
-bowtie2. All of them should be \code{Character} or
-\code{Numeric} scalar. You can put all additional
-arguments in one \code{Character} (e.g. "--threads 8 --no-mixed")
-with white space splitted just like command line,
-or put them in different \code{Character}
-(e.g. "--threads","8","--no-mixed"). Note that some
-arguments ("-x","--interleaved","-U","-1","-2","-b","-S") to the
-bowtie2 are invalid if they are already handled as explicit
-function arguments. See the output of
-\code{bowtie2_usage()} for details about available parameters.
+additional parameters to be passed to bowtie2 wrapper. 
+All of them should be \code{Character} or \code{Numeric} scalar. 
+You can put all additional arguments in one \code{Character} 
+(e.g. "--threads 8 --no-mixed") with white space separation,
+or put them in different \code{Character} (e.g. "--threads","8","--no-mixed"). 
+Note that some arguments ("-x","--interleaved","-U","-1","-2","-b","-S") are
+invalid if they are already handled as explicit function arguments. 
+See the output of \code{bowtie2_usage()} for details about available parameters.
 }
 \examples{
-\donttest{
 td <- tempdir()
 
 ## Building a bowtie2 index
@@ -96,11 +95,10 @@ seq2 = reads_2, overwrite = TRUE)
 bowtie2(bt2Index = file.path(td,"lambda_virus"), output = file.path(td,"example"), outputType = "bam", 
 seq1 = reads_1, seq2 = reads_2, overwrite = TRUE)
 }
-}
 \references{
 Langmead, B., & Salzberg, S. L. (2012).
 Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
 }
 \author{
-Zheng Wei, Rahul Varki
+Zheng Wei
 }
