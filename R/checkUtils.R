@@ -135,9 +135,8 @@ checkAddArgus<- function(pattern,...){
         fixed<-grepl(pattern,paramArray)
         if(sum(fixed)>0){
             invalidp<-paste0(paramArray[fixed],collapse = " ")
-            stop(sprintf(paste0("Argument(s) `%s` are invalid for additional ",
-                                "argument. Please set them as fixed arguments."),
-                         invalidp))
+            stop("Argument(s) ", invalidp, " are invalid for additional ",
+                 "argument. Please set them as fixed arguments.")
         }
         return(paramArray)
     }else{
