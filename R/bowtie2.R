@@ -95,7 +95,7 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
     }
     
     if (outputType != "sam" && outputType != "bam"){
-        stop(paste0("Specify either 'sam' or 'bam' for outputType input"))
+        stop("Specify either 'sam' or 'bam' for outputType input")
     }
     
     
@@ -122,8 +122,8 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
     if(!is.null(seq2)){
         seq2<-trimws(as.character(seq2))
         if(length(seq1)!=length(seq2)){
-            stop(paste0("The lengths of arguments ",
-                        "`seq1` and `seq2` should be the same length"))
+            stop("The lengths of arguments ",
+                 "`seq1` and `seq2` should be the same length")
         }
     }
     
@@ -132,8 +132,8 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
 
     if(interleaved){
         if(length(seq1)>1){
-            stop(paste0("Argument `seq1` has to be a SINGLE file",
-                        " path rather than a vector of paths"))
+            stop("Argument `seq1` has to be a SINGLE file",
+                 " path rather than a vector of paths")
         }
         if(!is.null(seq2)){
             stop("Argument `seq2` has to be NULL when interleaved=TRUE")
@@ -168,9 +168,9 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
     }
     
     else{
-        stop(paste0("Could not find either a valid small (.bt2) or large (.bt2l)", 
-                    " index with basename of ",basename(bt2Index), " at location ",
-                    dirname(bt2Index)))
+        stop("Could not find either a valid small (.bt2) or large (.bt2l)", 
+             " index with basename of ",basename(bt2Index), " at location ",
+             dirname(bt2Index))
     }
     
     # Check to see if the alignment file can be written to directory
@@ -203,7 +203,7 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
         argvs <- c(argvs,"-b",bamFile)
     }
     else{
-        stop(paste0("Could not find either the input reads or the bam file"))
+        stop("Could not find either the input reads or the bam file")
     }
 
     # Combine explicit and optional arguments together

@@ -171,8 +171,8 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
         }else{
             file2<-trimws(as.character(file2))
             if(length(file1)!=length(file2)){
-                stop(paste0("The lengths of arguments `file1` ",
-                            "and `file2` should be the same length"))
+                stop("The lengths of arguments `file1` ",
+                     "and `file2` should be the same length")
             }
         }
     }
