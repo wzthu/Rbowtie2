@@ -2,8 +2,7 @@
 knitr::opts_chunk$set(echo = TRUE)
 
 ## ----install, eval=FALSE------------------------------------------------------
-#  source("http://www.bioconductor.org/biocLite.R")
-#  biocLite("Rbowtie2")
+#  BiocManager::install("Rbowtie2")
 
 ## ----loading------------------------------------------------------------------
 library(Rbowtie2)
