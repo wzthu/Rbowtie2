@@ -5,7 +5,7 @@ The `Rbowtie2` package provides an R interface to the [bowtie2](https://github.c
 
 
 ## Source Package Information
-The `Rbowtie2` package uses the bowtie2 v2.4.4 source code which was obtained from https://sourceforge.net/projects/bowtie-bio/. The folders doc, example, scripts, and some non-code files were deleted to reduce the package size. To manually update the bowtie2 source package, delete the current bowtie2 folder in the src directory and replace it with the current bowtie2 release version. In the bowtie2 source directory there should be a Makefile. Open the Makefile and make the following changes:
+The `Rbowtie2` package uses the bowtie2 v2.4.4 source code which was obtained from https://sourceforge.net/projects/bowtie-bio/. The folders doc, example, scripts, and some non-code files were deleted to reduce the package size. To manually update the bowtie2 source package, delete the current bowtie2 folder in the src directory and replace it with the current bowtie2 release version. In the src/bowtie2 directory there should be a Makefile. Open the Makefile and make the following changes:
 
 1. Update the .PHONY clean declaration 
 ```
@@ -48,4 +48,5 @@ move: bowtie2-build-s bowtie2-align-s bowtie2-build-l bowtie2-align-l bowtie2 bo
 	cp bowtie2-build ../../inst
 ```
 
+In the Rbowtie2/src directory there should be two Makefiles (Makefile or Makefile.win). Depending on OS version, open the corresponding Makefile and change the BT2_DIR variable to be name of the bowtie directory.
 
