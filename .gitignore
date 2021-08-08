@@ -33,6 +33,8 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 
+# BBSoption file
+.BBSoptions
 
 
 .Ruserdata
@@ -54,8 +56,12 @@ vignettes/*.pdf
 /src/*/AdapterRemoval
 /src/*/bowtie2-align-s
 /src/*/bowtie2-build-s
+/src/*/bowtie2-align-l
+/src/*/bowtie2-build-l
 /inst/AdapterRemoval
 /inst/bowtie2-align-s
 /inst/bowtie2-build-s
+/inst/bowtie2-align-l
+/inst/bowtie2-build-l
 /inst/*.exe
 .Rproj.user
