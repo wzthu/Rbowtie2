@@ -22,7 +22,8 @@ Suggests:
     rmarkdown
 Imports:
       magrittr,
-      Rsamtools
+      Rsamtools,
+      utils
 SystemRequirements: 
       C++11,
       GNU make
