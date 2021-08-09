@@ -1,3 +1,5 @@
+utils::globalVariables(".")
+
 #' @name bowtie2
 #' 
 #' @title Interface to bowtie2-2.4.4 align function
