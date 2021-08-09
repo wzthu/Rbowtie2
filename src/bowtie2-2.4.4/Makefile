@@ -18,7 +18,7 @@
 #
 
 #
-# Makefile for bowtie, bowtie2-build, bowtie2-inspect
+# Makefile for bowtie, bowtie2-build
 #
 
 PREFIX := /usr/local
@@ -209,20 +209,17 @@ BOWTIE2_BIN_LIST := bowtie2-build-s \
   bowtie2-build-l \
   bowtie2-align-s \
   bowtie2-align-l \
-  bowtie2-inspect-s \
-  bowtie2-inspect-l
+  
 BOWTIE2_BIN_LIST_DBG := bowtie2-build-s-debug \
   bowtie2-build-l-debug \
   bowtie2-align-s-debug \
   bowtie2-align-l-debug \
-  bowtie2-inspect-s-debug \
-  bowtie2-inspect-l-debug
+  
 BOWTIE2_BIN_LIST_SAN := bowtie2-build-s-sanitized \
   bowtie2-build-l-sanitized \
   bowtie2-align-s-sanitized \
   bowtie2-align-l-sanitized \
-  bowtie2-inspect-s-sanitized \
-  bowtie2-inspect-l-sanitized
+  
 ifndef SANITIZER_FLAGS
         BOWTIE2_BIN_LIST_SAN =
 endif
@@ -240,7 +237,6 @@ GENERAL_LIST := $(wildcard scripts/*.sh) \
   $(PTHREAD_PKG) \
   bowtie2 \
   bowtie2-build \
-  bowtie2-inspect \
   AUTHORS \
   LICENSE \
   NEWS \
@@ -251,7 +247,7 @@ GENERAL_LIST := $(wildcard scripts/*.sh) \
   BOWTIE2_VERSION
 
 ifeq (1,$(WINDOWS))
-  BOWTIE2_BIN_LIST := $(BOWTIE2_BIN_LIST) bowtie2.bat bowtie2-build.bat bowtie2-inspect.bat
+  BOWTIE2_BIN_LIST := $(BOWTIE2_BIN_LIST) bowtie2.bat bowtie2-build.bat 
   CXXFLAGS += -static-libgcc -static-libstdc++
 endif
 
@@ -269,7 +265,7 @@ SRC_PKG_LIST = $(wildcard *.h) \
   $(GENERAL_LIST)
 
 ifeq (1,$(WINDOWS))
-  BIN_PKG_LIST := $(GENERAL_LIST) bowtie2.bat bowtie2-build.bat bowtie2-inspect.bat
+  BIN_PKG_LIST := $(GENERAL_LIST) bowtie2.bat bowtie2-build.bat 
 else
   BIN_PKG_LIST := $(GENERAL_LIST)
 endif
@@ -373,45 +369,7 @@ bowtie2-align-l-debug: bt2_search.cpp $(SEARCH_CPPS) $(SHARED_CPPS) $(HEADERS) $
 		$(SHARED_CPPS) $(SEARCH_CPPS_MAIN) \
 		$(LDFLAGS) $(LDLIBS)
 
-#
-# bowtie2-inspect targets
-#
 
-bowtie2-inspect-s-sanitized bowtie2-inspect-s: bt2_inspect.cpp $(HEADERS) $(SHARED_CPPS)
-	$(CXX) $(RELEASE_FLAGS) \
-		$(RELEASE_DEFS) $(CXXFLAGS) \
-		$(DEFS) -DBOWTIE2 -DBOWTIE_INSPECT_MAIN -Wall \
-		$(CPPFLAGS) \
-		-o $@ $< \
-		$(SHARED_CPPS) \
-		$(LDFLAGS) $(LDLIBS)
-
-bowtie2-inspect-l-sanitized bowtie2-inspect-l: bt2_inspect.cpp $(HEADERS) $(SHARED_CPPS)
-	$(CXX) $(RELEASE_FLAGS) \
-		$(RELEASE_DEFS) $(CXXFLAGS) \
-		$(DEFS) -DBOWTIE2 -DBOWTIE_INSPECT_MAIN  -DBOWTIE_64BIT_INDEX -Wall \
-		$(CPPFLAGS) \
-		-o $@ $< \
-		$(SHARED_CPPS) \
-		$(LDFLAGS) $(LDLIBS)
-
-bowtie2-inspect-s-debug: bt2_inspect.cpp $(HEADERS) $(SHARED_CPPS)
-	$(CXX) $(DEBUG_FLAGS) \
-		$(DEBUG_DEFS) $(CXXFLAGS) \
-		$(DEFS) -DBOWTIE2 -DBOWTIE_INSPECT_MAIN -Wall \
-		$(CPPFLAGS) \
-		-o $@ $< \
-		$(SHARED_CPPS) \
-		$(LDFLAGS) $(LDLIBS)
-
-bowtie2-inspect-l-debug: bt2_inspect.cpp $(HEADERS) $(SHARED_CPPS)
-	$(CXX) $(DEBUG_FLAGS) \
-		$(DEBUG_DEFS) $(CXXFLAGS) \
-		$(DEFS) -DBOWTIE2 -DBOWTIE_64BIT_INDEX -DBOWTIE_INSPECT_MAIN -Wall \
-		$(CPPFLAGS) \
-		-o $@ $< \
-		$(SHARED_CPPS) \
-		$(LDFLAGS) $(LDLIBS)
 
 #
 # bowtie2-dp targets
@@ -443,9 +401,6 @@ bowtie2-build.bat:
 	echo "@echo off" > bowtie2-build.bat
 	echo "python3 %~dp0/bowtie2-build %*" >> bowtie2-build.bat
 
-bowtie2-inspect.bat:
-	echo "@echo off" > bowtie2-inspect.bat
-	echo "python3 %~dp0/bowtie2-inspect %*" >> bowtie2-inspect.bat
 
 .PHONY: bowtie2-src-pkg
 bowtie2-src-pkg: $(SRC_PKG_LIST)
@@ -505,7 +460,7 @@ MANUAL: MANUAL.markdown
 .PHONY: install
 install: all
 	mkdir -p $(DESTDIR)$(bindir)
-	for file in $(BOWTIE2_BIN_LIST) bowtie2-inspect bowtie2-build bowtie2 ; do \
+	for file in $(BOWTIE2_BIN_LIST) bowtie2-build bowtie2 ; do \
 		cp -f $$file $(DESTDIR)$(bindir) ; \
 	done
 
@@ -612,9 +567,9 @@ clean_dSYM:
 .PHONY: move
 move: bowtie2-build-s bowtie2-align-s bowtie2-build-l bowtie2-align-l bowtie2 bowtie2-build
 
-	cp bowtie2-align-s ../../inst
-	cp bowtie2-build-s ../../inst
-	cp bowtie2-align-l ../../inst
-	cp bowtie2-build-l ../../inst
+	mv bowtie2-align-s ../../inst
+	mv bowtie2-build-s ../../inst
+	mv bowtie2-align-l ../../inst
+	mv bowtie2-build-l ../../inst
 	cp bowtie2 ../../inst
 	cp bowtie2-build ../../inst
