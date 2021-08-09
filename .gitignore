@@ -41,8 +41,6 @@ src/.DS_Store
 
 
 
-.Rbuildignore
-
 # C++ code
 /src/*.o
 /src/*.dll
