@@ -33,8 +33,9 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 
-# BBSoption file
-.BBSoptions
+# System Files
+Rbowtie2.Rproj
+src/.DS_Store
 
 
 .Ruserdata
