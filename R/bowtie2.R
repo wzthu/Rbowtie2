@@ -1,4 +1,4 @@
-utils::globalVariables(".")
+globalVariables(".")
 
 #' @name bowtie2
 #' 
