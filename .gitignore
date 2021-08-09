@@ -33,8 +33,7 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 
-# System Files
-Rbowtie2.Rproj
+# MacOS file
 src/.DS_Store
 
 
