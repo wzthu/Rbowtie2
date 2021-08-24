@@ -46,7 +46,8 @@ AdapterRemoval:$(OBJS)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< 
 
 
-	
+clean_o:
+	rm -f *.o
 
 
 clean:
