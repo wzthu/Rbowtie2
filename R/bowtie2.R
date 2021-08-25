@@ -180,7 +180,7 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
       checkFileCreatable(samOutput,"samOutput",overwrite)
     }
     else if (outputType == "bam"){
-      if (file.exists(Sys.which("samtools"))){
+      if (checkSamtoolsExists()){
         checkFileCreatable(bamOutput,"bamOutput",overwrite)
       }
       else{
@@ -218,7 +218,7 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
         argvs <- c(paramArray,argvs,"-S",samOutput)
     }
     else if (outputType == "bam"){
-        if (file.exists(Sys.which("samtools")))
+        if (checkSamtoolsExists())
           argvs <- c(paramArray,argvs)
         else
           argvs <- c(paramArray,argvs,"-S",samOutput)
@@ -232,7 +232,7 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
         invisible(.callbinary("bowtie2",paste(argvs,collapse = " ")))
     }
     else if (outputType == "bam"){
-      if (file.exists(Sys.which("samtools"))){
+      if (checkSamtoolsExists()){
         print("Samtools found on system. Using samtools to create bam file")
         argsam <- c("view","-bS",">",bamOutput)
         invisible(.callbinary("bowtie2",paste(argvs,collapse = " "), "|", Sys.which("samtools"), paste(argsam,collapse = " ")))
