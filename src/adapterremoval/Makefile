@@ -34,7 +34,7 @@ ADRM_LIBRARY = adrm
 OBJS = $(SRCS:.cc=.o)
 
 all: AdapterRemoval
-	cp AdapterRemoval ../../inst/
+	mv AdapterRemoval ../../inst/
 
 
 AdapterRemoval:$(OBJS)
