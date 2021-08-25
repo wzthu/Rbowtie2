@@ -180,8 +180,13 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
       checkFileCreatable(samOutput,"samOutput",overwrite)
     }
     else if (outputType == "bam"){
-      checkFileCreatable(samOutput,"samOutput",overwrite)
-      checkFileCreatable(bamOutput,"bamOutput",overwrite)
+      if (file.exists(Sys.which("samtools"))){
+        checkFileCreatable(bamOutput,"bamOutput",overwrite)
+      }
+      else{
+        checkFileCreatable(samOutput,"samOutput",overwrite)
+        checkFileCreatable(bamOutput,"bamOutput",overwrite)
+      }
     }
 
     # Create the explicit arguments for the binaries
@@ -209,10 +214,16 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
     }
 
     # Combine explicit and optional arguments together
-    if (outputType == "sam")
+    if (outputType == "sam"){
         argvs <- c(paramArray,argvs,"-S",samOutput)
-    else if (outputType == "bam")
-        argvs <- c(paramArray,argvs,"-S",samOutput)
+    }
+    else if (outputType == "bam"){
+        # TODO: More robust way of checking executable existence
+        if (file.exists(Sys.which("samtools")))
+          argvs <- c(paramArray,argvs)
+        else
+          argvs <- c(paramArray,argvs,"-S",samOutput)
+    }
     else
         stop("A non valid output type was allowed to be passed to the function")
 
@@ -222,6 +233,14 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
         invisible(.callbinary("bowtie2",paste(argvs,collapse = " ")))
     }
     else if (outputType == "bam"){
+      # TODO: More robust way of checking executable existence
+      if (file.exists(Sys.which("samtools"))){
+        print("Samtools found on system. Using samtools to create bam file")
+        argsam <- c("view","-bS",">",bamOutput)
+        invisible(.callbinary("bowtie2",paste(argvs,collapse = " "), "|", Sys.which("samtools"), paste(argsam,collapse = " ")))
+      }
+      else{
+        print("Samtools not found on system. Using Rsamtools to create bam file")
         invisible(.callbinary("bowtie2",paste(argvs,collapse = " "), path = samOutput)
                   %>%
                     Rsamtools::asBam(file = ., 
@@ -230,6 +249,7 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
                                      indexDestination = FALSE))
         
         invisible(file.remove(samOutput))
+      }
     }
     else{
         stop("A non valid output type was allowed to be passed to the function")

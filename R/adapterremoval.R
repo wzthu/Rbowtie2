@@ -296,7 +296,7 @@ adapterremoval_version<- function(){
     if (is.null(op) && is.null(bin2))
         call <- paste(shQuote(file.path(system.file(package="Rbowtie2"), bin1)), args1)
     else if (!is.null(op) && !is.null(bin2))
-        call <- paste(shQuote(file.path(system.file(package="Rbowtie2"), bin1)), args1, op, shQuote(file.path(system.file(package="Rbowtie2"), bin2)), args2)
+        call <- paste(shQuote(file.path(system.file(package="Rbowtie2"), bin1)), args1, op, bin2, args2)
     else
         stop("Bug exists which needs to be fixed")
     
