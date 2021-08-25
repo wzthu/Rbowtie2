@@ -8,6 +8,7 @@ CXX = g++
 all:
 	mkdir -p ../inst
 	(cd	$(ADRM_DIR) && ($(MAKE) CXX="$(CXX) -std=gnu++11" -f Makefile))
+	(cd	$(ADRM_DIR) && ($(MAKE) clean_o -f Makefile))
 	(cd $(BT2_DIR) && ($(MAKE) CXX="$(CXX)" -f Makefile))
 	(cd	$(BT2_DIR) && ($(MAKE) move -f Makefile))
 	(cd	$(BT2_DIR) && ($(MAKE) clean_dSYM -f Makefile))
