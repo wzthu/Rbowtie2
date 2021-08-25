@@ -1,0 +1,24 @@
+This file contains installation instructions of samtools, an optional software package used by the Rbowtie2 package. If samtools is present on the system, bam files can directly be created which can save time and memory storage. Otherwise, Rsamtools will be used instead which requires the sam file to be created prior to the bam file being created.
+
+The samtools source can be downloaded at this website: http://www.htslib.org/download/
+
+The following installation instructions are taken directly from the samtools INSTALL file:
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+To build and install Samtools, 'cd' to the samtools-1.x directory containing
+the package's source and type the following commands:
+
+    ./configure
+    make
+    make install
+
+The './configure' command checks your build environment and allows various
+optional functionality to be enabled (see Configuration below).  If you
+don't want to select any optional functionality, you may wish to omit
+configure and just type 'make; make install' as for previous versions
+of samtools.  However if the build fails you should run './configure'
+as it can diagnose the common reasons for build failures. 
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Recommend to look at the complete samtools INSTALL file if troubleshooting is needed.
+
