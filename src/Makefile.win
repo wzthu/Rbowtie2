@@ -1,7 +1,7 @@
 #CXX = $(BINPREF)/g++ -std=gnu++11
 #include ${R_HOME}/etc${R_ARCH}/Makeconf
 ADRM_DIR = adapterremoval
-BT2_DIR = bowtie2
+BT2_DIR = bowtie2-2.4.4
 
 #ifeq "$(WIN)" "64"
 
