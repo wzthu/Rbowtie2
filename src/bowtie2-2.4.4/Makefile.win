@@ -27,8 +27,6 @@ bindir := $(PREFIX)/bin
 LDLIBS := -lpthread -lz
 
 HEADERS := $(wildcard *.h)
-BOWTIE_MM := 1
-BOWTIE_SHARED_MEM :=
 
 CXXFLAGS += -std=c++11
 
@@ -36,27 +34,12 @@ ARCH = $(shell uname -m)
 NGS_VER ?= 2.9.2
 VDB_VER ?= 2.9.2-1
 
-# Detect Cygwin or MinGW
-WINDOWS :=
-MINGW :=
-ifneq (,$(findstring MINGW,$(shell uname)))
-  WINDOWS := 1
-  MINGW := 1
-  # POSIX memory-mapped files not currently supported on Windows
-  BOWTIE_MM :=
-  BOWTIE_SHARED_MEM :=
-endif
+WINDOWS := 1
+MINGW := 1
+# POSIX memory-mapped files not currently supported on Windows
+BOWTIE_MM :=
+BOWTIE_SHARED_MEM :=
 
-MACOS :=
-ifneq (,$(findstring Darwin,$(shell uname)))
-  MACOS := 1
-  ifeq (1,$(shell uname -r | awk -F. '{ if ($$1 > 12 && $$1 < 16) print 1; }'))
-	CXXFLAGS += -stdlib=libstdc++
-  endif
-  ifdef STATIC_BUILD
-	CXXFLAGS += -mmacosx-version-min=10.9
-  endif
-endif
 
 BITS := 32
 ifneq (,$(findstring $(shell uname -m), x86_64 amd64))
