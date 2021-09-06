@@ -263,32 +263,23 @@ adapterremoval_version<- function(){
 }
 
 #' @name .callbinary
-#' 
 #' @title Make system call for binaries
-#' 
 #' @description Function that makes a system call for the bowtie binaries. 
 #' Note it is not intended to be used outside of the package.
-#' 
 #' @author Zheng Wei
-#' 
+#' @param lang \code{Character}. The interpreter used to execute the binary
 #' @param bin1 \code{Character}. The binary used for the system call.
-#' 
 #' @param args1 \code{Character}. The arguments to pass to the binary.
-#' 
 #' @param op \code{Character}. Optional: Generally used if needed to pipe to another binary.
-#' 
 #' @param bin2 \code{Character}. Optional: Another binary that can be used in the system call.
 #' Generally the output of the first binary is piped to the this binary.
-#' 
 #' @param args2 \code{Character} Optional: The arguments to pass to the second binary.
-#' 
 #' @param path \code{Character} Optional: If passed to function, returns the path.
 #' Needed for Rsamtools to convert from sam to bam. 
-#' 
 #' @return The output of the system call or the path provided.
 
 
-.callbinary<- function(bin1, args1, op = NULL, bin2 = NULL, args2 = NULL, path = NULL)
+.callbinary<- function(lang, bin1, args1, op = NULL, bin2 = NULL, args2 = NULL, path = NULL)
 {
     args1 <- gsub("^ *| *$", "", args1)
     args2 <- gsub("^ *| *$", "", args2)
