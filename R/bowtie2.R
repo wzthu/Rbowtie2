@@ -1,53 +1,40 @@
 globalVariables(".")
 
 #' @name bowtie2
-#' 
 #' @title Interface to bowtie2-2.4.4 align function
-#' 
 #' @description This function can be use to call the bowtie2 wrapper which wraps
 #' the \code{bowtie2-align-s} and the \code{bowtie2-align-l} binaries.
-#'  
 #' @importFrom magrittr %>%
-#'  
 #' @param bt2Index \code{Character} scalar. The path where the bowtie2 index files 
 #' are located. Include the basename of the index files at the end of the path
 #' (i.e. path_to_index_dir/index_basename). Do not include the bowtie2 index file 
 #' extension (.bt2 or .bt2l)
-#' 
 #' @param output \code{Character} scalar. The path where the alignment output file 
 #' should be created. Include the basename of the alignment file at the end of the 
 #' path (i.e. path_to_output_dir/output_basename). Do not include the alignment 
 #' file extension (.sam or .bam).
-#' 
 #' @param outputType \code{Character} scalar. Specify the output alignment file type.
 #' Default is set to "sam" but can also be changed to "bam".
-#' 
 #' @param seq1 \code{Character} vector. For single-end sequencing,
 #' it contains sequence file paths.
 #' For paired-end sequencing, it can be file paths with #1 mates
 #' paired with file paths in seq2.
 #' And it can also be interleaved file paths when argument
 #' interleaved=\code{TRUE}.
-#' 
 #' @param seq2 \code{Character} vector. It contains file paths with
 #' #2 mates paired with file paths in seq1.
 #' For single-end sequencing files and interleaved paired-end
 #' sequencing files (argument interleaved=\code{TRUE}),
 #' it must be \code{NULL}.
-#' 
 #' @param bamFile \code{Character} vector. A path to a bam file that contains
 #' unaligned reads. If a bam file is provided then seq1 and seq2 must be 
 #' set to \code{NULL}
-#' 
 #' @param ... Additional arguments to be passed on to the bowtie2 wrapper.
 #' See below for details.
-#' 
 #' @param interleaved \code{Logical}. Set \code{TRUE} when files are
 #' interleaved paired-end sequencing data.
-#' 
 #' @param overwrite \code{Logical}. Force overwriting of existing
 #' files if setting \code{TRUE}.
-#' 
 #' @details All additional arguments in ... are interpreted as
 #' additional parameters to be passed to bowtie2 wrapper. 
 #' All of them should be \code{Character} or \code{Numeric} scalar. 
@@ -57,18 +44,13 @@ globalVariables(".")
 #' Note that some arguments ("-x","--interleaved","-U","-1","-2","-b","-S") are
 #' invalid if they are already handled as explicit function arguments. 
 #' See the output of \code{bowtie2_usage()} for details about available parameters.
-#' 
 #' @author Zheng Wei
-#' 
 #' @return An invisible \code{Integer} of call
 #' status. The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
-#' 
 #' @references Langmead, B., & Salzberg, S. L. (2012).
 #' Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), 357-359.
-#' 
 #' @export bowtie2
-#' 
 #' @examples
 #' td <- tempdir()
 #' 
@@ -194,19 +176,19 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
 
     if(!is.null(seq1) && is.null(seq2)){
         if(interleaved){
-            seq1<-paste0(seq1,collapse = ",")
+            seq1<-shQuote(paste0(seq1,collapse = ","))
             argvs <- c(argvs,"--interleaved",seq1)
         }else{
-            seq1<-paste0(seq1,collapse = ",")
+            seq1<-shQuote(paste0(seq1,collapse = ","))
             argvs <- c(argvs,"-U",seq1)
         }
     }else if(!is.null(seq1) && !is.null(seq2)){
-        seq1<-paste0(seq1,collapse = ",")
-        seq2<-paste0(seq2,collapse = ",")
+        seq1<-shQuote(paste0(seq1,collapse = ","))
+        seq2<-shQuote(paste0(seq2,collapse = ","))
         argvs <- c(argvs,"-1",seq1,"-2",seq2)
     }
     else if (!is.null(bamFile)){
-        bamFile <- paste0(bamFile, collapse = ",")
+        bamFile <- shQuote(paste0(bamFile, collapse = ","))
         argvs <- c(argvs,"-b",bamFile)
     }
     else{
@@ -215,13 +197,13 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
 
     # Combine explicit and optional arguments together
     if (outputType == "sam"){
-        argvs <- c(paramArray,argvs,"-S",samOutput)
+        argvs <- c(paramArray,argvs,"-S",shQuote(samOutput))
     }
     else if (outputType == "bam"){
         if (checkSamtoolsExists())
           argvs <- c(paramArray,argvs)
         else
-          argvs <- c(paramArray,argvs,"-S",samOutput)
+          argvs <- c(paramArray,argvs,"-S",shQuote(samOutput))
     }
     else
         stop("A non valid output type was allowed to be passed to the function")
@@ -229,17 +211,17 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
     
     # Call bowtie2 wrapper which handles whether large or small indexes are present
     if(outputType == "sam"){
-        invisible(.callbinary("bowtie2",paste(argvs,collapse = " ")))
+        invisible(.callbinary("perl","bowtie2",paste(argvs,collapse = " ")))
     }
     else if (outputType == "bam"){
       if (checkSamtoolsExists()){
         print("Samtools found on system. Using samtools to create bam file")
-        argsam <- c("view","-bS",">",bamOutput)
-        invisible(.callbinary("bowtie2",paste(argvs,collapse = " "), "|", Sys.which("samtools"), paste(argsam,collapse = " ")))
+        argsam <- c("view","-bS",">",shQuote(bamOutput))
+        invisible(.callbinary("perl","bowtie2",paste(argvs,collapse = " "), "|", Sys.which("samtools"), paste(argsam,collapse = " ")))
       }
       else{
         print("Samtools not found on system. Using Rsamtools to create bam file")
-        invisible(.callbinary("bowtie2",paste(argvs,collapse = " "), path = samOutput)
+        invisible(.callbinary("perl","bowtie2",paste(argvs,collapse = " "), path = samOutput)
                   %>%
                     Rsamtools::asBam(file = ., 
                                      destination = tools::file_path_sans_ext(bamOutput),
@@ -256,25 +238,18 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
 
 
 #' @name bowtie2-build
-#' 
 #' @title Interface to bowtie2-2.4.4 build function
-#' 
 #' @description This function can be use to call the bowtie2-build wrapper which 
 #' wraps the \code{bowtie2-build-s} and the \code{bowtie2-build-l} binaries.
-#'  
 #' @param references \code{Character} vector. The path to the files containing
 #' the references for which to build a bowtie index.
-#' 
 #' @param bt2Index \code{Character} scalar. The path where the bowtie2 index
 #' files should be created. Include the basename of the index file at the end 
 #' of the path (i.e. path_to_index_dir/index_basename). 
-#' 
 #' @param ... Additional arguments to be passed on to the binaries.
 #' See below for details.
-#' 
 #' @param overwrite \code{Logical}. Force overwriting of existing files
 #' if setting \code{TRUE}.
-#' 
 #' @details All additional arguments in ... are interpreted as additional
 #' parameters to be passed on to bowtie2_build wrapper. All of them should be 
 #' \code{Character} or \code{Numeric} scalar. You can put all additional
@@ -282,18 +257,13 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
 #' space separation, or put them in different \code{Character} 
 #' (e.g. "--threads","8","--quiet"). See the output of \code{bowtie2_build_usage()} 
 #' for details about available parameters.
-#' 
 #' @author Zheng Wei
-#' 
 #' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
-#' 
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
 #' alignment with Bowtie 2. Nature methods, 9(4), 357-359.
-#' 
 #' @export bowtie2_build
-#' 
 #' @examples
 #' td <- tempdir()
 #' 
@@ -362,31 +332,26 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
     
     # Combine explicit and optional arguments together
     references<-paste0(references,collapse = ",")
+    references<-shQuote(references)
+    bt2Index<-shQuote(bt2Index)
     argvs <- c(paramArray,references,bt2Index)
 
     # Call bowtie2-build wrapper which handles whether small or large indexes will be built
-    invisible(.callbinary("bowtie2-build", paste(argvs,collapse = " ")))
+    invisible(.callbinary("python","bowtie2-build", paste(argvs,collapse = " ")))
 }
 
 
 #' @name bowtie2_version
-#' 
 #' @title Print version information of bowtie2-2.4.4
-#' 
 #' @description Calling bowtie2_version() prints the version information of 
 #' the bowtie package used. 
-#' 
 #' @author Zheng Wei
-#' 
 #' @return An invisible \code{Integer} of call status.
 #' The value is 0 when there is not any mistakes
 #' Otherwise the value is non-zero.
-#' 
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
 #' alignment with Bowtie 2. Nature methods, 9(4), 357-359.
-#' 
 #' @export bowtie2_version
-#' 
 #' @examples
 #' bowtie2_version()
 
@@ -396,25 +361,19 @@ bowtie2_version <- function(){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     
-    .callbinary("bowtie2","--version")
+    .callbinary("perl","bowtie2","--version")
 }
 
 #' @name bowtie2_usage
-#' 
 #' @title Print available arguments that can be passed to bowtie2()
-#' 
 #' @description Calling bowtie2_usage() prints the available arguments that can
 #' be passed to the ... argument of the bowtie2() function of the package.  
 #' Note that some arguments are invalid if they are already handled as explicit 
 #' function arguments.
-#' 
 #' @author Zheng Wei
-#' 
 #' @return Information about available arguments that can be passed to bowtie2().
-#' 
 #' @references Langmead, B., & Salzberg, S. L. (2012). Fast gapped-read
 #' alignment with Bowtie 2. Nature methods, 9(4), 357-359.
-#' 
 #' @export bowtie2_usage
 #' 
 #' @examples
@@ -426,27 +385,20 @@ bowtie2_usage <- function(){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     
-    .callbinary("bowtie2","-h")
+    .callbinary("perl","bowtie2","-h")
 }
 
 #' @name bowtie2_build_usage
-#' 
 #' @title Print available arguments that can be passed to bowtie2_build()
-#' 
 #' @description Calling bowtie2_build_usage() prints the available arguments that 
 #' can be passed to the ... argument of the bowtie2_build() function of the package.  
 #' Note that some arguments are invalid if they are already handled as explicit 
 #' function arguments.
-#' 
 #' @author Zheng Wei
-#' 
 #' @return Information about available arguments that can be passed to bowtie2_build()
-#' 
 #' @references Langmead B, Salzberg S.
 #' Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359.
-#' 
 #' @export bowtie2_build_usage
-#' 
 #' @examples
 #' bowtie2_build_usage()
 
@@ -456,7 +408,7 @@ bowtie2_build_usage <- function() {
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     
-    .callbinary("bowtie2-build","-h")
+    .callbinary("python","bowtie2-build","-h")
 }
 
 
