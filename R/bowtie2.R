@@ -211,17 +211,27 @@ bowtie2 <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2=NULL,
     
     # Call bowtie2 wrapper which handles whether large or small indexes are present
     if(outputType == "sam"){
-        invisible(.callbinary("perl","bowtie2",paste(argvs,collapse = " ")))
+        invisible(.callbinary(lang = "perl",
+                              bin1 = "bowtie2",
+                              args1 = paste(argvs,collapse = " ")))
     }
     else if (outputType == "bam"){
       if (checkSamtoolsExists()){
         print("Samtools found on system. Using samtools to create bam file")
         argsam <- c("view","-bS",">",shQuote(bamOutput))
-        invisible(.callbinary("perl","bowtie2",paste(argvs,collapse = " "), "|", Sys.which("samtools"), paste(argsam,collapse = " ")))
+        invisible(.callbinary(lang = "perl",
+                              bin1 = "bowtie2",
+                              args1 = paste(argvs,collapse = " "),
+                              op = "|", 
+                              bin2 = shQuote(Sys.which("samtools")), 
+                              args2 = paste(argsam,collapse = " ")))
       }
       else{
         print("Samtools not found on system. Using Rsamtools to create bam file")
-        invisible(.callbinary("perl","bowtie2",paste(argvs,collapse = " "), path = samOutput)
+        invisible(.callbinary(lang = "perl",
+                              bin1 = "bowtie2",
+                              args1 = paste(argvs,collapse = " "), 
+                              path = samOutput)
                   %>%
                     Rsamtools::asBam(file = ., 
                                      destination = tools::file_path_sans_ext(bamOutput),
@@ -337,7 +347,9 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
     argvs <- c(paramArray,references,bt2Index)
 
     # Call bowtie2-build wrapper which handles whether small or large indexes will be built
-    invisible(.callbinary("python","bowtie2-build", paste(argvs,collapse = " ")))
+    invisible(.callbinary(lang = "python",
+                          bin1 = "bowtie2-build", 
+                          args1 = paste(argvs,collapse = " ")))
 }
 
 
@@ -361,7 +373,7 @@ bowtie2_version <- function(){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     
-    .callbinary("perl","bowtie2","--version")
+    .callbinary(lang = "perl", bin1 = "bowtie2", args1 = "--version")
 }
 
 #' @name bowtie2_usage
@@ -385,7 +397,7 @@ bowtie2_usage <- function(){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     
-    .callbinary("perl","bowtie2","-h")
+    .callbinary(lang = "perl", bin1 = "bowtie2", args1 = "-h")
 }
 
 #' @name bowtie2_build_usage
@@ -408,7 +420,7 @@ bowtie2_build_usage <- function() {
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
     
-    .callbinary("python","bowtie2-build","-h")
+    .callbinary(lang = "python", bin1 = "bowtie2-build", args1 = "-h")
 }
 
 
