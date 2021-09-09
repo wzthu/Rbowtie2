@@ -4,7 +4,15 @@
 \alias{.callbinary}
 \title{Make system call for binaries}
 \usage{
-.callbinary(bin1, args1, op = NULL, bin2 = NULL, args2 = NULL, path = NULL)
+.callbinary(
+  bin1,
+  args1,
+  op = NULL,
+  bin2 = NULL,
+  args2 = NULL,
+  path = NULL,
+  lang = NULL
+)
 }
 \arguments{
 \item{bin1}{\code{Character}. The binary used for the system call.}
@@ -20,6 +28,8 @@ Generally the output of the first binary is piped to the this binary.}
 
 \item{path}{\code{Character} Optional: If passed to function, returns the path.
 Needed for Rsamtools to convert from sam to bam.}
+
+\item{lang}{\code{Character}. The interpreter used to execute the binary}
 }
 \value{
 The output of the system call or the path provided.

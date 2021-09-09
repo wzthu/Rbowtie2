@@ -10,7 +10,7 @@ checkIndexType(filePath)
 \item{filePath}{\code{Character} scalar. The path where bowtie2 index files 
 are located. Include the basename of the index files at the end of the path
 (i.e. path_to_index_dir/index_basename). Do not include the bowtie2 index file 
-extension (.bt2 or .bt2l)}
+extension (.bt2 or .bt2l).}
 }
 \value{
 \code{Character} scalar. Returns either "SMALL" if the .bt2 file is found,
@@ -20,7 +20,7 @@ is found.
 \description{
 This is an internal function that is not meant to be used outside
 of the package. It determines whether the given index library comprises of 
-small indexes (.bt2) or large indexes (.bt2l)
+small indexes (.bt2) or large indexes (.bt2l).
 }
 \details{
 The function first tries to determine whether 
