@@ -50,6 +50,8 @@ latest version of R. Rbowtie2 is part of Bioconductor project,
 so you can install Rbowtie2 and its dependencies like this:
 
 ```{r install, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
 BiocManager::install("Rbowtie2")
 ```
 
