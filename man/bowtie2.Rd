@@ -2,53 +2,41 @@
 % Please edit documentation in R/bowtie2.R
 \name{bowtie2}
 \alias{bowtie2}
-\title{Interface to bowtie2-2.4.4 align function}
+\title{Interface to bowtie2 of bowtie2-2.2.3}
 \usage{
 bowtie2(
   bt2Index,
-  output,
-  outputType = "sam",
-  seq1 = NULL,
-  seq2 = NULL,
-  bamFile = NULL,
+  samOutput,
+  seq1,
   ...,
+  seq2 = NULL,
   interleaved = FALSE,
   overwrite = FALSE
 )
 }
 \arguments{
-\item{bt2Index}{\code{Character} scalar. The path where the bowtie2 index files 
-are located. Include the basename of the index files at the end of the path
-(i.e. path_to_index_dir/index_basename). Do not include the bowtie2 index file 
-extension (.bt2 or .bt2l)}
+\item{bt2Index}{\code{Character} scalar. bowtie2 index files
+prefix: 'dir/basename'
+(minus trailing '.*.bt2' of 'dir/basename.*.bt2').}
 
-\item{output}{\code{Character} scalar. The path where the alignment output file 
-should be created. Include the basename of the alignment file at the end of the 
-path (i.e. path_to_output_dir/output_basename). Do not include the alignment 
-file extension (.sam or .bam).}
-
-\item{outputType}{\code{Character} scalar. Specify the output alignment file type.
-Default is set to "sam" but can also be changed to "bam".}
+\item{samOutput}{\code{Character} scalar. A path to a SAM file
+used for the alignment output.}
 
 \item{seq1}{\code{Character} vector. For single-end sequencing,
 it contains sequence file paths.
 For paired-end sequencing, it can be file paths with #1 mates
 paired with file paths in seq2.
 And it can also be interleaved file paths when argument
-interleaved=\code{TRUE}.}
+interleaved=\code{TRUE}}
+
+\item{...}{Additional arguments to be passed on to the binaries.
+See below for details.}
 
 \item{seq2}{\code{Character} vector. It contains file paths with
 #2 mates paired with file paths in seq1.
 For single-end sequencing files and interleaved paired-end
-sequencing files (argument interleaved=\code{TRUE}),
+sequencing files(argument interleaved=\code{TRUE}),
 it must be \code{NULL}.}
-
-\item{bamFile}{\code{Character} vector. A path to a bam file that contains
-unaligned reads. If a bam file is provided then seq1 and seq2 must be 
-set to \code{NULL}}
-
-\item{...}{Additional arguments to be passed on to the bowtie2 wrapper.
-See below for details.}
 
 \item{interleaved}{\code{Logical}. Set \code{TRUE} when files are
 interleaved paired-end sequencing data.}
@@ -62,38 +50,42 @@ status. The value is 0 when there is not any mistakes
 Otherwise the value is non-zero.
 }
 \description{
-This function can be use to call the bowtie2 wrapper which wraps
-the \code{bowtie2-align-s} and the \code{bowtie2-align-l} binaries.
+This function can be use to call wrapped \code{bowtie2}
+binary.
 }
 \details{
 All additional arguments in ... are interpreted as
-additional parameters to be passed to bowtie2 wrapper. 
-All of them should be \code{Character} or \code{Numeric} scalar. 
-You can put all additional arguments in one \code{Character} 
-(e.g. "--threads 8 --no-mixed") with white space separation,
-or put them in different \code{Character} (e.g. "--threads","8","--no-mixed"). 
-Note that some arguments ("-x","--interleaved","-U","-1","-2","-b","-S") are
-invalid if they are already handled as explicit function arguments. 
-See the output of \code{bowtie2_usage()} for details about available parameters.
+additional parameters to be passed on to
+bowtie2. All of them should be \code{Character} or
+\code{Numeric} scalar. You can put all aditional
+arguments in one \code{Character}(e.g. "--threads 8 --no-mixed")
+with white space splited just like command line,
+or put them in different \code{Character}
+(e.g. "--threads","8","--no-mixed"). Note that some
+arguments("-x","--interleaved","-U","-1","-2","-S") to the
+bowtie2 are invalid if they are already handled as explicit
+function arguments. See the output of
+\code{bowtie2_usage()} for details about available parameters.
 }
 \examples{
 td <- tempdir()
-
 ## Building a bowtie2 index
-refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"), full=TRUE)
-bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),"--threads 4 --quiet",overwrite=TRUE)
-
+refs <- dir(system.file(package="Rbowtie2", "extdata", "bt2","refs"),
+full=TRUE)
+bowtie2_build(references=refs, bt2Index=file.path(td, "lambda_virus"),
+"--threads 4 --quiet",overwrite=TRUE)
 ## Alignments
-reads_1 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads", "reads_1.fastq")
-reads_2 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads", "reads_2.fastq")
+reads_1 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads",
+"reads_1.fastq")
+reads_2 <- system.file(package="Rbowtie2", "extdata", "bt2", "reads",
+"reads_2.fastq")
+if(file.exists(file.path(td, "lambda_virus.1.bt2"))){
+    cmdout<-bowtie2(bt2Index = file.path(td, "lambda_virus"),
+       samOutput = file.path(td, "result.sam"),
+       seq1=reads_1,seq2=reads_2,overwrite=TRUE,"--threads 3");cmdout
+    head(readLines(file.path(td, "result.sam")))
+}
 
-## Sam file created
-bowtie2(bt2Index = file.path(td,"lambda_virus"), output = file.path(td,"example"), seq1 = reads_1,
-seq2 = reads_2, overwrite = TRUE)
-
-## Bam file created
-bowtie2(bt2Index = file.path(td,"lambda_virus"), output = file.path(td,"example"), outputType = "bam", 
-seq1 = reads_1, seq2 = reads_2, overwrite = TRUE)
 }
 \references{
 Langmead, B., & Salzberg, S. L. (2012).

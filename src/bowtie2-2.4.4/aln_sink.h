@@ -766,6 +766,14 @@ public:
 		bool mixed,       // looked for unpaired alignments where paired failed?
 		bool hadoopOut);  // output Hadoop counters?
 
+        void printAlSummCerr(
+                const ReportingMetrics& met,
+                size_t repThresh, // threshold for uniqueness, or max if no thresh
+                bool discord,     // looked for discordant alignments
+                bool mixed,       // looked for unpaired alignments where paired failed?
+                bool hadoopOut);  // output Hadoop counters?
+
+
 	/**
 	 * Called when all alignments are complete.  It is assumed that no
 	 * synchronization is necessary.

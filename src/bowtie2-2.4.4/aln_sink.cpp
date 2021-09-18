@@ -19,6 +19,7 @@
 
 #include <iomanip>
 #include <limits>
+#include <fstream>
 #include "aln_sink.h"
 #include "aligner_seed.h"
 #include "util.h"
@@ -355,7 +356,7 @@ void AlnSink::printAlSumm(
 {
 	// NOTE: there's a filtering step at the very beginning, so everything
 	// being reported here is post filtering
-
+	AlnSink::printAlSummCerr( met, repThresh,  discord, mixed,  hadoopOut);  
 	bool canRep = repThresh != MAX_SIZE_T;
 	if(hadoopOut) {
 		cerr << "reporter:counter:Bowtie,Reads processed," << met.nread << endl;
@@ -524,7 +525,190 @@ void AlnSink::printAlSumm(
 		met.nunp_rep;
 	assert_leq(tot_al, tot_al_cand);
 	printPct(cerr, tot_al, tot_al_cand);
-	cerr << " overall alignment rate" << endl;
+	cerr << " overall alignment rate" << endl; 
+}
+
+void AlnSink::printAlSummCerr(
+	const ReportingMetrics& met,
+	size_t repThresh,   // threshold for uniqueness, or max if no thresh
+	bool discord,       // looked for discordant alignments
+	bool mixed,         // looked for unpaired alignments where paired failed?
+	bool hadoopOut)     // output Hadoop counters?
+{
+	// NOTE: there's a filtering step at the very beginning, so everything
+	// being reported here is post filtering
+    
+	ofstream pout(".bowtie2.cerr.txt");
+	bool canRep = repThresh != MAX_SIZE_T;
+	if(hadoopOut) {
+		pout << "reporter:counter:Bowtie,Reads processed," << met.nread << endl;
+	}
+	uint64_t totread = met.nread;
+	if(totread > 0) {
+		pout << "" << met.nread << " reads; of these:" << endl;
+	} else {
+		assert_eq(0, met.npaired);
+		assert_eq(0, met.nunpaired);
+		pout << "" << totread << " reads" << endl;
+	}
+	uint64_t totpair = met.npaired;
+	if(totpair > 0) {
+		// Paired output
+		pout << "  " << totpair << " (";
+		printPct(pout, totpair, totread);
+		pout << ") were paired; of these:" << endl;
+
+		// Concordants
+		pout << "    " << met.nconcord_0 << " (";
+		printPct(pout, met.nconcord_0, met.npaired);
+		pout << ") aligned concordantly 0 times" << endl;
+		if(canRep) {
+			// Print the number that aligned concordantly exactly once
+			assert_eq(met.nconcord_uni, met.nconcord_uni1+met.nconcord_uni2);
+			pout << "    " << met.nconcord_uni1 << " (";
+			printPct(pout, met.nconcord_uni1, met.npaired);
+			pout << ") aligned concordantly exactly 1 time" << endl;
+			
+			// Print the number that aligned concordantly more than once but
+			// fewer times than the limit
+			
+			pout << "    " << met.nconcord_uni2+met.nconcord_rep << " (";
+			printPct(pout, met.nconcord_uni2+met.nconcord_rep, met.npaired);
+			pout << ") aligned concordantly >1 times" << endl;
+		} else {
+			// Print the number that aligned concordantly exactly once
+			assert_eq(met.nconcord_uni, met.nconcord_uni1+met.nconcord_uni2);
+			pout << "    " << met.nconcord_uni1 << " (";
+			printPct(pout, met.nconcord_uni1, met.npaired);
+			pout << ") aligned concordantly exactly 1 time" << endl;
+
+			// Print the number that aligned concordantly more than once
+			pout << "    " << met.nconcord_uni2 << " (";
+			printPct(pout, met.nconcord_uni2, met.npaired);
+			pout << ") aligned concordantly >1 times" << endl;
+		}
+		if(discord) {
+			// TODO: what about discoardant and on separate chromosomes?
+		
+			// Bring out the unaligned pair total so we can subtract discordants
+			pout << "    ----" << endl;
+			pout << "    " << met.nconcord_0
+			     << " pairs aligned concordantly 0 times; of these:" << endl;
+			// Discordants
+			pout << "      " << met.ndiscord << " (";
+			printPct(pout, met.ndiscord, met.nconcord_0);
+			pout << ") aligned discordantly 1 time" << endl;
+		}
+		uint64_t ncondiscord_0 = met.nconcord_0 - met.ndiscord;
+		if(mixed) {
+			// Bring out the unaligned pair total so we can subtract discordants
+			pout << "    ----" << endl;
+			pout << "    " << ncondiscord_0
+			     << " pairs aligned 0 times concordantly or discordantly; of these:" << endl;
+			pout << "      " << (ncondiscord_0 * 2) << " mates make up the pairs; of these:" << endl;
+			pout << "        " << met.nunp_0_0 << " " << "(";
+			printPct(pout, met.nunp_0_0, ncondiscord_0 * 2);
+			pout << ") aligned 0 times" << endl;
+			if(canRep) {
+				// Print the number that aligned exactly once
+				assert_eq(met.nunp_0_uni, met.nunp_0_uni1+met.nunp_0_uni2);
+				pout << "        " << met.nunp_0_uni1 << " (";
+				printPct(pout, met.nunp_0_uni1, ncondiscord_0 * 2);
+				pout << ") aligned exactly 1 time" << endl;
+
+				// Print the number that aligned more than once but fewer times
+				// than the limit
+				pout << "        " << met.nunp_0_uni2+met.nunp_0_rep << " (";
+				printPct(pout, met.nunp_0_uni2+met.nunp_0_rep, ncondiscord_0 * 2);
+				pout << ") aligned >1 times" << endl;
+			} else {
+				// Print the number that aligned exactly once
+				assert_eq(met.nunp_0_uni, met.nunp_0_uni1+met.nunp_0_uni2);
+				pout << "        " << met.nunp_0_uni1 << " (";
+				printPct(pout, met.nunp_0_uni1, ncondiscord_0 * 2);
+				pout << ") aligned exactly 1 time" << endl;
+
+				// Print the number that aligned more than once but fewer times
+				// than the limit
+				pout << "        " << met.nunp_0_uni2 << " (";
+				printPct(pout, met.nunp_0_uni2, ncondiscord_0 * 2);
+				pout << ") aligned >1 times" << endl;
+			}
+			
+			//if(canRep) {
+			//	// Bring out the repetitively aligned pair total so we can subtract discordants
+			//	pout << "    ----" << endl;
+			//	pout << "    " << met.nconcord_rep
+			//		 << " pairs aligned concordantly >" << repThresh
+			//		 << " times; of these:" << endl;
+			//	pout << "      " << (met.nconcord_rep * 2) << " mates make up the pairs; of these:" << endl;
+			//	
+			//	pout << "        " << met.nunp_rep_0 << " (";
+			//	printPct(pout, met.nunp_rep_0, met.nconcord_rep * 2);
+			//	pout << ") aligned 0 times" << endl;
+			//	
+			//	pout << "        " << met.nunp_rep_uni << " (";
+			//	printPct(pout, met.nunp_rep_uni, met.nconcord_rep * 2);
+			//	pout << ") aligned >0 and <=" << repThresh << " times" << endl;
+			//	
+			//	pout << "        " << met.nunp_rep_rep << " (";
+			//	printPct(pout, met.nunp_rep_rep, met.nconcord_rep * 2);
+			//	pout << ") aligned >" << repThresh << " times" << endl;
+			//}
+		}
+	}
+	uint64_t totunpair = met.nunpaired;
+	if(totunpair > 0) {
+		// Unpaired output
+		pout << "  " << totunpair << " (";
+		printPct(pout, totunpair, totread);
+		pout << ") were unpaired; of these:" << endl;
+		
+		pout << "    " << met.nunp_0 << " (";
+		printPct(pout, met.nunp_0, met.nunpaired);
+		pout << ") aligned 0 times" << endl;
+		if(hadoopOut) {
+			pout << "reporter:counter:Bowtie 2,Unpaired reads with 0 alignments,"
+			     << met.nunpaired << endl;
+		}
+		
+		if(canRep) {
+			// Print the number that aligned exactly once
+			assert_eq(met.nunp_uni, met.nunp_uni1+met.nunp_uni2);
+			pout << "    " << met.nunp_uni1 << " (";
+			printPct(pout, met.nunp_uni1, met.nunpaired);
+			pout << ") aligned exactly 1 time" << endl;
+
+			// Print the number that aligned more than once but fewer times
+			// than the limit
+			pout << "    " << met.nunp_uni2+met.nunp_rep << " (";
+			printPct(pout, met.nunp_uni2+met.nunp_rep, met.nunpaired);
+			pout << ") aligned >1 times" << endl;
+		} else {
+			// Print the number that aligned exactly once
+			assert_eq(met.nunp_uni, met.nunp_uni1+met.nunp_uni2);
+			pout << "    " << met.nunp_uni1 << " (";
+			printPct(pout, met.nunp_uni1, met.nunpaired);
+			pout << ") aligned exactly 1 time" << endl;
+
+			// Print the number that aligned more than once
+			pout << "    " << met.nunp_uni2 << " (";
+			printPct(pout, met.nunp_uni2, met.nunpaired);
+			pout << ") aligned >1 times" << endl;
+		}
+	}
+	uint64_t tot_al_cand = totunpair + totpair*2;
+	uint64_t tot_al =
+		(met.nconcord_uni + met.nconcord_rep)*2 +
+		(met.ndiscord)*2 +
+		met.nunp_0_uni +
+		met.nunp_0_rep + 
+		met.nunp_uni +
+		met.nunp_rep;
+	assert_leq(tot_al, tot_al_cand);
+	printPct(pout, tot_al, tot_al_cand);
+	pout << " overall alignment rate" << endl;
+	pout.close();
 }
 
 /**

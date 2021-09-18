@@ -161,7 +161,7 @@ reads_1 <- system.file(package="Rbowtie2", "extdata",
 reads_2 <- system.file(package="Rbowtie2", "extdata", 
                        "bt2", "reads", "reads_2.fastq")
 if(file.exists(file.path(td, "lambda_virus.1.bt2"))){
-    (cmdout<-bowtie2(bt2Index = file.path(td, "lambda_virus"),
+    (cmdout<-bowtie2_samtools(bt2Index = file.path(td, "lambda_virus"),
         output = file.path(td, "result"),
         outputType = "sam",
         seq1=reads_1,
