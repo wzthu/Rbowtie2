@@ -61,13 +61,13 @@ identify_adapters <- function(file1,file2,...,basename = NULL,
         checkAddArgus("--identify-adapters|--file1|--file2|--basename",...)
     if(is.null(file2)){
         argvs<-c("--identify-adapters","--file1",
-                 file1,"--interleaved",paramArray);
+                 shQuote(file1),"--interleaved",paramArray);
     }else{
         argvs<-c("--identify-adapters","--file1",
-                 file1,"--file2",file2,paramArray);
+                 shQuote(file1),"--file2",shQuote(file2),paramArray);
     }
     if(!is.null(basename)){
-        argvs<-c(argvs,"--basename",basename)
+        argvs<-c(argvs,"--basename",shQuote(basename))
     }
 
     .callbinary("AdapterRemoval",paste(argvs,collapse = " "))
@@ -195,25 +195,25 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
     checkFileCreatable(output2,"output2",overwrite)
     checkPathExist(basename,"basename")
 
-    argvs<-c("--file1",file1)
+    argvs<-c("--file1", shQuote(file1))
 
     if(!is.null(adapter1)){
-        argvs<-c(argvs,"--adapter1",adapter1)
+        argvs<-c(argvs,"--adapter1", shQuote(adapter1))
     }
     if(!is.null(output1)){
-        argvs<-c(argvs,"--output1",output1)
+        argvs<-c(argvs,"--output1", shQuote(output1))
     }
     if(!is.null(file2)){
-        argvs<-c(argvs,"--file2",file2)
+        argvs<-c(argvs,"--file2", shQuote(file2))
     }
     if(!is.null(adapter2)){
-        argvs<-c(argvs,"--adapter2",adapter2)
+        argvs<-c(argvs,"--adapter2", shQuote(adapter2))
     }
     if(!is.null(output2)){
-        argvs<-c(argvs,"--output2",output2)
+        argvs<-c(argvs,"--output2", shQuote(output2))
     }
     if(!is.null(basename)){
-        argvs<-c(argvs,"--basename",basename)
+        argvs<-c(argvs,"--basename", shQuote(basename))
     }
     if(interleaved){
         argvs<-c(argvs,"--interleaved")
@@ -241,7 +241,7 @@ remove_adapters <- function(file1,...,adapter1 = NULL,output1 = NULL,
 #' adapterremoval_usage()
 #' 
 adapterremoval_usage<- function(){
-    .callbinary("AdapterRemoval","-h")
+    .callbinary(bin1 = "AdapterRemoval", args1 = "-h")
 }
 
 
@@ -259,44 +259,35 @@ adapterremoval_usage<- function(){
 #' adapterremoval_version()
 #' 
 adapterremoval_version<- function(){
-    .callbinary("AdapterRemoval","--version")
+    .callbinary(bin1 = "AdapterRemoval", args1 = "--version")
 }
 
 #' @name .callbinary
-#' 
 #' @title Make system call for binaries
-#' 
 #' @description Function that makes a system call for the bowtie binaries. 
 #' Note it is not intended to be used outside of the package.
-#' 
 #' @author Zheng Wei
-#' 
+#' @param lang \code{Character}. The interpreter used to execute the binary
 #' @param bin1 \code{Character}. The binary used for the system call.
-#' 
 #' @param args1 \code{Character}. The arguments to pass to the binary.
-#' 
 #' @param op \code{Character}. Optional: Generally used if needed to pipe to another binary.
-#' 
 #' @param bin2 \code{Character}. Optional: Another binary that can be used in the system call.
 #' Generally the output of the first binary is piped to the this binary.
-#' 
 #' @param args2 \code{Character} Optional: The arguments to pass to the second binary.
-#' 
 #' @param path \code{Character} Optional: If passed to function, returns the path.
 #' Needed for Rsamtools to convert from sam to bam. 
-#' 
 #' @return The output of the system call or the path provided.
 
 
-.callbinary<- function(bin1, args1, op = NULL, bin2 = NULL, args2 = NULL, path = NULL)
+.callbinary<- function(bin1, args1, op = NULL, bin2 = NULL, args2 = NULL, path = NULL, lang = NULL)
 {
     args1 <- gsub("^ *| *$", "", args1)
     args2 <- gsub("^ *| *$", "", args2)
     
     if (is.null(op) && is.null(bin2))
-        call <- paste(shQuote(file.path(system.file(package="Rbowtie2"), bin1)), args1)
+        call <- paste(lang, shQuote(file.path(system.file(package="Rbowtie2"), bin1)), args1)
     else if (!is.null(op) && !is.null(bin2))
-        call <- paste(shQuote(file.path(system.file(package="Rbowtie2"), bin1)), args1, op, bin2, args2)
+        call <- paste(lang, shQuote(file.path(system.file(package="Rbowtie2"), bin1)), args1, op, bin2, args2)
     else
         stop("Bug exists which needs to be fixed")
     
