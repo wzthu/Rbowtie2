@@ -1,7 +1,10 @@
 # Rbowtie2
 Bioconductor package: an R wrapper for Bowtie2 and AdapterRemoval 
 
-The `Rbowtie2` package provides an R interface to the [bowtie2](https://github.com/BenLangmead/bowtie2) short read aligner by Langmead et al. (2009), and the [AdapterRemoval](https://github.com/MikkelSchubert/adapterremoval) package by Schubert, Lindgreen, and Orlando (2016). The `Rbowtie2` package allows users to remove adapter sequences from reads, build bowtie2 indexes (.bt2 or .bt2l), and to create bowtie2 alignment files (.sam or .bam). Note that creating a .bam requires that the corresponding .sam file first be created due to the asBam function of Rsamtools that is currently being used in the `Rbowtie2` package. This might be not viable for some users. Replacing Rsamtools with samtools could potentially resolve this issue, and this README file will be updated if this change occurs.
+The `Rbowtie2` package provides an R interface to the [bowtie2](https://github.com/BenLangmead/bowtie2) short read aligner by Langmead et al. (2009), and the [AdapterRemoval](https://github.com/MikkelSchubert/adapterremoval) package by Schubert, Lindgreen, and Orlando (2016). The `Rbowtie2` package allows users to remove adapter sequences from reads, build bowtie2 indexes (.bt2 or .bt2l), and to create bowtie2 alignment files (.sam or .bam). 
+
+## Bam File Creation
+The `Rbowtie2` package attempts to use `samtools` to create the bam file if present on the system. This method of creating the bam file avoids the need to create an intermediate sam file which might be infeasable depending on the size of the file and the available memory on the system. If `samtools` cannot be found on the system, the package attempts to create the bam file via `Rsamtools` which requires that an intermediate sam file be created prior to the bam file being created.
 
 
 ## Source Package Information
