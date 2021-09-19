@@ -17,7 +17,7 @@ samtools: http://www.htslib.org/download/
 
 
 ## Bam File Creation
-The `Rbowtie2` package attempts to use `samtools` to create the bam file if present on the system. This method of creating the bam file avoids the need to create an intermediate sam file which might be infeasable depending on the size of the file and the available memory on the system. If `samtools` cannot be found on the system, the package attempts to create the bam file via `Rsamtools` which requires that an intermediate sam file be created prior to the bam file being created.
+The `Rbowtie2` package attempts to use `samtools` to create the bam file if present on the system. This method of creating the bam file avoids the need to create an intermediate sam file which might be infeasable depending on the size of the file and the available memory on the system. If `samtools`is not found on the system, the package attempts to create the bam file via `Rsamtools` which requires that an intermediate sam file be created prior to the bam file being created.
 
 
 ## Bowtie2 Source Package Information
