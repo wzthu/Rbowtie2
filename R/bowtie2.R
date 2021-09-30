@@ -501,8 +501,20 @@ bowtie2_build_usage <- function() {
     if(R.Version()$arch=="i386"){
         return("bowtie2 is not available for 32bit, please use 64bit R instead")
     }
-    
-    .callbinary(lang = "python", bin1 = "bowtie2-build", args1 = "-h")
+    tryCatch(
+    { 
+        .callbinary(lang = "python", bin1 = "bowtie2-build", args1 = "-h")
+    },
+    error=function(e) {
+        .callbinary(lang = "python3", bin1 = "bowtie2-build", args1 = "-h")
+    },
+    warning=function(w) {
+    },
+    finally={
+    }
+    )
+
+  
 }
 
 
