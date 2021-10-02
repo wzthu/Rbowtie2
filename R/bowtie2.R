@@ -429,9 +429,22 @@ bowtie2_build <- function(references,bt2Index,...,overwrite=FALSE){
     argvs <- c(paramArray,references,bt2Index)
 
     # Call bowtie2-build wrapper which handles whether small or large indexes will be built
-    invisible(.callbinary(lang = "python",
+    tryCatch(
+    {
+    invisible(.callbinary(lang = "python3",
                           bin1 = "bowtie2-build", 
                           args1 = paste(argvs,collapse = " ")))
+    },
+    error=function(e) {
+    invisible(.callbinary(lang = "python",
+                          bin1 = "bowtie2-build",
+                          args1 = paste(argvs,collapse = " ")))
+    },
+    warning=function(w) {
+    },
+    finally={
+    }
+    )
 }
 
 
@@ -503,10 +516,10 @@ bowtie2_build_usage <- function() {
     }
     tryCatch(
     { 
-        .callbinary(lang = "python", bin1 = "bowtie2-build", args1 = "-h")
+        .callbinary(lang = "python3", bin1 = "bowtie2-build", args1 = "-h")
     },
     error=function(e) {
-        .callbinary(lang = "python3", bin1 = "bowtie2-build", args1 = "-h")
+        .callbinary(lang = "python", bin1 = "bowtie2-build", args1 = "-h")
     },
     warning=function(w) {
     },
