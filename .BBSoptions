@@ -1,6 +1,0 @@
-# The reason this is marked as unsupported on win32 is that
-# the wrapped bowtie2-2.3.2 binary do not support 32-bit windows.
-# The binary created for 32-bit windows can merely notice that 
-# bowtie2 does not support 32bit windows.
-UnsupportedPlatforms: win32
-AlertOn: ERROR, WARNINGS
