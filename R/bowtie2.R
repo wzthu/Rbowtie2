@@ -251,7 +251,7 @@ bowtie2_samtools <- function(bt2Index,output,outputType = "sam", seq1=NULL, seq2
     }
 
     # Create the explicit arguments for the binaries
-    argvs = c("-x",bt2Index)
+    argvs = c("-x",shQuote(bt2Index))
 
     if(!is.null(seq1) && is.null(seq2)){
         if(interleaved){
