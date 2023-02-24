@@ -1,7 +1,7 @@
 Package: Rbowtie2
 Type: Package
 Title: An R Wrapper for Bowtie2 and AdapterRemoval 
-Version: 2.5.2
+Version: 2.4.2
 Date: 2021-10-5
 Authors@R: 
     c(person(given = "Zheng", family = "Wei", role = c("aut","cre"), 
